@@ -1,0 +1,7 @@
+errors/*
+databases/*
+sessions/*
+*.bak
+*.swp
+*.pyc
+*~
