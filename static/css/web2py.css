@@ -308,3 +308,39 @@ li.w2p_grid_breadcrumb_elem {
 .ie-lte8 div.flash{ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#222222', endColorstr='#000000', GradientType=0 ); }
 .ie-lte8 div.flash:hover {filter:alpha(opacity=25);}
 .ie9 #w2p_query_panel {padding-bottom:2px}
+
+/* CUSTOM IGS */
+
+div.igsCB {
+    float: left;
+    width: 30px;
+    clear: both;
+}
+
+div.igsLabel {
+    float: left;
+    width: 150px;
+}
+
+div.igsLabelRango {
+    float: left;
+    width: 180px;
+}
+
+div.igsRangoAnios > input {
+    width: 50px;
+}
+
+div.igsNumbers > input {
+    width: 75px;
+    float: left;
+}
+
+div.igsNumbers > label {
+    float: left;
+    width: 200px;
+}
+
+div.igsSave {
+    clear: both;
+}

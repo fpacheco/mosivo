@@ -1,0 +1,11 @@
+{{extend 'layout.html'}}
+{{=form}}
+<script >
+    $(".igsCB").click(function(){
+        if ($(this).find(":checkbox").is(':checked')){
+            $(this).next(".igsLabel").next(".igsSelects").find("select").removeAttr("disabled");
+        } else {
+            $(this).next(".igsLabel").next(".igsSelects").find("select").attr("disabled", "disabled");
+        }
+    });
+</script>
