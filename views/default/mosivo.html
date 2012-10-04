@@ -1,11 +1,161 @@
 {{extend 'layout.html'}}
 {{=form}}
-<script >
-    $(".igsCB").click(function(){
-        if ($(this).find(":checkbox").is(':checked')){
-            $(this).next(".igsLabel").next(".igsSelects").find("select").removeAttr("disabled");
+<script>
+    $("#padronCB").click(function(){
+        if ($("#padronCB").is(':checked')){
+            $("#padron").removeAttr("disabled");
+            $("#rectCB").attr("checked", false);
+            $("#topLeftLat").attr("disabled", "disabled");
+            $("#topLeftLong").attr("disabled", "disabled");
+            $("#bottomRightLat").attr("disabled", "disabled");
+            $("#bottomRightLong").attr("disabled", "disabled");
+            $("#seccionJudicial").attr("disabled", "disabled");
+            $("#seccionJCB").attr("checked", false);
+            $("#departamento").attr("disabled", "disabled");
+            $("#deptoCB").attr("checked", false);
+            $("#region").attr("disabled", "disabled");
+            $("#regionCB").attr("checked", false);
+            $("#cuenca").attr("disabled", "disabled");
+            $("#cuencaCB").attr("checked", false);
+            $("#centroLat").attr("disabled", "disabled");
+            $("#centroLong").attr("disabled", "disabled");
+            $("#radio").attr("disabled", "disabled");
+            $("#circCB").attr("checked", false);
         } else {
-            $(this).next(".igsLabel").next(".igsSelects").find("select").attr("disabled", "disabled");
+            $("#padron").attr("disabled", "disabled");
+        }
+    });
+    $("#seccionJCB").click(function(){
+        if ($("#seccionJCB").is(':checked')){
+            $("#rectCB").attr("checked", false);
+            $("#seccionJudicial").removeAttr("disabled");
+            $("#padron").attr("disabled", "disabled");
+            $("#padronCB").attr("checked", false);
+            $("#departamento").attr("disabled", "disabled");
+            $("#deptoCB").attr("checked", false);
+            $("#region").attr("disabled", "disabled");
+            $("#regionCB").attr("checked", false);
+            $("#cuenca").attr("disabled", "disabled");
+            $("#cuencaCB").attr("checked", false);
+            $("#centroLat").attr("disabled", "disabled");
+            $("#centroLong").attr("disabled", "disabled");
+            $("#radio").attr("disabled", "disabled");
+            $("#circCB").attr("checked", false);
+        } else {
+            $("#seccionJudicial").attr("disabled", "disabled");
+        }
+    });
+    $("#deptoCB").click(function(){
+        if ($("#deptoCB").is(':checked')){
+            $("#rectCB").attr("checked", false);
+            $("#departamento").removeAttr("disabled");
+            $("#padron").attr("disabled", "disabled");
+            $("#padronCB").attr("checked", false);
+            $("#seccionJudicial").attr("disabled", "disabled");
+            $("#seccionJCB").attr("checked", false);
+            $("#region").attr("disabled", "disabled");
+            $("#regionCB").attr("checked", false);
+            $("#cuenca").attr("disabled", "disabled");
+            $("#cuencaCB").attr("checked", false);
+            $("#centroLat").attr("disabled", "disabled");
+            $("#centroLong").attr("disabled", "disabled");
+            $("#radio").attr("disabled", "disabled");
+            $("#circCB").attr("checked", false);
+        } else {
+            $("#departamento").attr("disabled", "disabled");
+        }
+    });
+    $("#regionCB").click(function(){
+        if ($("#regionCB").is(':checked')){
+            $("#rectCB").attr("checked", false);
+            $("#region").removeAttr("disabled");
+            $("#padron").attr("disabled", "disabled");
+            $("#padronCB").attr("checked", false);
+            $("#seccionJudicial").attr("disabled", "disabled");
+            $("#seccionJCB").attr("checked", false);
+            $("#departamento").attr("disabled", "disabled");
+            $("#deptoCB").attr("checked", false);
+            $("#cuenca").attr("disabled", "disabled");
+            $("#cuencaCB").attr("checked", false);
+            $("#centroLat").attr("disabled", "disabled");
+            $("#centroLong").attr("disabled", "disabled");
+            $("#radio").attr("disabled", "disabled");
+            $("#circCB").attr("checked", false);
+        } else {
+            $("#region").attr("disabled", "disabled");
+        }
+    });
+    $("#cuencaCB").click(function(){
+        if ($("#cuencaCB").is(':checked')){
+            $("#rectCB").attr("checked", false);
+            $("#cuenca").removeAttr("disabled");
+            $("#padron").attr("disabled", "disabled");
+            $("#padronCB").attr("checked", false);
+            $("#seccionJudicial").attr("disabled", "disabled");
+            $("#seccionJCB").attr("checked", false);
+            $("#departamento").attr("disabled", "disabled");
+            $("#deptoCB").attr("checked", false);
+            $("#region").attr("disabled", "disabled");
+            $("#regionCB").attr("checked", false);
+            $("#centroLat").attr("disabled", "disabled");
+            $("#centroLong").attr("disabled", "disabled");
+            $("#radio").attr("disabled", "disabled");
+            $("#circCB").attr("checked", false);
+        } else {
+            $("#cuenca").attr("disabled", "disabled");
+        }
+    });
+    $("#rectCB").click(function(){
+        if ($("#rectCB").is(':checked')){
+            $("#topLeftLat").removeAttr("disabled");
+            $("#topLeftLong").removeAttr("disabled");
+            $("#bottomRightLat").removeAttr("disabled");
+            $("#bottomRightLong").removeAttr("disabled");
+            $("#padron").attr("disabled", "disabled");
+            $("#padronCB").attr("checked", false);
+            $("#seccionJudicial").attr("disabled", "disabled");
+            $("#seccionJCB").attr("checked", false);
+            $("#departamento").attr("disabled", "disabled");
+            $("#deptoCB").attr("checked", false);
+            $("#region").attr("disabled", "disabled");
+            $("#regionCB").attr("checked", false);
+            $("#cuenca").attr("disabled", "disabled");
+            $("#cuencaCB").attr("checked", false);
+            $("#centroLat").attr("disabled", "disabled");
+            $("#centroLong").attr("disabled", "disabled");
+            $("#radio").attr("disabled", "disabled");
+            $("#circCB").attr("checked", false);
+        } else {
+            $("#topLeftLat").attr("disabled", "disabled");
+            $("#topLeftLong").attr("disabled", "disabled");
+            $("#bottomRightLat").attr("disabled", "disabled");
+            $("#bottomRightLong").attr("disabled", "disabled");
+        }
+    });
+    $("#circCB").click(function(){
+        if ($("#circCB").is(':checked')){
+            $("#centroLat").removeAttr("disabled");
+            $("#centroLong").removeAttr("disabled");
+            $("#radio").removeAttr("disabled");
+            $("#padron").attr("disabled", "disabled");
+            $("#padronCB").attr("checked", false);
+            $("#seccionJudicial").attr("disabled", "disabled");
+            $("#seccionJCB").attr("checked", false);
+            $("#departamento").attr("disabled", "disabled");
+            $("#deptoCB").attr("checked", false);
+            $("#region").attr("disabled", "disabled");
+            $("#regionCB").attr("checked", false);
+            $("#cuenca").attr("disabled", "disabled");
+            $("#cuencaCB").attr("checked", false);
+            $("#topLeftLat").attr("disabled", "disabled");
+            $("#topLeftLong").attr("disabled", "disabled");
+            $("#bottomRightLat").attr("disabled", "disabled");
+            $("#bottomRightLong").attr("disabled", "disabled");
+            $("#rectCB").attr("checked", false);
+        } else {
+            $("#centroLat").attr("disabled", "disabled");
+            $("#centroLong").attr("disabled", "disabled");
+            $("#radio").attr("disabled", "disabled");
         }
     });
 </script>

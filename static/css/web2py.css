@@ -317,6 +317,12 @@ div.igsCB {
     clear: both;
 }
 
+div.igsOtherCB {
+    float: left;
+    width: 30px;
+    clear: both;
+}
+
 div.igsLabel {
     float: left;
     width: 150px;
@@ -331,6 +337,10 @@ div.igsRangoAnios > input {
     width: 50px;
 }
 
+div.igsNumbers {
+    padding-left: 100px;
+}
+
 div.igsNumbers > input {
     width: 75px;
     float: left;
@@ -338,9 +348,34 @@ div.igsNumbers > input {
 
 div.igsNumbers > label {
     float: left;
-    width: 200px;
+    width: 75px;
 }
 
 div.igsSave {
     clear: both;
+}
+
+div.igsTabbedLabel {
+    clear: both;
+    padding-left: 50px;
+}
+
+div.igsTabbedLabelRadio {
+    float: left;
+    padding-left: 100px;
+}
+
+div.igsNumbersRadio {
+    float: left;
+    padding-left: 35px;
+}
+
+div.igsNumbersRadio > input {
+    width: 75px;
+    float: left;
+}
+
+div.igsNumbersRadio > label {
+    float: left;
+    width: 75px;
 }

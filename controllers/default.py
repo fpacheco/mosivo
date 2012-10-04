@@ -31,12 +31,23 @@ def mosivo():
                     DIV(
                         DIV(INPUT(_id='cuencaCB', _type='checkbox'), _class='igsCB'), DIV(LABEL("Cuenca:"), _class="igsLabel"), DIV(SELECT(opts, _name='cuenca', _id='cuenca', _disabled="disabled"),_class="igsSelects")),
                     DIV(
-                        DIV(INPUT(_id='cuencaCB', _type='checkbox'), _class='igsCB'), DIV(LABEL("Rectángulo:"), _class="igsLabel"),DIV(LABEL("Esquina superior izquierda:"), INPUT(_type='text', _id ="topLeft", _name ="topLeft", _autocomplete="off", requires=IS_FLOAT_IN_RANGE(None,None)), LABEL("Esquina inferior derecha:"),INPUT(_type='text', _id ="bottomRight", _name ="bottomRight", _autocomplete="off", requires=IS_FLOAT_IN_RANGE(None,None)),_class="igsNumbers")),
+                        DIV(DIV(INPUT(_id='rectCB', _name='rectCB', _type='checkbox'), _class='igsOtherCB'), DIV(LABEL("Rectángulo:"), _class="igsLabel")),
+                        DIV(LABEL("Esquina superior izquierda:"), _class='igsTabbedLabel'), 
+                        DIV(LABEL("Latitud:"), INPUT(_type='text', _id ="topLeftLat", _name ="topLeftLat", _autocomplete="off", requires=IS_FLOAT_IN_RANGE(None,None), _disabled="disabled"), LABEL("Longitud:"), INPUT(_type='text', _id ="topLeftLong", _name ="topLeftLong", _autocomplete="off", requires=IS_FLOAT_IN_RANGE(None,None), _disabled="disabled"),_class="igsNumbers"), 
+                        DIV(LABEL("Esquina inferior derecha:"), _class='igsTabbedLabel'),
+                        DIV(LABEL("Latitud:"), INPUT(_type='text', _id ="bottomRightLat", _name ="bottomRightLat", _autocomplete="off", requires=IS_FLOAT_IN_RANGE(None,None), _disabled="disabled"), LABEL("Longitud:"), INPUT(_type='text', _id ="bottomRightLong", _name ="bottomRightLong", _autocomplete="off", requires=IS_FLOAT_IN_RANGE(None,None), _disabled="disabled"),_class="igsNumbers")
+                    ),
                     DIV(
-                        DIV(INPUT(_id='cuencaCB', _type='checkbox'), _class='igsCB'), DIV(LABEL("Círculo:"), _class="igsLabel"),DIV(LABEL("Centro:"), INPUT(_type='text', _id ="centro", _name ="centro", _autocomplete="off", requires=IS_FLOAT_IN_RANGE(None,None)), LABEL("Radio:"),  INPUT(_type='text', _id ="radio", _name ="radio", _autocomplete="off", requires=IS_FLOAT_IN_RANGE(None,None)),_class="igsNumbers")),
+                        DIV(DIV(INPUT(_id='circCB',  _name='rectCB', _type='checkbox'), _class='igsOtherCB'), DIV(LABEL("Círculo:"), _class="igsLabel")),
+                        DIV(LABEL("Centro:"), _class='igsTabbedLabel'), 
+                        DIV(LABEL("Latitud:"), INPUT(_type='text', _id ="centroLat", _name ="centroLat", _autocomplete="off", requires=IS_FLOAT_IN_RANGE(None,None), _disabled="disabled"), LABEL("Longitud:"), INPUT(_type='text', _id ="centroLong", _name ="centroLong", _autocomplete="off", requires=IS_FLOAT_IN_RANGE(None,None), _disabled="disabled"),_class="igsNumbers"), 
+                        DIV(DIV(LABEL("Radio:"), _class="igsTabbedLabelRadio"), DIV(INPUT(_type='text', _id ="radio", _name ="radio", _autocomplete="off", requires=IS_FLOAT_IN_RANGE(None,None), _disabled="disabled"), _class='igsNumbersRadio'), _style="clear: both;"),
+                    ),
                     DIV(
                         DIV(INPUT(_type = "submit", _value= "Guardar"),_class = "igsSave")
                     )
                 ), _method = 'POST'
             )
+    #from gluon.debug import dbg
+    #dbg.set_trace() # stop here!
     return dict(form=form)
