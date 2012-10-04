@@ -6,7 +6,14 @@ def call(): return service()
 ### end requires
 
 def index():
-    return "MoSiVo"
+    form = SQLFORM(db.Planes_Pro)
+    if form.accepts(request, session):
+        request.flash = "saved!"
+    elif form.errors:
+        request.flash = "errors"
+    else:
+        pass
+    return dict(form=form)
     
 def mosivo():
     opts = []

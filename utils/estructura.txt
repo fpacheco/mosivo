@@ -1,0 +1,636 @@
+dbro.define_table(u'Access',
+    Field(u'IDpiani',u'bigint'),
+    Field(u'FECHAACT',u'smalldatetime'),
+    Field(u'PROY',u'int'),
+    Field(u'DPTO',u'char'),
+    Field(u'SECJUD',u'int'),
+    Field(u'PRESENTADO',u'int'),
+    Field(u'SupEstab',u'int'),
+    Field(u'AÑOPRO',u'int'),
+    Field(u'CodG',u'char'),
+    Field(u'CodE',u'int'),
+    Field(u'EPOPRO',u'nchar'),
+    Field(u'HAPRO',u'decimal'),
+    Field(u'DENPRO',u'int'),
+    Field(u'EP1',u'int'),
+    Field(u'EP2',u'int'),
+    Field(u'EP3',u'int'),
+    Field(u'CALPRO',u'char'),
+    Field(u'MPfor',u'nchar'),
+    Field(u'MPorsem',u'nchar'),
+    Field(u'MPorplanta',u'nchar'),
+    Field(u'MPtipoplanta',u'nchar'),
+    Field(u'MPraleo',u'nchar'),
+    Field(u'MPpoda',u'nchar'),
+    Field(u'MPcorta',u'nchar'),
+    Field(u'Gendec',u'char'),
+    Field(u'Espdec',u'int'),
+    Field(u'AÑODEC',u'int'),
+    Field(u'HADEC',u'decimal'),
+    Field(u'FUSTAL',u'int'),
+    Field(u'REBROTE',u'int'),
+    Field(u'ABAJA',u'int'),
+    Field(u'EPODEC',u'nvarchar'),
+    Field(u'DENDEC',u'int'),
+    Field(u'ED1',u'int'),
+    Field(u'ED2',u'int'),
+    Field(u'ED3',u'int'),
+    Field(u'CALDEC',u'char'),
+    Field(u'MDfor',u'nchar'),
+    Field(u'MDorsem',u'nchar'),
+    Field(u'MDorplanta',u'nchar'),
+    Field(u'MDtipoplanta',u'nchar'),
+    Field(u'MDraleo',u'nchar'),
+    Field(u'MDpoda',u'nchar'),
+    Field(u'MDcorta',u'nchar'),
+    Field(u'OBSERVACIO',u'nchar'),
+    Field(u'BAJA',u'nvarchar'),
+    Field(u'FIRMA',u'nvarchar'),
+    Field(u'FUSTALDIF',u'int'),
+)
+
+dbro.define_table(u'Cambios_Areas',
+    Field(u'Fecha',u'smalldatetime'),
+    Field(u'Nro_Carpeta',u'int'),
+    Field(u'Cod_depto',u'char'),
+    Field(u'Cod_Pad',u'bigint'),
+    Field(u'Area',u'decimal'),
+)
+
+dbro.define_table(u'Carpetas_BN',
+    Field(u'Codigo',u'int'),
+    Field(u'Nro_Carpeta',u'int'),
+    Field(u'Fecha_pres',u'smallint'),
+    Field(u'Cod_Depto',u'char'),
+    Field(u'Cod_Sj',u'int'),
+    Field(u'Latitud',u'decimal'),
+    Field(u'Longitud',u'decimal'),
+    Field(u'Tipo_Bosque',u'char'),
+    Field(u'Baja',u'bit'),
+    Field(u'Notas',u'nchar'),
+)
+
+dbro.define_table(u'Carpetas_N',
+    Field(u'Codigo',u'int'),
+    Field(u'Nro_Carpeta',u'int'),
+    Field(u'Fecha_Pres',u'smallint'),
+    Field(u'Cod_Depto',u'char'),
+    Field(u'Cod_Sj',u'int'),
+    Field(u'Longitud',u'decimal'),
+    Field(u'Latitud',u'decimal'),
+    Field(u'Baja',u'bit'),
+    Field(u'Notas',u'nchar'),
+)
+
+dbro.define_table(u'Carpetas_P',
+    Field(u'Codigo',u'int'),
+    Field(u'Nro_Carpeta',u'int'),
+    Field(u'Fecha_Pres',u'smallint'),
+    Field(u'Cod_Depto',u'char'),
+    Field(u'Cod_Sj',u'int'),
+    Field(u'Longitud',u'decimal'),
+    Field(u'Latitud',u'decimal'),
+    Field(u'Baja',u'bit'),
+    Field(u'Notas',u'nchar'),
+)
+
+dbro.define_table(u'Coeficientes',
+    Field(u'Creci_Pi_CN_5',u'smallint'),
+    Field(u'Creci_Pi_CN_10',u'smallint'),
+    Field(u'Creci_Pi_CN_15',u'smallint'),
+    Field(u'Creci_Pi_CN_20',u'smallint'),
+    Field(u'Creci_Pi_LI_5',u'smallint'),
+    Field(u'Creci_Pi_LI_10',u'smallint'),
+    Field(u'Creci_Pi_LI_15',u'smallint'),
+    Field(u'Creci_Pi_LI_20',u'smallint'),
+    Field(u'Creci_Pi_OT_6',u'smallint'),
+    Field(u'Creci_Pi_OT_12',u'smallint'),
+    Field(u'Creci_Pi_OT_18',u'smallint'),
+    Field(u'Creci_Pi_OT_25',u'smallint'),
+    Field(u'Creci_Pi_des',u'decimal'),
+    Field(u'Creci_Eu_CN_Gr',u'smallint'),
+    Field(u'Creci_Eu_CN_Gl',u'smallint'),
+    Field(u'Creci_Eu_CN_Ot',u'smallint'),
+    Field(u'Creci_Eu_LI_Gr',u'smallint'),
+    Field(u'Creci_Eu_LI_Gl',u'smallint'),
+    Field(u'Creci_Eu_LI_Ot',u'smallint'),
+    Field(u'Creci_Eu_SE_Gr',u'smallint'),
+    Field(u'Creci_Eu_SE_Gl',u'smallint'),
+    Field(u'Creci_Eu_SE_Ot',u'smallint'),
+    Field(u'Creci_Pri_Gr',u'decimal'),
+    Field(u'Creci_Pri_Gl',u'decimal'),
+    Field(u'Creci_Pri_Ot',u'decimal'),
+    Field(u'Creci_Seg_Gr',u'decimal'),
+    Field(u'Creci_Seg_Gl',u'decimal'),
+    Field(u'Creci_Seg_Ot',u'decimal'),
+    Field(u'Creci_Eu_des',u'decimal'),
+    Field(u'Des_Pi_Pu_Pri',u'smallint'),
+    Field(u'Des_Pi_Pu_Seg',u'smallint'),
+    Field(u'Des_Pi_Pu_Ter',u'smallint'),
+    Field(u'Des_Pi_Pu_Fin',u'smallint'),
+    Field(u'Des_Pi_As_Pri',u'smallint'),
+    Field(u'Des_Pi_As_Seg',u'smallint'),
+    Field(u'Des_Pi_As_Ter',u'smallint'),
+    Field(u'Des_Pi_As_Fin',u'smallint'),
+    Field(u'Des_Eu_Pu_CN_Pri',u'smallint'),
+    Field(u'Des_Eu_Pu_CN_Seg',u'smallint'),
+    Field(u'Des_Eu_Pu_CN_Ter',u'smallint'),
+    Field(u'Des_Eu_Pu_CN_Cua',u'smallint'),
+    Field(u'Des_Eu_Pu_CN_Fin',u'smallint'),
+    Field(u'Des_Eu_Pu_LI_Pri',u'smallint'),
+    Field(u'Des_Eu_Pu_LI_Seg',u'smallint'),
+    Field(u'Des_Eu_Pu_LI_Ter',u'smallint'),
+    Field(u'Des_Eu_Pu_LI_Fin',u'smallint'),
+    Field(u'Des_Eu_Asn_CN_Pri',u'smallint'),
+    Field(u'Des_Eu_Asn_CN_Seg',u'smallint'),
+    Field(u'Des_Eu_Asn_CN_Ter',u'smallint'),
+    Field(u'Des_Eu_Asn_CN_Cua',u'smallint'),
+    Field(u'Des_Eu_Asn_CN_Fin',u'smallint'),
+    Field(u'Des_Eu_Asn_LI_Pri',u'smallint'),
+    Field(u'Des_Eu_Asn_LI_Seg',u'smallint'),
+    Field(u'Des_Eu_Asn_LI_Ter',u'smallint'),
+    Field(u'Des_Eu_Asn_LI_Fin',u'smallint'),
+    Field(u'Des_Eu_Asp_CN_Pri',u'smallint'),
+    Field(u'Des_Eu_Asp_CN_Seg',u'smallint'),
+    Field(u'Des_Eu_Asp_CN_Ter',u'smallint'),
+    Field(u'Des_Eu_Asp_CN_Cua',u'smallint'),
+    Field(u'Des_Eu_Asp_CN_Fin',u'smallint'),
+    Field(u'Des_Eu_Asp_LI_Pri',u'smallint'),
+    Field(u'Des_Eu_Asp_LI_Seg',u'smallint'),
+    Field(u'Des_Eu_Asp_LI_Ter',u'smallint'),
+    Field(u'Des_Eu_Asp_LI_Fin',u'smallint'),
+    Field(u'Pro_Eu_CN_Pri',u'smallint'),
+    Field(u'Pro_Eu_CN_Seg',u'smallint'),
+    Field(u'Pro_Eu_CN_Ter',u'smallint'),
+    Field(u'Pro_Eu_CN_Cua',u'smallint'),
+    Field(u'Pro_Eu_CN_Fin',u'smallint'),
+    Field(u'Pro_Eu_LI_Pri',u'smallint'),
+    Field(u'Pro_Eu_LI_Seg',u'smallint'),
+    Field(u'Pro_Eu_LI_Ter',u'smallint'),
+    Field(u'Pro_Eu_LI_Fin',u'smallint'),
+    Field(u'Por_Eu_CN_As',u'smallint'),
+    Field(u'Por_Eu_CN_Pu',u'smallint'),
+    Field(u'Por_Eu_LI_As',u'smallint'),
+    Field(u'Por_Eu_LI_Pu',u'smallint'),
+    Field(u'Por_Area_efec',u'smallint'),
+)
+
+dbro.define_table(u'Deptos',
+    Field(u'Codigo',u'char'),
+    Field(u'Nombre',u'char'),
+    Field(u'Numero',u'smallint'),
+)
+
+dbro.define_table(u'Dj_Guias',
+    Field(u'Cod_DJ',u'bigint'),
+    Field(u'Guia',u'int'),
+    Field(u'Tonelaje',u'int'),
+)
+
+dbro.define_table(u'dtproperties',
+    Field(u'id',u'int identity'),
+    Field(u'objectid',u'int'),
+    Field(u'property',u'varchar'),
+    Field(u'value',u'varchar'),
+    Field(u'uvalue',u'nvarchar'),
+    Field(u'lvalue',u'image'),
+    Field(u'version',u'int'),
+)
+
+dbro.define_table(u'Enfermedades',
+    Field(u'Codigo',u'char'),
+    Field(u'Especie',u'char'),
+    Field(u'Hospedero',u'char'),
+    Field(u'Organo',u'bigint'),
+    Field(u'Imagen1',u'image'),
+    Field(u'Imagen2',u'image'),
+    Field(u'Tipo',u'smallint'),
+)
+
+dbro.define_table(u'Monitoreos',
+    Field(u'Codigo',u'bigint'),
+    Field(u'Fecha_Inicio',u'smalldatetime'),
+    Field(u'Tipo_Monitoreo',u'char'),
+    Field(u'Estado',u'int'),
+    Field(u'Usuario',u'char'),
+    Field(u'Area_total',u'decimal'),
+)
+
+dbro.define_table(u'Otros',
+    Field(u'Codigo',u'char'),
+    Field(u'Descripcion',u'char'),
+    Field(u'Tipo',u'smallint'),
+    Field(u'Tipo_Char',u'char'),
+)
+
+dbro.define_table(u'Parcelas',
+    Field(u'Codigo',u'bigint identity'),
+    Field(u'Fila',u'int'),
+    Field(u'Cod_Rodal',u'bigint'),
+    Field(u'Fecha',u'smalldatetime'),
+    Field(u'Ind_Coneat',u'char'),
+    Field(u'Tipo_Suelo',u'smallint'),
+    Field(u'Res_Cat1',u'smallint'),
+    Field(u'Res_Cat2',u'smallint'),
+    Field(u'Res_Cat3',u'smallint'),
+    Field(u'Res_Cat4',u'smallint'),
+    Field(u'Res_Cat5',u'smallint'),
+    Field(u'Res_Fus1',u'smallint'),
+    Field(u'Res_Fus2',u'smallint'),
+    Field(u'Res_Fus3',u'smallint'),
+    Field(u'Res_Fus4',u'smallint'),
+    Field(u'Res_Fus5',u'smallint'),
+    Field(u'Mes',u'smallint'),
+    Field(u'Año',u'smallint'),
+    Field(u'Mes_Dia',u'smallint'),
+    Field(u'Observaciones',u'char'),
+    Field(u'Area',u'decimal'),
+)
+
+dbro.define_table(u'Parcelas_Otros',
+    Field(u'Codigo',u'bigint identity'),
+    Field(u'Cod_Parcela',u'bigint'),
+    Field(u'Cod_Agente',u'char'),
+    Field(u'GMD',u'decimal'),
+    Field(u'Por_AA',u'decimal'),
+    Field(u'Tipo',u'char'),
+    Field(u'Pos',u'smallint'),
+    Field(u'GMD_Rnd',u'smallint'),
+    Field(u'A1',u'decimal'),
+    Field(u'A2',u'decimal'),
+    Field(u'A3',u'decimal'),
+    Field(u'A4',u'decimal'),
+    Field(u'A5',u'decimal'),
+    Field(u'A6',u'decimal'),
+    Field(u'A7',u'decimal'),
+    Field(u'A8',u'decimal'),
+    Field(u'A9',u'decimal'),
+    Field(u'A10',u'decimal'),
+    Field(u'A11',u'decimal'),
+    Field(u'A12',u'decimal'),
+    Field(u'A13',u'decimal'),
+    Field(u'A14',u'decimal'),
+    Field(u'A15',u'decimal'),
+    Field(u'A16',u'decimal'),
+    Field(u'A17',u'decimal'),
+    Field(u'A18',u'decimal'),
+    Field(u'A19',u'decimal'),
+    Field(u'A20',u'decimal'),
+    Field(u'A21',u'decimal'),
+    Field(u'A22',u'decimal'),
+    Field(u'A23',u'decimal'),
+    Field(u'A24',u'decimal'),
+    Field(u'A25',u'decimal'),
+)
+
+dbro.define_table(u'Plagas',
+    Field(u'Codigo',u'char'),
+    Field(u'Insecto',u'char'),
+    Field(u'Familia',u'char'),
+    Field(u'Orden',u'char'),
+    Field(u'Hospedero',u'char'),
+    Field(u'Tipo_de_Daño',u'char'),
+    Field(u'Importancia',u'char'),
+    Field(u'Imagen1',u'image'),
+    Field(u'Imagen2',u'image'),
+    Field(u'Tipo',u'smallint'),
+)
+
+dbro.define_table(u'Planes',
+    Field(u'Codigo',u'bigint'),
+    Field(u'Codigo_Plan_Pro',u'bigint'),
+    Field(u'Fecha_Act',u'smalldatetime'),
+    Field(u'Año_Dec',u'smallint'),
+    Field(u'CodG_Dec',u'nchar'),
+    Field(u'CodE_Dec',u'int'),
+    Field(u'Epo_Dec',u'nchar'),
+    Field(u'Ha_Dec',u'decimal'),
+    Field(u'Den_Dec',u'int'),
+    Field(u'E1_Dec',u'int'),
+    Field(u'E2_Dec',u'int'),
+    Field(u'E3_Dec',u'int'),
+    Field(u'Cal_Dec',u'nchar'),
+    Field(u'Met_Dec',u'nchar'),
+    Field(u'Sem_Dec',u'nchar'),
+    Field(u'Planta_Dec',u'nchar'),
+    Field(u'Tipo_Planta_Dec',u'nchar'),
+    Field(u'Raleo_Dec',u'nchar'),
+    Field(u'Poda_Dec',u'nchar'),
+    Field(u'Corta_Dec',u'nchar'),
+    Field(u'Objetivo_dec',u'nchar'),
+    Field(u'Proyecto_g_dec',u'nchar'),
+    Field(u'Observaciones',u'nchar'),
+)
+
+dbro.define_table(u'Planes_Pro',
+    Field(u'Codigo',u'bigint'),
+    Field(u'Codigo_Cp',u'int'),
+    Field(u'Fecha_Act',u'smalldatetime'),
+    Field(u'Año_Pro',u'smallint'),
+    Field(u'CodG_Pro',u'nchar'),
+    Field(u'CodE_Pro',u'int'),
+    Field(u'Epo_Pro',u'nchar'),
+    Field(u'Ha_Pro',u'decimal'),
+    Field(u'Den_Pro',u'int'),
+    Field(u'E1_Pro',u'int'),
+    Field(u'E2_Pro',u'int'),
+    Field(u'E3_Pro',u'int'),
+    Field(u'Cal_Pro',u'nchar'),
+    Field(u'Met_Pro',u'nchar'),
+    Field(u'Sem_Pro',u'nchar'),
+    Field(u'Planta_Pro',u'nchar'),
+    Field(u'Tipo_Planta_Pro',u'nchar'),
+    Field(u'Raleo_Pro',u'nchar'),
+    Field(u'Poda_Pro',u'nchar'),
+    Field(u'Corta_Pro',u'nchar'),
+    Field(u'Objetivo_pro',u'nchar'),
+    Field(u'Proyecto_g_pro',u'nchar'),
+    Field(u'Observaciones',u'nchar'),
+)
+
+dbro.define_table(u'Plantas',
+    Field(u'CodG',u'nchar'),
+    Field(u'CodE',u'int'),
+    Field(u'Genero',u'nchar'),
+    Field(u'Especie',u'nchar'),
+    Field(u'Descripcion',u'nchar'),
+    Field(u'Apel',u'nchar'),
+    Field(u'Carac',u'text'),
+    Field(u'Foto',u'image'),
+    Field(u'Taxo',u'image'),
+)
+
+dbro.define_table(u'Propietarios',
+    Field(u'Codigo',u'int'),
+    Field(u'Nombre',u'nchar'),
+    Field(u'Direccion',u'nchar'),
+    Field(u'Telefono',u'nchar'),
+    Field(u'Representacion',u'nchar'),
+)
+
+dbro.define_table(u'Proyecciones',
+    Field(u'Cod_Sj',u'int'),
+    Field(u'Cod_Depto',u'char'),
+    Field(u'Especie',u'smallint'),
+    Field(u'Año',u'smallint'),
+    Field(u'Valor',u'decimal'),
+)
+
+dbro.define_table(u'Registro',
+    Field(u'Codigo',u'bigint'),
+    Field(u'Codigo_Cp_Pr',u'int'),
+    Field(u'Codigo_Cp_Bn',u'int'),
+    Field(u'Cod_Depto',u'char'),
+    Field(u'Codigo_Pad',u'bigint'),
+    Field(u'Anexo',u'char'),
+    Field(u'Tipo_Bos',u'char'),
+    Field(u'Cant_Bosques',u'int'),
+    Field(u'Cant_Tipo_Bosque',u'int'),
+    Field(u'Cant_Tipo_Bosque_Depto',u'int'),
+    Field(u'Resoluciones',u'nchar'),
+    Field(u'Codigo_Prop',u'int'),
+    Field(u'Rep_Prop',u'char'),
+    Field(u'Area',u'decimal'),
+    Field(u'Tipo_Prop',u'char'),
+)
+
+dbro.define_table(u'Rodales',
+    Field(u'Codigo',u'bigint identity'),
+    Field(u'Fila',u'int'),
+    Field(u'Cod_Mon',u'bigint'),
+    Field(u'Area',u'decimal'),
+    Field(u'Densidad',u'smallint'),
+    Field(u'Densidad_Act',u'smallint'),
+    Field(u'Codg',u'nchar'),
+    Field(u'Code',u'int'),
+    Field(u'Origen',u'char'),
+    Field(u'Procedencia',u'char'),
+    Field(u'Propietario',u'int'),
+    Field(u'Responsable',u'char'),
+    Field(u'Establecimiento',u'char'),
+    Field(u'Observador',u'char'),
+    Field(u'Localizacion',u'char'),
+    Field(u'Datum',u'bit'),
+    Field(u'Longitud_G',u'char'),
+    Field(u'Latitud_G',u'char'),
+    Field(u'Longitud',u'decimal'),
+    Field(u'Latitud',u'decimal'),
+    Field(u'Cod_depto',u'char'),
+    Field(u'Tipo',u'char'),
+    Field(u'Turno',u'smallint'),
+    Field(u'Edad',u'decimal'),
+    Field(u'Altura',u'decimal'),
+    Field(u'Laboreo_Tipo',u'smallint'),
+    Field(u'Poda1',u'bit'),
+    Field(u'Epoca_Poda1',u'char'),
+    Field(u'Año_Poda1',u'smallint'),
+    Field(u'Raleo1',u'bit'),
+    Field(u'Epoca_Raleo1',u'char'),
+    Field(u'Año_Raleo1',u'smallint'),
+    Field(u'Poda2',u'bit'),
+    Field(u'Epoca_Poda2',u'char'),
+    Field(u'Año_Poda2',u'smallint'),
+    Field(u'Raleo2',u'bit'),
+    Field(u'Epoca_Raleo2',u'char'),
+    Field(u'Año_Raleo2',u'smallint'),
+    Field(u'Poda3',u'bit'),
+    Field(u'Epoca_poda3',u'char'),
+    Field(u'Año_Poda3',u'smallint'),
+    Field(u'Raleo3',u'bit'),
+    Field(u'Epoca_Raleo3',u'char'),
+    Field(u'Año_Raleo3',u'smallint'),
+    Field(u'Laboreo',u'bit'),
+    Field(u'Herbicida',u'bit'),
+    Field(u'Otros',u'bit'),
+    Field(u'Sin_manejo',u'bit'),
+    Field(u'Res_Cat1',u'decimal'),
+    Field(u'Res_Cat2',u'decimal'),
+    Field(u'Res_Cat3',u'decimal'),
+    Field(u'Res_Cat4',u'decimal'),
+    Field(u'Res_Cat5',u'decimal'),
+    Field(u'Res_Fus1',u'decimal'),
+    Field(u'Res_Fus2',u'decimal'),
+    Field(u'Res_Fus3',u'decimal'),
+    Field(u'Res_Fus4',u'decimal'),
+    Field(u'Res_Fus5',u'decimal'),
+    Field(u'Mapa',u'image'),
+    Field(u'Cant_Parcelas',u'int'),
+)
+
+dbro.define_table(u'Rodales_Otros',
+    Field(u'Codigo',u'bigint identity'),
+    Field(u'Cod_Rodal',u'bigint'),
+    Field(u'Cod_Agente',u'char'),
+    Field(u'Por_AA_Ha',u'decimal'),
+    Field(u'Tipo',u'char'),
+    Field(u'Pos',u'smallint'),
+)
+
+dbro.define_table(u'Seleccion',
+    Field(u'Sesion',u'char'),
+    Field(u'Codigo',u'char'),
+    Field(u'GMD',u'int'),
+)
+
+dbro.define_table(u'Simbolos_Mon',
+    Field(u'Codigo',u'bigint'),
+    Field(u'Sesion_Id',u'char'),
+    Field(u'Monitoreo',u'bigint'),
+    Field(u'Rodal',u'bigint'),
+    Field(u'X',u'decimal'),
+    Field(u'Y',u'decimal'),
+    Field(u'Simbolo',u'varchar'),
+)
+
+dbro.define_table(u'MAPINFO_MAPCATALOG',
+    Field(u'SPATIALTYPE',u'float'),
+    Field(u'TABLENAME',u'varchar'),
+    Field(u'OWNERNAME',u'varchar'),
+    Field(u'SPATIALCOLUMN',u'varchar'),
+    Field(u'DB_X_LL',u'float'),
+    Field(u'DB_Y_LL',u'float'),
+    Field(u'DB_X_UR',u'float'),
+    Field(u'DB_Y_UR',u'float'),
+    Field(u'COORDINATESYSTEM',u'varchar'),
+    Field(u'SYMBOL',u'varchar'),
+    Field(u'XCOLUMNNAME',u'varchar'),
+    Field(u'YCOLUMNNAME',u'varchar'),
+    Field(u'RENDITIONTYPE',u'int'),
+    Field(u'RENDITIONCOLUMN',u'varchar'),
+    Field(u'RENDITIONTABLE',u'varchar'),
+)
+
+dbro.define_table(u'Agentes',
+    Field(u'Codigo',u'char'),
+    Field(u'nombre',u'char'),
+    Field(u'tipo',u'varchar'),
+)
+
+
+Tabla: Access
+)
+
+Tabla: Cambios_Areas
+)
+
+Tabla: Carpetas_BN
+    primaryKey: u'Codigo',
+)
+
+Tabla: Carpetas_N
+    primaryKey: u'Codigo',
+)
+
+Tabla: Carpetas_P
+    primaryKey: u'Codigo',
+)
+
+Tabla: Coeficientes
+)
+
+Tabla: Deptos
+    primaryKey: u'Codigo',
+)
+
+Tabla: Dj_Guias
+    primaryKey: u'Cod_DJ',
+    primaryKey: u'Guia',
+)
+
+Tabla: dtproperties
+    primaryKey: u'id',
+    primaryKey: u'property',
+)
+
+Tabla: Enfermedades
+    primaryKey: u'Codigo',
+)
+
+Tabla: Monitoreos
+    primaryKey: u'Codigo',
+)
+
+Tabla: Otros
+    primaryKey: u'Codigo',
+)
+
+Tabla: Parcelas
+    primaryKey: u'Codigo',
+)
+
+Tabla: Parcelas_Otros
+)
+
+Tabla: Plagas
+    primaryKey: u'Codigo',
+)
+
+Tabla: Planes
+    primaryKey: u'Codigo',
+)
+
+Tabla: Planes_Pro
+    primaryKey: u'Codigo',
+)
+
+Tabla: Plantas
+    primaryKey: u'CodG',
+    primaryKey: u'CodE',
+)
+
+Tabla: Propietarios
+    primaryKey: u'Codigo',
+)
+
+Tabla: Proyecciones
+    primaryKey: u'Cod_Sj',
+    primaryKey: u'Cod_Depto',
+    primaryKey: u'Especie',
+    primaryKey: u'Año',
+)
+
+Tabla: Registro
+    primaryKey: u'Codigo',
+)
+
+Tabla: Rodales
+    primaryKey: u'Codigo',
+)
+
+Tabla: Rodales_Otros
+)
+
+Tabla: Seleccion
+)
+
+Tabla: Simbolos_Mon
+    primaryKey: u'Codigo',
+)
+
+Estos son los foreign key de las tablas
+(u'DGF', u'dbo', u'Carpetas_BN', u'Nro_Carpeta', u'DGF', u'dbo', u'Cambios_Areas', u'Nro_Carpeta', 1, 1, 1, u'FK_Cambios_Areas_Carpetas_BN', u'IX_Carpetas_BN', 7)
+(u'DGF', u'dbo', u'Carpetas_BN', u'Cod_Depto', u'DGF', u'dbo', u'Cambios_Areas', u'Cod_depto', 2, 1, 1, u'FK_Cambios_Areas_Carpetas_BN', u'IX_Carpetas_BN', 7)
+(u'DGF', u'dbo', u'Carpetas_BN', u'Codigo', u'DGF', u'dbo', u'Plan_Manejo', u'Cod_Carp_BN', 1, 1, 1, u'FK_Plan_Manejo_Carpetas_BN', u'PK_Carpetas_BN', 7)
+(u'DGF', u'dbo', u'Carpetas_N', u'Nro_Carpeta', u'DGF', u'dbo', u'Planes_N', u'Codigo_Cp', 1, 1, 1, u'FK_Planes_N_Carpetas_N', u'IX_Carpetas_N', 7)
+(u'DGF', u'dbo', u'Carpetas_P', u'Nro_Carpeta', u'DGF', u'dbo', u'Planes_Pro', u'Codigo_Cp', 1, 1, 1, u'FK_Planes_Pro_Carpetas_P', u'IX_Carpetas_P', 7)
+(u'DGF', u'dbo', u'Deptos', u'Codigo', u'DGF', u'dbo', u'Parcelas_inf', u'cod_depto', 1, 1, 1, u'FK_Parcelas_inf_Deptos', u'PK_Deptos', 7)
+(u'DGF', u'dbo', u'Deptos', u'Codigo', u'DGF', u'dbo', u'Parcelas_Inf_Pro', u'cod_depto', 1, 1, 1, u'FK_Parcelas_inf_pro_Deptos', u'PK_Deptos', 7)
+(u'DGF', u'dbo', u'Deptos', u'Codigo', u'DGF', u'dbo', u'Rodales', u'Cod_depto', 1, 1, 1, u'FK_Rodales_Deptos', u'PK_Deptos', 7)
+(u'DGF', u'dbo', u'Monitoreos', u'Codigo', u'DGF', u'dbo', u'Rodales', u'Cod_Mon', 1, 1, 1, u'FK_Rodales_Monitoreos', u'PK_Monitoreos', 7)
+(u'DGF', u'dbo', u'Planes', u'Codigo', u'DGF', u'dbo', u'Estados', u'Codigo_Pl', 1, 1, 1, u'FK_Estados_Planes', u'PK_Planes', 7)
+(u'DGF', u'dbo', u'Planes_Pro', u'Codigo', u'DGF', u'dbo', u'Planes', u'Codigo_Plan_Pro', 1, 1, 1, u'FK_Planes_Planes_Pro', u'PK_Planes_Pro', 7)
+(u'DGF', u'dbo', u'Plantas', u'CodG', u'DGF', u'dbo', u'Parcelas_inf', u'codg', 1, 1, 1, u'FK_Parcelas_inf_Plantas', u'PK_Plantas', 7)
+(u'DGF', u'dbo', u'Plantas', u'CodE', u'DGF', u'dbo', u'Parcelas_inf', u'code', 2, 1, 1, u'FK_Parcelas_inf_Plantas', u'PK_Plantas', 7)
+(u'DGF', u'dbo', u'Plantas', u'CodG', u'DGF', u'dbo', u'Parcelas_Inf_Pro', u'codg', 1, 1, 1, u'FK_Parcelas_inf_pro_Plantas', u'PK_Plantas', 7)
+(u'DGF', u'dbo', u'Plantas', u'CodE', u'DGF', u'dbo', u'Parcelas_Inf_Pro', u'code', 2, 1, 1, u'FK_Parcelas_inf_pro_Plantas', u'PK_Plantas', 7)
+(u'DGF', u'dbo', u'Plantas', u'CodG', u'DGF', u'dbo', u'Rodales', u'Codg', 1, 1, 1, u'FK_Rodales_Plantas', u'PK_Plantas', 7)
+(u'DGF', u'dbo', u'Plantas', u'CodE', u'DGF', u'dbo', u'Rodales', u'Code', 2, 1, 1, u'FK_Rodales_Plantas', u'PK_Plantas', 7)
+(u'DGF', u'dbo', u'Propietarios', u'Codigo', u'DGF', u'dbo', u'Registro', u'Codigo_Prop', 1, 1, 1, u'FK_Registro_Propietarios', u'PK_Propietarios', 7)
+(u'DGF', u'dbo', u'Propietarios', u'Codigo', u'DGF', u'dbo', u'Usuarios_Emp', u'Propietario', 1, 1, 1, u'FK_Usuarios_Emp_Propietarios', u'PK_Propietarios', 7)
+(u'DGF', u'dbo', u'Registro', u'Codigo', u'DGF', u'dbo', u'Certificados', u'Cod_Reg', 1, 1, 1, u'FK_Certificados_Registro1', u'PK_Registro', 7)
+(u'DGF', u'dbo', u'Rodales', u'Codigo', u'DGF', u'dbo', u'Parcelas', u'Cod_Rodal', 1, 1, 1, u'FK_Parcelas_Rodales', u'PK_Rodales', 7)
+(u'DGF', u'dbo', u'Rodales', u'Codigo', u'DGF', u'dbo', u'Rodales_Otros', u'Cod_Rodal', 1, 1, 0, u'FK_Rodales_Otros_Rodales', u'PK_Rodales', 7)
+
+
+
+
