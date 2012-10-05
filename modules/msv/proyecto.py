@@ -15,11 +15,13 @@ class Proyecto():
         if self.__checkId(id):
             self.id = id
             self.setBasicData()
-            self.setBPlantado()
+            ## El orden es importante
             self.setBProyectado()
     """
     def __init__(self, id):
         self.id = id
+        self.setBPlantado()
+
 
     def __checkId(self,id):
         """Verifica si existe un proyecto con ese id"""
@@ -61,7 +63,7 @@ class Proyecto():
 
     def setBPlantado(self):
         """Obtiene los datos de bosque plantado para este proyecto"""
-        self.bPlantado = BPl(self.con,self.id)
+        self.bPlantado = BPl(self.con,self.bProyectado.BPlIds)
 
     def setBProyectado(self):
         """Obtiene los datos de bosque proyectado para este proyecto"""
