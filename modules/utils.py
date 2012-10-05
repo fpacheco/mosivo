@@ -7,16 +7,17 @@ Created on Fri Oct  5 09:43:19 2012
 
 
 class Utils():
-    """
+
     def __init__(self,con):
         self.con = con
         self.cur = con.cursor()
         self.__setCarpetas()
+
     """
-    
     def __init__(self):
         pass
         self.carpetas = [{'id': 1, 'nombre':'Carpeta 1'},{'id': 2, 'nombre':'Carpeta 2'}]
+    """
             
     def __setCarpetas(self):
         """Setea las carpetas que hay"""

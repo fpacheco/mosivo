@@ -106,7 +106,7 @@ if VERSIONING_DB:
     # Versioning para todas las tablas
     auth.enable_record_versioning(db)
 
-# import pyodbc
+import pyodbc
 # Global variable to MSSQL Server (Database DGF)
 # mssqlcon = pyodbc.connect(CON_STR)
-
+mssqlcon = ''

@@ -8,7 +8,7 @@ class Proyecto():
     """ setCoord de la base de datos
     coord desde la clase
     """
-    """
+
     def __init__(self,con,id):
         self.con = con
         self.cur = con.cursor()
@@ -17,10 +17,8 @@ class Proyecto():
             self.setBasicData()
             ## El orden es importante
             self.setBProyectado()
-    """
-    def __init__(self, id):
-        self.id = id
-        self.setBPlantado()
+            self.setBPlantado()
+
 
 
     def __checkId(self,id):

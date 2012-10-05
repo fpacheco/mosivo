@@ -66,8 +66,8 @@ def getCarpetas():
     sidx = request.get_vars['sidx']
     sord = request.get_vars['sord']
     ret = []
-    #utils = local_import('utils' , reload=True).Utils(mssqlcon)
-    utils = local_import('utils' , reload=True).Utils()
+    utils = local_import('utils' , reload=True).Utils(mssqlcon)
+    #utils = local_import('utils' , reload=True).Utils()
     carpetas = utils.getCarpetas() 
     for carpeta in carpetas:
         cell = {'id':carpeta['id'], 'cell': [carpeta['nombre'], carpeta['id']]}
@@ -82,8 +82,8 @@ def getCarpetas():
     
 def showCarpeta():
     if request.get_vars['id']:
-        #proyecto = local_import('msv/proyecto' , reload=True).Proyecto(mssqlcon, int(request.get_vars['id']))
-        proyecto = local_import('msv/proyecto' , reload=True).Proyecto(int(request.get_vars['id']))
+        proyecto = local_import('msv/proyecto' , reload=True).Proyecto(mssqlcon, int(request.get_vars['id']))
+        #proyecto = local_import('msv/proyecto' , reload=True).Proyecto(int(request.get_vars['id']))
         #return dict(proyectado=proyecto.getBProyectado().data, plantado=proyecto.getBPlantado().data)
         proy = [{'id': '1', 'nombre': 'proy1', 'raleo': '[2008, 2010, 2012]'}]
         plant = [{'id': '1', 'nombre': 'plant1'}]
