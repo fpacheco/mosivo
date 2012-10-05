@@ -8,8 +8,8 @@ class Proyecto():
     """ setCoord de la base de datos
     coord desde la clase
     """
+    """
     def __init__(self,con,id):
-        """docstring for __init__"""
         self.con = con
         self.cur = con.cursor()
         if self.__checkId(id):
@@ -17,6 +17,9 @@ class Proyecto():
             self.setBasicData()
             self.setBPlantado()
             self.setBProyectado()
+    """
+    def __init__(self, id):
+        self.id = id
 
     def __checkId(self,id):
         """Verifica si existe un proyecto con ese id"""
@@ -63,4 +66,14 @@ class Proyecto():
     def setBProyectado(self):
         """Obtiene los datos de bosque proyectado para este proyecto"""
         self.bProyectado = BPr(self.con,self.id)
+        
+    def getBPlantado(self):
+        if not self.bPlantado:
+            self.setBPlantado()
+        return self.bPlantado
+        
+    def getBProyectado(self):
+        if not self.bProyectado:
+            self.setBProyectado()
+        return self.bProyectado
 
