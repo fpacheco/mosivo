@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""
 db.define_table('Access',
     Field('IDpiani',type='integer'),
     Field('FECHAACT',type='datetime'),
@@ -509,6 +510,8 @@ db.define_table('MAPINFO_MAPCATALOG',
     Field('RENDITIONCOLUMN',type='string'),
     Field('RENDITIONTABLE',type='string')
 )
+"""
+
 
 
 """

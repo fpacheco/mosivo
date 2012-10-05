@@ -24,3 +24,26 @@ settings.plugins = ['jqgrid']
 DEVELOP_MODE = True
 # Versionado de cada una de las tablas de la base de datos
 VERSIONING_DB = False
+# Datos de acceso al servidor MSSQL vía ODBC (pyodbc/FreeTDS)
+MSSQL_USER = 'fpacheco'
+MSSQL_PASS = 'fpacheco'
+MSSQL_SERVER = '192.168.20.7'
+MSSQL_DATABASE = 'DGF'
+# Nombre de una seccion en odbcinst.ini [SQL Server]
+ODBC_DRIVER = '{SQL Server}'
+# Nombre del DSN en odbc.ini
+ODBC_DSN = 'DGF_DATABASE'
+# Texto de conexion
+CON_STR = "DRIVER=%s;SERVER=%s;DATABASE=%s;UID=%s;PWD=%s" % (
+    ODBC_DRIVER,
+    MSSQL_SERVER,
+    MSSQL_DATABASE,
+    MSSQL_USER,
+    MSSQL_PASS,
+)
+# Texto alternativo de conexión (con DSN en odbc.ini)
+CON_STR2 = "DSN=%s;UID=%s;PWD=%s" % (
+    MSSQL_DATABASE,
+    MSSQL_USER,
+    MSSQL_PASS,
+)
