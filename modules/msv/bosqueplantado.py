@@ -7,7 +7,7 @@ class BosquePlantado():
     def __init__(self,con,BPrIds):
         """docstring for __init__"""
         self.con = con
-        self.cursor = self.con.cursor()
+        self.cur = self.con.cursor()
         self.BPrIds = BPrIds
         self.setBasicData()
 
@@ -18,8 +18,8 @@ class BosquePlantado():
             sExpr.append( "Codigo_Plan_Pro=%d" % id)
         ors = " OR ".join( sExpr )
         sql = "SELECT * FROM Planes WHERE %s ORDER BY Año_Dec ASC" % ors
-        self.cursor.execute( sql )
-        rows = self.cursor.fetchall()
+        self.cur.execute( sql )
+        rows = self.cur.fetchall()
         data = []
         for row in rows:
             rowData = {}

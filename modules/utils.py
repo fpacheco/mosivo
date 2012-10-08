@@ -5,7 +5,6 @@ Created on Fri Oct  5 09:43:19 2012
 @author: geus
 """
 
-
 class Utils():
 
     def __init__(self,con):
@@ -13,18 +12,16 @@ class Utils():
         self.cur = con.cursor()
         self.__setCarpetas()
 
-    """
-    def __init__(self):
-        pass
-        self.carpetas = [{'id': 1, 'nombre':'Carpeta 1'},{'id': 2, 'nombre':'Carpeta 2'}]
-    """
-            
     def __setCarpetas(self):
         """Setea las carpetas que hay"""
-        self.cursor.execute('SELECT Nro_Carpeta FROM Carpetas_P')
-        rows = self.cursor.fetchall()
+        self.cur.execute('SELECT Nro_Carpeta FROM Carpetas_P')
+        rows = self.cur.fetchall()
+        data = []
+        for row in rows:
+            data.append(row[0])
+            
         if len(rows) > 0:
-            self.carpetas = rows
+            self.carpetas = data
         else:
             self.carpetas = None
             

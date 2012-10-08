@@ -7,15 +7,15 @@ class BosqueProyectado():
     def __init__(self,con,proyId):
         """docstring for __init__"""
         self.con = con
-        self.cursor = self.con.cursor()
+        self.cur = self.con.cursor()
         if self.__checkProyId(proyId):
             self.proyId = proyId ## Nro_Carpeta de la tabla Carpetas_P
             self.setBasicData()
 
     def __checkProyId(self,id):
         """Verifica si existe un registro con ese id en la tabla Planes_Pro"""
-        self.cursor.execute('SELECT Codigo_Cp FROM Planes_Pro WHERE Codigo_Cp=?',id)
-        rows = self.cursor.fetchall()
+        self.cur.execute('SELECT Codigo_Cp FROM Planes_Pro WHERE Codigo_Cp=?',id)
+        rows = self.cur.fetchall()
         if len(rows)>0:
             return True
         return False
@@ -23,9 +23,9 @@ class BosqueProyectado():
     def setBasicData(self):
         """docstring for se"""
         # from datetime import date
-        #self.cursor.execute( u'SELECT * FROM Planes_Pro WHERE Codigo_Cp=? AND Año_Pro>=?', (self.proyId,date.today().year) )
-        self.cursor.execute( u'SELECT * FROM Planes_Pro WHERE Codigo_Cp=? ORDER BY Año_Pro ASC', self.proyId )
-        rows = self.cursor.fetchall()
+        #self.cur.execute( u'SELECT * FROM Planes_Pro WHERE Codigo_Cp=? AND Año_Pro>=?', (self.proyId,date.today().year) )
+        self.cur.execute( u'SELECT * FROM Planes_Pro WHERE Codigo_Cp=? ORDER BY Año_Pro ASC', self.proyId )
+        rows = self.cur.fetchall()
         ids = []
         data = []
         for row in rows:

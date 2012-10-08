@@ -9,14 +9,11 @@
 ## be redirected to HTTPS, uncomment the line below:
 # request.requires_https()
 
-if DEVELOP_MODE:
-    from gluon import *
+
 
 if not request.env.web2py_runtime_gae:
     ## if NOT running on Google App Engine use SQLite or other DB
-    db = DAL('sqlite://storage.sqlite')
-    # Siempre FALSE ¡¡¡¡¡¡¡¡No cambiar nunca !!!!!
-    ### dbro = DAL('mssql://fpacheco:fpacheco@192.168.20.7/DGF',migrate_enabled=False)
+    db = DAL('postgres://mosivo:12mosivo12@localhost/mosivo', migrate_enabled=True)
 else:
     ## connect to Google BigTable (optional 'google:datastore://namespace')
     db = DAL('google:datastore')
@@ -108,5 +105,10 @@ if VERSIONING_DB:
 
 import pyodbc
 # Global variable to MSSQL Server (Database DGF)
-# mssqlcon = pyodbc.connect(CON_STR)
-mssqlcon = ''
+#mssqlcon = pyodbc.connect(CON_STR2)
+if IN_DGF:
+    #mssqlcon = pyodbc.connect(CON_STR2)
+    mssqlcon = pyodbc.connect(CON_STR2)
+else:
+    mssqlcon = pyodbc.connect( "DSN=MoSiVo" )
+    

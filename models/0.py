@@ -24,6 +24,9 @@ settings.plugins = ['jqgrid']
 DEVELOP_MODE = True
 # Versionado de cada una de las tablas de la base de datos
 VERSIONING_DB = False
+# Si esto en InGeSur emulo con postgresql via ODBC
+IN_DGF = False
+
 # Datos de acceso al servidor MSSQL vía ODBC (pyodbc/FreeTDS)
 MSSQL_USER = 'fpacheco'
 MSSQL_PASS = 'fpacheco'
@@ -43,7 +46,7 @@ CON_STR = "DRIVER=%s;SERVER=%s;DATABASE=%s;UID=%s;PWD=%s" % (
 )
 # Texto alternativo de conexión (con DSN en odbc.ini)
 CON_STR2 = "DSN=%s;UID=%s;PWD=%s" % (
-    MSSQL_DATABASE,
+    ODBC_DSN,
     MSSQL_USER,
     MSSQL_PASS,
 )

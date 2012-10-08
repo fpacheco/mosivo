@@ -5,16 +5,8 @@ def download(): return response.download(request,db)
 def call(): return service()
 ### end requires
 
-
 def index():
-    form = SQLFORM(db.Planes_Pro)
-    if form.accepts(request, session):
-        request.flash = "saved!"
-    elif form.errors:
-        request.flash = "errors"
-    else:
-        pass
-    return dict(form=form)
+    return "MSV"
     
 def mosivo():
     opts = []
@@ -53,12 +45,11 @@ def mosivo():
     #dbg.set_trace() # stop here!
     return dict(form=form)
     
-def carpetas():
-    
-    
+def carpetas():    
     #from gluon.debug import dbg
     #dbg.set_trace() # stop here!
-    return dict()
+    utils = local_import('utils' , reload=True).Utils(mssqlcon)
+    return "Carpetas: %s" % utils.getCarpetas()
     
 def getCarpetas():
     page = request.get_vars['page']
@@ -83,9 +74,13 @@ def getCarpetas():
 def showCarpeta():
     if request.get_vars['id']:
         proyecto = local_import('msv/proyecto' , reload=True).Proyecto(mssqlcon, int(request.get_vars['id']))
-        #proyecto = local_import('msv/proyecto' , reload=True).Proyecto(int(request.get_vars['id']))
-        #return dict(proyectado=proyecto.getBProyectado().data, plantado=proyecto.getBPlantado().data)
-        proy = [{'id': '1', 'nombre': 'proy1', 'raleo': '[2008, 2010, 2012]'}]
-        plant = [{'id': '1', 'nombre': 'plant1'}]
-        return dict(id=request.get_vars['id'],proyectado=proy, plantado=plant)
+        proyecto = local_import('msv/proyecto' , reload=True).Proyecto(int(request.get_vars['id']))
+        return dict(proyectado=proyecto.getBProyectado().data, plantado=proyecto.getBPlantado().data)
+        #proy = [{'id': '1', 'nombre': 'proy1', 'raleo': '[2008, 2010, 2012]'}]
+        #plant = [{'id': '1', 'nombre': 'plant1'}]
+        #return dict(id=request.get_vars['id'],proyectado=proy, plantado=plant)
         
+def getProyecto():   
+    if request.get_vars['id']:
+        proyecto = local_import('msv/proyecto' , reload=True).Proyecto(mssqlcon, int(request.get_vars['id']))
+        proyecto = local_import('msv/proyecto' , reload=True).Proyecto(int(request.get_vars['id']))

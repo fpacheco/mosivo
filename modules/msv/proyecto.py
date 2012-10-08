@@ -20,10 +20,9 @@ class Proyecto():
             self.setBPlantado()
 
 
-
     def __checkId(self,id):
         """Verifica si existe un proyecto con ese id"""
-        self.cursor.execute('SELECT Nro_Carpeta FROM Carpetas_P WHERE Nro_Carpeta=?',id)
+        self.cur.execute('SELECT Nro_Carpeta FROM Carpetas_P WHERE Nro_Carpeta=?',id)
         rows = self.cursor.fetchall()
         if len(rows)==1:
             return True
@@ -53,7 +52,7 @@ class Proyecto():
 
     def setCodPadron(self):
         """Obtiene el codigo del padron para este proyecto"""
-        self.cursor.execute('SELECT Codigo_Pad FROM Registro WHERE Codigo_Cp_Pr=?',self.id)
+        self.cur.execute('SELECT Codigo_Pad FROM Registro WHERE Codigo_Cp_Pr=?',self.id)
         rows = self.cursor.fetchall()
         if len(rows)==1:
             return rows[0][0]
