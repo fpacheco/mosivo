@@ -1,647 +1,1016 @@
-# -*- coding: utf-8 -*-
 """
-db.define_table('Access',
-    Field('IDpiani',type='integer'),
-    Field('FECHAACT',type='datetime'),
-    Field('PROY',type='integer'),
-    Field('DPTO',type='string'),
-    Field('SECJUD',type='integer'),
-    Field('PRESENTADO',type='integer'),
-    Field('SupEstab',type='integer'),
-    Field('AÑOPRO',type='integer'),
-    Field('CodG',type='string'),
-    Field('CodE',type='integer'),
-    Field('EPOPRO',type='string'),
-    Field('HAPRO',type='double'),
-    Field('DENPRO',type='integer'),
-    Field('EP1',type='integer'),
-    Field('EP2',type='integer'),
-    Field('EP3',type='integer'),
-    Field('CALPRO',type='string'),
-    Field('MPfor',type='string'),
-    Field('MPorsem',type='string'),
-    Field('MPorplanta',type='string'),
-    Field('MPtipoplanta',type='string'),
-    Field('MPraleo',type='string'),
-    Field('MPpoda',type='string'),
-    Field('MPcorta',type='string'),
-    Field('Gendec',type='string'),
-    Field('Espdec',type='integer'),
-    Field('AÑODEC',type='integer'),
-    Field('HADEC',type='double'),
-    Field('FUSTAL',type='integer'),
-    Field('REBROTE',type='integer'),
-    Field('ABAJA',type='integer'),
-    Field('EPODEC',type='string'),
-    Field('DENDEC',type='integer'),
-    Field('ED1',type='integer'),
-    Field('ED2',type='integer'),
-    Field('ED3',type='integer'),
-    Field('CALDEC',type='string'),
-    Field('MDfor',type='string'),
-    Field('MDorsem',type='string'),
-    Field('MDorplanta',type='string'),
-    Field('MDtipoplanta',type='string'),
-    Field('MDraleo',type='string'),
-    Field('MDpoda',type='string'),
-    Field('MDcorta',type='string'),
-    Field('OBSERVACIO',type='string'),
-    Field('BAJA',type='string'),
-    Field('FIRMA',type='string'),
-    Field('FUSTALDIF',type='integer')
-)
-
-
-
-db.define_table('Deptos',
-    Field('Codigo',type='string', unique=True, notnull=True),
-    Field('Nombre',type='string'),
-    Field('Numero',type='integer')
-)
-
-db.define_table('Rodales',
-    Field('Codigo',type='integer', unique=True, notnull=True),
-    Field('Fila',type='integer'),
-    Field('Cod_Mon',type='integer'),
-    Field('Area',type='double'),
-    Field('Densidad',type='integer'),
-    Field('Densidad_Act',type='integer'),
-    Field('Codg',type='string'),
-    Field('Code',type='integer'),
-    Field('Origen',type='string'),
-    Field('Procedencia',type='string'),
-    Field('Propietario',type='integer'),
-    Field('Responsable',type='string'),
-    Field('Establecimiento',type='string'),
-    Field('Observador',type='string'),
-    Field('Localizacion',type='string'),
-    Field('Datum',type='boolean'),
-    Field('Longitud_G',type='string'),
-    Field('Latitud_G',type='string'),
-    Field('Longitud',type='double'),
-    Field('Latitud',type='double'),
-    Field('Cod_depto',db.Deptos),
-    Field('Tipo',type='string'),
-    Field('Turno',type='integer'),
-    Field('Edad',type='double'),
-    Field('Altura',type='double'),
-    Field('Laboreo_Tipo',type='integer'),
-    Field('Poda1',type='boolean'),
-    Field('Epoca_Poda1',type='string'),
-    Field('Año_Poda1',type='integer'),
-    Field('Raleo1',type='boolean'),
-    Field('Epoca_Raleo1',type='string'),
-    Field('Año_Raleo1',type='integer'),
-    Field('Poda2',type='boolean'),
-    Field('Epoca_Poda2',type='string'),
-    Field('Año_Poda2',type='integer'),
-    Field('Raleo2',type='boolean'),
-    Field('Epoca_Raleo2',type='string'),
-    Field('Año_Raleo2',type='integer'),
-    Field('Poda3',type='boolean'),
-    Field('Epoca_poda3',type='string'),
-    Field('Año_Poda3',type='integer'),
-    Field('Raleo3',type='boolean'),
-    Field('Epoca_Raleo3',type='string'),
-    Field('Año_Raleo3',type='integer'),
-    Field('Laboreo',type='boolean'),
-    Field('Herbicida',type='boolean'),
-    Field('Otros',type='boolean'),
-    Field('Sin_manejo',type='boolean'),
-    Field('Res_Cat1',type='double'),
-    Field('Res_Cat2',type='double'),
-    Field('Res_Cat3',type='double'),
-    Field('Res_Cat4',type='double'),
-    Field('Res_Cat5',type='double'),
-    Field('Res_Fus1',type='double'),
-    Field('Res_Fus2',type='double'),
-    Field('Res_Fus3',type='double'),
-    Field('Res_Fus4',type='double'),
-    Field('Res_Fus5',type='double'),
-    Field('Mapa',type='upload'),
-    Field('Cant_Parcelas',type='integer')
-)
-
-db.define_table('Carpetas_BN',
-    Field('Codigo',type='integer', unique=True, notnull=True),
-    Field('Nro_Carpeta',type='integer'),
-    Field('Fecha_pres',type='integer'),
-    Field('Cod_Depto',db.Deptos),
-    Field('Cod_Sj',type='integer'),
-    Field('Latitud',type='double'),
-    Field('Longitud',type='double'),
-    Field('Tipo_Bosque',type='string'),
-    Field('Baja',type='boolean'),
-    Field('Notas',type='string')
-)
-
-db.define_table('Cambios_Areas',
-    Field('Fecha',type='datetime'),
-    Field('Nro_Carpeta',db.Carpetas_BN),
-    Field('Cod_depto',db.Deptos),
-    Field('Cod_Pad',type='integer'),
-    Field('Area',type='double')
-)
-
-db.define_table('Carpetas_N',
-    Field('Codigo',type='integer', unique=True, notnull=True),
-    Field('Nro_Carpeta',type='integer'),
-    Field('Fecha_Pres',type='integer'),
-    Field('Cod_Depto',db.Deptos),
-    Field('Cod_Sj',type='integer'),
-    Field('Longitud',type='double'),
-    Field('Latitud',type='double'),
-    Field('Baja',type='boolean'),
-    Field('Notas',type='string')
-)
-
-db.define_table('Carpetas_P',
-    Field('Codigo',type='integer', unique=True, notnull=True),
-    Field('Nro_Carpeta',type='integer'),
-    Field('Fecha_Pres',type='integer'),
-    Field('Cod_Depto',db.Deptos),
-    Field('Cod_Sj',type='integer'),
-    Field('Longitud',type='double'),
-    Field('Latitud',type='double'),
-    Field('Baja',type='boolean'),
-    Field('Notas',type='string')
-)
-
-db.define_table('Coeficientes',
-    Field('Creci_Pi_CN_5',type='integer'),
-    Field('Creci_Pi_CN_10',type='integer'),
-    Field('Creci_Pi_CN_15',type='integer'),
-    Field('Creci_Pi_CN_20',type='integer'),
-    Field('Creci_Pi_LI_5',type='integer'),
-    Field('Creci_Pi_LI_10',type='integer'),
-    Field('Creci_Pi_LI_15',type='integer'),
-    Field('Creci_Pi_LI_20',type='integer'),
-    Field('Creci_Pi_OT_6',type='integer'),
-    Field('Creci_Pi_OT_12',type='integer'),
-    Field('Creci_Pi_OT_18',type='integer'),
-    Field('Creci_Pi_OT_25',type='integer'),
-    Field('Creci_Pi_des',type='double'),
-    Field('Creci_Eu_CN_Gr',type='integer'),
-    Field('Creci_Eu_CN_Gl',type='integer'),
-    Field('Creci_Eu_CN_Ot',type='integer'),
-    Field('Creci_Eu_LI_Gr',type='integer'),
-    Field('Creci_Eu_LI_Gl',type='integer'),
-    Field('Creci_Eu_LI_Ot',type='integer'),
-    Field('Creci_Eu_SE_Gr',type='integer'),
-    Field('Creci_Eu_SE_Gl',type='integer'),
-    Field('Creci_Eu_SE_Ot',type='integer'),
-    Field('Creci_Pri_Gr',type='double'),
-    Field('Creci_Pri_Gl',type='double'),
-    Field('Creci_Pri_Ot',type='double'),
-    Field('Creci_Seg_Gr',type='double'),
-    Field('Creci_Seg_Gl',type='double'),
-    Field('Creci_Seg_Ot',type='double'),
-    Field('Creci_Eu_des',type='double'),
-    Field('Des_Pi_Pu_Pri',type='integer'),
-    Field('Des_Pi_Pu_Seg',type='integer'),
-    Field('Des_Pi_Pu_Ter',type='integer'),
-    Field('Des_Pi_Pu_Fin',type='integer'),
-    Field('Des_Pi_As_Pri',type='integer'),
-    Field('Des_Pi_As_Seg',type='integer'),
-    Field('Des_Pi_As_Ter',type='integer'),
-    Field('Des_Pi_As_Fin',type='integer'),
-    Field('Des_Eu_Pu_CN_Pri',type='integer'),
-    Field('Des_Eu_Pu_CN_Seg',type='integer'),
-    Field('Des_Eu_Pu_CN_Ter',type='integer'),
-    Field('Des_Eu_Pu_CN_Cua',type='integer'),
-    Field('Des_Eu_Pu_CN_Fin',type='integer'),
-    Field('Des_Eu_Pu_LI_Pri',type='integer'),
-    Field('Des_Eu_Pu_LI_Seg',type='integer'),
-    Field('Des_Eu_Pu_LI_Ter',type='integer'),
-    Field('Des_Eu_Pu_LI_Fin',type='integer'),
-    Field('Des_Eu_Asn_CN_Pri',type='integer'),
-    Field('Des_Eu_Asn_CN_Seg',type='integer'),
-    Field('Des_Eu_Asn_CN_Ter',type='integer'),
-    Field('Des_Eu_Asn_CN_Cua',type='integer'),
-    Field('Des_Eu_Asn_CN_Fin',type='integer'),
-    Field('Des_Eu_Asn_LI_Pri',type='integer'),
-    Field('Des_Eu_Asn_LI_Seg',type='integer'),
-    Field('Des_Eu_Asn_LI_Ter',type='integer'),
-    Field('Des_Eu_Asn_LI_Fin',type='integer'),
-    Field('Des_Eu_Asp_CN_Pri',type='integer'),
-    Field('Des_Eu_Asp_CN_Seg',type='integer'),
-    Field('Des_Eu_Asp_CN_Ter',type='integer'),
-    Field('Des_Eu_Asp_CN_Cua',type='integer'),
-    Field('Des_Eu_Asp_CN_Fin',type='integer'),
-    Field('Des_Eu_Asp_LI_Pri',type='integer'),
-    Field('Des_Eu_Asp_LI_Seg',type='integer'),
-    Field('Des_Eu_Asp_LI_Ter',type='integer'),
-    Field('Des_Eu_Asp_LI_Fin',type='integer'),
-    Field('Pro_Eu_CN_Pri',type='integer'),
-    Field('Pro_Eu_CN_Seg',type='integer'),
-    Field('Pro_Eu_CN_Ter',type='integer'),
-    Field('Pro_Eu_CN_Cua',type='integer'),
-    Field('Pro_Eu_CN_Fin',type='integer'),
-    Field('Pro_Eu_LI_Pri',type='integer'),
-    Field('Pro_Eu_LI_Seg',type='integer'),
-    Field('Pro_Eu_LI_Ter',type='integer'),
-    Field('Pro_Eu_LI_Fin',type='integer'),
-    Field('Por_Eu_CN_As',type='integer'),
-    Field('Por_Eu_CN_P',type='integer'),
-    Field('Por_Eu_LI_As',type='integer'),
-    Field('Por_Eu_LI_P',type='integer'),
-    Field('Por_Area_efec',type='integer')
-)
-
-
-
-db.define_table('Dj_Guias',
-    Field('Cod_DJ',type='integer', unique=True, notnull=True),
-    Field('Guia',type='integer'),
-    Field('Tonelaje',type='integer')
-)
-
-db.define_table('dtproperties',
-    Field('objectid',type='integer'),
-    Field('property',type='string'),
-    Field('value',type='string'),
-    Field('uvalue',type='string'),
-    Field('lvalue',type='upload'),
-    Field('version',type='integer')
-)
-
-db.define_table('Enfermedades',
-    Field('Codigo',type='string', unique=True, notnull=True),
-    Field('Especie',type='string'),
-    Field('Hospedero',type='string'),
-    Field('Organo',type='integer'),
-    Field('Imagen1',type='upload'),
-    Field('Imagen2',type='upload'),
-    Field('Tipo',type='integer')
-)
-
-db.define_table('Monitoreos',
-    Field('Codigo',type='integer', unique=True, notnull=True),
-    Field('Fecha_Inicio',type='datetime'),
-    Field('Tipo_Monitoreo',type='string'),
-    Field('Estado',type='integer'),
-    Field('Usuario',type='string'),
-    Field('Area_total',type='double')
-)
-
-db.define_table('Otros',
-    Field('Codigo',type='string', unique=True, notnull=True),
-    Field('Descripcion',type='string'),
-    Field('Tipo',type='integer'),
-    Field('Tipo_Char',type='string')
-)
-
-db.define_table('Parcelas',
-    Field('Codigo',type='integer', unique=True, notnull=True),
-    Field('Fila',type='integer'),
-    Field('Cod_Rodal',db.Rodales),
-    Field('Fecha',type='datetime'),
-    Field('Ind_Coneat',type='string'),
-    Field('Tipo_Suelo',type='integer'),
-    Field('Res_Cat1',type='integer'),
-    Field('Res_Cat2',type='integer'),
-    Field('Res_Cat3',type='integer'),
-    Field('Res_Cat4',type='integer'),
-    Field('Res_Cat5',type='integer'),
-    Field('Res_Fus1',type='integer'),
-    Field('Res_Fus2',type='integer'),
-    Field('Res_Fus3',type='integer'),
-    Field('Res_Fus4',type='integer'),
-    Field('Res_Fus5',type='integer'),
-    Field('Mes',type='integer'),
-    Field('Año',type='integer'),
-    Field('Mes_Dia',type='integer'),
-    Field('Observaciones',type='string'),
-    Field('Area',type='double')
-)
-
-db.define_table('Parcelas_Otros',
-    Field('Codigo',type='integer', unique=True, notnull=True),
-    Field('Cod_Parcela',db.Parcelas),
-    Field('Cod_Agente',type='string'),
-    Field('GMD',type='double'),
-    Field('Por_AA',type='double'),
-    Field('Tipo',type='string'),
-    Field('Pos',type='integer'),
-    Field('GMD_Rnd',type='integer'),
-    Field('A1',type='double'),
-    Field('A2',type='double'),
-    Field('A3',type='double'),
-    Field('A4',type='double'),
-    Field('A5',type='double'),
-    Field('A6',type='double'),
-    Field('A7',type='double'),
-    Field('A8',type='double'),
-    Field('A9',type='double'),
-    Field('A10',type='double'),
-    Field('A11',type='double'),
-    Field('A12',type='double'),
-    Field('A13',type='double'),
-    Field('A14',type='double'),
-    Field('A15',type='double'),
-    Field('A16',type='double'),
-    Field('A17',type='double'),
-    Field('A18',type='double'),
-    Field('A19',type='double'),
-    Field('A20',type='double'),
-    Field('A21',type='double'),
-    Field('A22',type='double'),
-    Field('A23',type='double'),
-    Field('A24',type='double'),
-    Field('A25',type='double')
-)
-
-db.define_table('Plagas',
-    Field('Codigo',type='string', unique=True, notnull=True),
-    Field('Insecto',type='string'),
-    Field('Familia',type='string'),
-    Field('Orden',type='string'),
-    Field('Hospedero',type='string'),
-    Field('Tipo_de_Daño',type='string'),
-    Field('Importancia',type='string'),
-    Field('Imagen1',type='upload'),
-    Field('Imagen2',type='upload'),
-    Field('Tipo',type='integer')
-)
-
-db.define_table('Planes',
-    Field('Codigo',type='integer', unique=True, notnull=True),
-    Field('Codigo_Plan_Pro',type='integer'),
-    Field('Fecha_Act',type='datetime'),
-    Field('Año_Dec',type='integer'),
-    Field('CodG_Dec',type='string'),
-    Field('CodE_Dec',type='integer'),
-    Field('Epo_Dec',type='string'),
-    Field('Ha_Dec',type='double'),
-    Field('Den_Dec',type='integer'),
-    Field('E1_Dec',type='integer'),
-    Field('E2_Dec',type='integer'),
-    Field('E3_Dec',type='integer'),
-    Field('Cal_Dec',type='string'),
-    Field('Met_Dec',type='string'),
-    Field('Sem_Dec',type='string'),
-    Field('Planta_Dec',type='string'),
-    Field('Tipo_Planta_Dec',type='string'),
-    Field('Raleo_Dec',type='string'),
-    Field('Poda_Dec',type='string'),
-    Field('Corta_Dec',type='string'),
-    Field('Objetivo_dec',type='string'),
-    Field('Proyecto_g_dec',type='string'),
-    Field('Observaciones',type='string')
-)
-
-db.define_table('Planes_Pro',
-    Field('Codigo',type='integer', unique=True, notnull=True),
-    Field('Codigo_Cp',type='integer'),
-    Field('Fecha_Act',type='datetime'),
-    Field('Año_Pro',type='integer'),
-    Field('CodG_Pro',type='string'),
-    Field('CodE_Pro',type='integer'),
-    Field('Epo_Pro',type='string'),
-    Field('Ha_Pro',type='double'),
-    Field('Den_Pro',type='integer'),
-    Field('E1_Pro',type='integer'),
-    Field('E2_Pro',type='integer'),
-    Field('E3_Pro',type='integer'),
-    Field('Cal_Pro',type='string'),
-    Field('Met_Pro',type='string'),
-    Field('Sem_Pro',type='string'),
-    Field('Planta_Pro',type='string'),
-    Field('Tipo_Planta_Pro',type='string'),
-    Field('Raleo_Pro',type='string'),
-    Field('Poda_Pro',type='string'),
-    Field('Corta_Pro',type='string'),
-    Field('Objetivo_pro',type='string'),
-    Field('Proyecto_g_pro',type='string'),
-    Field('Observaciones',type='string')
-)
-
-db.define_table('Plantas',
-    Field('CodG',type='string'),
-    Field('CodE',type='integer'),
-    Field('Genero',type='string'),
-    Field('Especie',type='string'),
-    Field('Descripcion',type='string'),
-    Field('Apel',type='string'),
-    Field('Carac','text'),
-    Field('Foto',type='upload'),
-    Field('Taxo',type='upload')
-)
-
-db.define_table('Propietarios',
-    Field('Codigo',type='integer', unique=True, notnull=True),
-    Field('Nombre',type='string'),
-    Field('Direccion',type='string'),
-    Field('Telefono',type='string'),
-    Field('Representacion',type='string')
-)
-
-db.define_table('Proyecciones',
-    Field('Cod_Sj',type='integer'),
-    Field('Cod_Depto',db.Deptos),
-    Field('Especie',type='integer'),
-    Field('Año',type='integer'),
-    Field('Valor',type='double')
-)
-
-db.define_table('Registro',
-    Field('Codigo',type='integer'),
-    Field('Codigo_Cp_Pr',type='integer'),
-    Field('Codigo_Cp_Bn',type='integer'),
-    Field('Cod_Depto',db.Deptos),
-    Field('Codigo_Pad',type='integer'),
-    Field('Anexo',type='string'),
-    Field('Tipo_Bos',type='string'),
-    Field('Cant_Bosques',type='integer'),
-    Field('Cant_Tipo_Bosque',type='integer'),
-    Field('Cant_Tipo_Bosque_Depto',type='integer'),
-    Field('Resoluciones',type='string'),
-    Field('Codigo_Prop',type='integer'),
-    Field('Rep_Prop',type='string'),
-    Field('Area',type='double'),
-    Field('Tipo_Prop',type='string')
-)
-
-db.define_table('Agentes',
-    Field('Codigo',type='string', unique=True, notnull=True),
-    Field('nombre',type='string'),
-    Field('tipo',type='string')
-)
-
-db.define_table('Rodales_Otros',
-    Field('Codigo',type='integer', unique=True, notnull=True),
-    Field('Cod_Rodal',db.Rodales),
-    Field('Cod_Agente',db.Agentes),
-    Field('Por_AA_Ha',type='double'),
-    Field('Tipo',type='string'),
-    Field('Pos',type='integer')
-)
-
-db.define_table('Seleccion',
-    Field('Sesion',type='string'),
-    Field('Codigo',type='string'),
-    Field('GMD',type='integer')
-)
-
-db.define_table('Simbolos_Mon',
-    Field('Codigo',type='integer', unique=True, notnull=True),
-    Field('Sesion_Id',type='string'),
-    Field('Monitoreo',type='integer'),
-    Field('Rodal',type='integer'),
-    Field('X',type='double'),
-    Field('Y',type='double'),
-    Field('Simbolo',type='string')
-)
-
-db.define_table('MAPINFO_MAPCATALOG',
-    Field('SPATIALTYPE','float'),
-    Field('TABLENAME',type='string'),
-    Field('OWNERNAME',type='string'),
-    Field('SPATIALCOLUMN',type='string'),
-    Field('DB_X_LL','float'),
-    Field('DB_Y_LL','float'),
-    Field('DB_X_UR','float'),
-    Field('DB_Y_UR','float'),
-    Field('COORDINATESYSTEM',type='string'),
-    Field('SYMBOL',type='string'),
-    Field('XCOLUMNNAME',type='string'),
-    Field('YCOLUMNNAME',type='string'),
-    Field('RENDITIONTYPE',type='integer'),
-    Field('RENDITIONCOLUMN',type='string'),
-    Field('RENDITIONTABLE',type='string')
-)
+Columns
+Asociaciones
+	AsociacionesId,smallint identity
+	AsociacionesDescripcion,char
 """
 
+db.define_table('Asociaciones',
+    Field('AsociacionesId', type='integer'),
+    Field('AsociacionesDescripcion', type="string"),
+    primarykey=['AsociacionesId']
+)
 
 
 """
-
-Tabla: Access
+Calificacion
+	CalificacionId,char
+	CalificacionDescripcion,char
+"""
+db.define_table('Calificacion',
+    Field('CalificacionId', type='integer'),
+    Field('CalificacionDescripcion', type="string"),
+    primarykey=['CalificacionId']
+)
+ 
+""" 
+CalificacionBP
+	CalificacionBPCarpeta,decimal
+	CalificacionBPPadron,decimal
+	CalificacionBPMatricula,char
+	CalificacionId,char
+	CalifBPFechaHoraRegistroDig,datetime
+	CalifBPUsuario,char
+	CalifBPUsuarioUltimaModif,char
+	CalifBPFechaHoraUltimaModif,datetime
+"""
+db.define_table('CalificacionBP',
+    Field('CalificacionBPCarpeta', type='integer'),
+    Field('CalificacionBPPadron', type='integer'),
+    Field('CalificacionBPMatricula', type='string'),
+    Field('CalificacionId', db.Calificacion.CalificacionId),
+    Field('CalifBPFechaHoraRegistroDig', type="datetime"),
+    Field('CalifBPUsuario', type="string"),
+    Field('CalifBPUsuarioUltimaModif', type="string"),
+    Field('CalifBPFechaHoraUltimaModif', type="datetime"),
+    primarykey=['CalificacionBPCarpeta','CalificacionBPPadron','CalificacionId']
 )
 
-Tabla: Cambios_Areas
+ 
+"""
+CarpetaBN
+	CarpetaBNId,char
+	CarpetaBNFechaRegistro,datetime
+	CarpetaBNNombreEstabl,char
+	CarpetaBNDepartamentoEstabl,char
+	CarpetaBNSeccionCatastralEstabl,smallint
+	CarpetaBNSeccionJudicialEstabl,smallint
+	CarpetaBNSeccionPolicialEstabl,smallint
+	CarpetaBNParajeEstabl,char
+	CarpetaBNCIRepLegal,int
+	CarpetaBNNombreRepLegal,char
+	CarpetaBNDireccionRepLegal,char
+	CarpetaBNDepartamentoRepLegal,char
+	CarpetaBNTelefonoRepLegal,char
+	CarpetaBNCelularRepLegal,char
+	CarpetaBNFaxRepLegal,char
+	CarpetaBNMailRepLegal,char
+	CarpetaBNCITecnico,int
+	CarpetaBNNombreTecnico,char
+	CarpetaBNDireccionTecnico,char
+	CarpetaBNTelefonoTecnico,char
+	CarpetaBNCelularTecnico,char
+	CarpetaBNFaxTecnico,char
+	CarpetaBNMailTecnico,char
+	CarpetaBNTipoProfesional,bit
+	CarpetaBNTipoRebrote,smallint
+	CarpetaBNEstadoSanitario,varchar
+	CarpetaBNInvEspExoticas,bit
+	CarpetaBNIncForestales,bit
+	CarpetaBNAccionesAntropicas,varchar
+	CarpetaBNAreaArboladaTotal,decimal
+	CarpetaBNAreaArboladaBN,decimal
+	CarpetaBNAreaArboladaBP,decimal
+	CarpetaBNFechaHoraRegistroDig,datetime
+	CarpetaBNUsuario,char
+	AsociacionesId,smallint
+	CarpetaBNNroCarpeta,int
+""" 
+
+db.define_table('CarpetaBN',
+    Field('CarpetaBNId', type='integer'),
+    Field('CarpetaBNFechaRegistro', type='datetime'),
+    Field('CarpetaBNNombreEstabl', type='string'),
+    Field('CarpetaBNDepartamentoEstabl', db.Departamentos.DepartamentosId),
+    Field('CarpetaBNSeccionCatastralEstabl', type="integer"),
+    Field('CarpetaBNSeccionJudicialEstabl', type="integer"),
+    Field('CarpetaBNSeccionPolicialEstabl', type="integer"),
+    Field('CarpetaBNParajeEstabl', type="string"),
+    Field('CarpetaBNCIRepLegal', type="integer"),
+    Field('CarpetaBNNombreRepLegal', type="string"),
+    Field('CarpetaBNDireccionRepLegal', type="string"),
+    Field('CarpetaBNDepartamentoRepLegal', db.Departamentos.DepartamentosId),
+    Field('CarpetaBNTelefonoRepLegal', type="string"),
+    Field('CarpetaBNCelularRepLegal', type="string"),
+    Field('CarpetaBNFaxRepLegal', type="string"),
+    Field('CarpetaBNMailRepLegal', type="string"),
+    Field('CarpetaBNCITecnico', type="string"),
+    Field('CarpetaBNNombreTecnico', type="string"),
+    Field('CarpetaBNDireccionTecnico', type="string"),
+    Field('CarpetaBNTelefonoTecnico', type="string"),
+    Field('CarpetaBNCelularTecnico', type="string"),
+    Field('CarpetaBNFaxTecnico', type="string"),
+    Field('CarpetaBNMailTecnico', type="string"),
+    Field('CarpetaBNTipoProfesional', type="string"), # ver
+    Field('CarpetaBNTipoRebrote', type="integer"),
+    Field('CarpetaBNEstadoSanitario', type="string"),
+    Field('CarpetaBNAreaArboladaTotal', type="decimal"),
+    Field('CarpetaBNAreaArboladaBN', type="decimal"),
+    Field('CarpetaBNAreaArboladaBP', type="decimal"),
+    Field('CarpetaBNFechaHoraRegistroDig', type="datetime"),
+    Field('CarpetaBNUsuario', type="string"),
+    Field('AsociacionesId', db.Asociaciones.AsociacionesId),
+    Field('CarpetaBNNroCarpeta', type="integer"),
+    primarykey=['CarpetaBNId']
+)
+ 
+""" 
+CarpetaBNPadron
+	CarpetaBNId,char
+	CarpetaBNPadronId,decimal
+	CarpetaBNPadronSeccJudicial,smallint
+	CarpetaBNPadronSeccPolicial,smallint
+	CarpetaBNPadronSupBN,decimal
+	CarpetaBNPadronSupBP,decimal
+	CarpetaBNPadronTotal,decimal
+	CarpetaBNPadronSupPadron,decimal
+"""
+db.define_table('CarpetaBNPadron',
+    Field('CarpetaBNId', db.CarpetaBN.CarpetaBNId),
+    Field('CarpetaBNPadronId', type='decimal'),
+    Field('CarpetaBNPadronSeccJudicial', type='integer'),
+    Field('CarpetaBNPadronSeccPolicial', type='integer'),
+    Field('CarpetaBNPadronSupBN', type="decimal"),
+    Field('CarpetaBNPadronSupBP', type="decimal"),
+    Field('CarpetaBNPadronTotal', type="decimal"),
+    Field('CarpetaBNPadronSupPadron', type="decimal"),
+    primarykey=['CarpetaBNId','CarpetaBNPadronId','CarpetaBNPadronSeccJudicial']
 )
 
-Tabla: Carpetas_BN
-    primaryKey: 'Codigo',
-)
-
-Tabla: Carpetas_N
-    primaryKey: 'Codigo',
-)
-
-Tabla: Carpetas_P
-    primaryKey: 'Codigo',
-)
-
-Tabla: Coeficientes
-)
-
-Tabla: Deptos
-    primaryKey: 'Codigo',
-)
-
-Tabla: Dj_Guias
-    primaryKey: 'Cod_DJ',
-    primaryKey: 'Guia',
-)
-
-Tabla: dtproperties
-    primaryKey: 'id',
-    primaryKey: 'property',
-)
-
-Tabla: Enfermedades
-    primaryKey: 'Codigo',
-)
-
-Tabla: Monitoreos
-    primaryKey: 'Codigo',
-)
-
-Tabla: Otros
-    primaryKey: 'Codigo',
-)
-
-Tabla: Parcelas
-    primaryKey: 'Codigo',
-)
-
-Tabla: Parcelas_Otros
-)
-
-Tabla: Plagas
-    primaryKey: 'Codigo',
-)
-
-Tabla: Planes
-    primaryKey: 'Codigo',
-)
-
-Tabla: Planes_Pro
-    primaryKey: 'Codigo',
-)
-
-Tabla: Plantas
-    primaryKey: 'CodG',
-    primaryKey: 'CodE',
-)
-
-Tabla: Propietarios
-    primaryKey: 'Codigo',
-)
-
-Tabla: Proyecciones
-    primaryKey: 'Cod_Sj',
-    primaryKey: 'Cod_Depto',
-    primaryKey: 'Especie',
-    primaryKey: 'Año',
-)
-
-Tabla: Registro
-    primaryKey: 'Codigo',
-)
-
-Tabla: Rodales
-    primaryKey: 'Codigo',
-)
-
-Tabla: Rodales_Otros
-)
-
-Tabla: Seleccion
-)
-
-Tabla: Simbolos_Mon
-    primaryKey: 'Codigo',
-)
+""" 
+ 
+CarpetaBNPropietario
+	CarpetaBNId,char
+	CarpetaBNPropietarioCI,int
+	CarpetaBNPropietarioNombre,char
+	CarpetaBNPropietarioRazonSocial,char
+	CarpetaBNPropietarioRUT,char
+	CarpetaBNPropietarioDireccion,char
+	CarpetaBNPropietarioDep,char
+	CarpetaBNPropietarioCiudad,char
+	CarpetaBNPropietarioTelefono,char
+	CarpetaBNPropietarioCelular,char
+	CarpetaBNPropietarioFax,char
+	CarpetaBNPropietarioMail,char
 """
 
-"""
-Estos son los foreign key de las tablas
-('DGF', 'dbo', 'Carpetas_BN', 'Nro_Carpeta', 'DGF', 'dbo', 'Cambios_Areas', 'Nro_Carpeta', 1, 1, 1, 'FK_Cambios_Areas_Carpetas_BN', 'IX_Carpetas_BN', 7)
-('DGF', 'dbo', 'Carpetas_BN', 'Cod_Depto', 'DGF', 'dbo', 'Cambios_Areas', 'Cod_depto', 2, 1, 1, 'FK_Cambios_Areas_Carpetas_BN', 'IX_Carpetas_BN', 7)
-('DGF', 'dbo', 'Carpetas_BN', 'Codigo', 'DGF', 'dbo', 'Plan_Manejo', 'Cod_Carp_BN', 1, 1, 1, 'FK_Plan_Manejo_Carpetas_BN', 'PK_Carpetas_BN', 7)
-('DGF', 'dbo', 'Carpetas_N', 'Nro_Carpeta', 'DGF', 'dbo', 'Planes_N', 'Codigo_Cp', 1, 1, 1, 'FK_Planes_N_Carpetas_N', 'IX_Carpetas_N', 7)
-('DGF', 'dbo', 'Carpetas_P', 'Nro_Carpeta', 'DGF', 'dbo', 'Planes_Pro', 'Codigo_Cp', 1, 1, 1, 'FK_Planes_Pro_Carpetas_P', 'IX_Carpetas_P', 7)
-('DGF', 'dbo', 'Deptos', 'Codigo', 'DGF', 'dbo', 'Parcelas_inf', 'cod_depto', 1, 1, 1, 'FK_Parcelas_inf_Deptos', 'PK_Deptos', 7)
-('DGF', 'dbo', 'Deptos', 'Codigo', 'DGF', 'dbo', 'Parcelas_Inf_Pro', 'cod_depto', 1, 1, 1, 'FK_Parcelas_inf_pro_Deptos', 'PK_Deptos', 7)
-('DGF', 'dbo', 'Deptos', 'Codigo', 'DGF', 'dbo', 'Rodales', 'Cod_depto', 1, 1, 1, 'FK_Rodales_Deptos', 'PK_Deptos', 7)
-('DGF', 'dbo', 'Monitoreos', 'Codigo', 'DGF', 'dbo', 'Rodales', 'Cod_Mon', 1, 1, 1, 'FK_Rodales_Monitoreos', 'PK_Monitoreos', 7)
-('DGF', 'dbo', 'Planes', 'Codigo', 'DGF', 'dbo', 'Estados', 'Codigo_Pl', 1, 1, 1, 'FK_Estados_Planes', 'PK_Planes', 7)
-('DGF', 'dbo', 'Planes_Pro', 'Codigo', 'DGF', 'dbo', 'Planes', 'Codigo_Plan_Pro', 1, 1, 1, 'FK_Planes_Planes_Pro', 'PK_Planes_Pro', 7)
-('DGF', 'dbo', 'Plantas', 'CodG', 'DGF', 'dbo', 'Parcelas_inf', 'codg', 1, 1, 1, 'FK_Parcelas_inf_Plantas', 'PK_Plantas', 7)
-('DGF', 'dbo', 'Plantas', 'CodE', 'DGF', 'dbo', 'Parcelas_inf', 'code', 2, 1, 1, 'FK_Parcelas_inf_Plantas', 'PK_Plantas', 7)
-('DGF', 'dbo', 'Plantas', 'CodG', 'DGF', 'dbo', 'Parcelas_Inf_Pro', 'codg', 1, 1, 1, 'FK_Parcelas_inf_pro_Plantas', 'PK_Plantas', 7)
-('DGF', 'dbo', 'Plantas', 'CodE', 'DGF', 'dbo', 'Parcelas_Inf_Pro', 'code', 2, 1, 1, 'FK_Parcelas_inf_pro_Plantas', 'PK_Plantas', 7)
-('DGF', 'dbo', 'Plantas', 'CodG', 'DGF', 'dbo', 'Rodales', 'Codg', 1, 1, 1, 'FK_Rodales_Plantas', 'PK_Plantas', 7)
-('DGF', 'dbo', 'Plantas', 'CodE', 'DGF', 'dbo', 'Rodales', 'Code', 2, 1, 1, 'FK_Rodales_Plantas', 'PK_Plantas', 7)
-('DGF', 'dbo', 'Propietarios', 'Codigo', 'DGF', 'dbo', 'Registro', 'Codigo_Prop', 1, 1, 1, 'FK_Registro_Propietarios', 'PK_Propietarios', 7)
-('DGF', 'dbo', 'Propietarios', 'Codigo', 'DGF', 'dbo', 'Usuarios_Emp', 'Propietario', 1, 1, 1, 'FK_Usuarios_Emp_Propietarios', 'PK_Propietarios', 7)
-('DGF', 'dbo', 'Registro', 'Codigo', 'DGF', 'dbo', 'Certificados', 'Cod_Reg', 1, 1, 1, 'FK_Certificados_Registro1', 'PK_Registro', 7)
-('DGF', 'dbo', 'Rodales', 'Codigo', 'DGF', 'dbo', 'Parcelas', 'Cod_Rodal', 1, 1, 1, 'FK_Parcelas_Rodales', 'PK_Rodales', 7)
-('DGF', 'dbo', 'Rodales', 'Codigo', 'DGF', 'dbo', 'Rodales_Otros', 'Cod_Rodal', 1, 1, 0, 'FK_Rodales_Otros_Rodales', 'PK_Rodales', 7)
+db.define_table('CarpetaBNPropietario',
+    Field('CarpetaBNId', db.CarpetaBN.CarpetaBNId),
+    Field('CarpetaBNPropietarioCI', type='integer'),
+    Field('CarpetaBNPropietarioNombre', type='string'),
+    Field('CarpetaBNPropietarioRazonSocial', type='string'),
+    Field('CarpetaBNPropietarioRUT', type="string"),
+    Field('CarpetaBNPropietarioDireccion', type="string"),
+    Field('CarpetaBNPropietarioDep', db.Departamentos.DepartamentosId),
+    Field('CarpetaBNPropietarioCiudad', type="string"),
+    Field('CarpetaBNPropietarioTelefono', type="string"),
+    Field('CarpetaBNPropietarioCelular', type="string"),
+    Field('CarpetaBNPropietarioFax', type="string"),
+    Field('CarpetaBNPropietarioMail', type="string"),
+    primarykey=['CarpetaBNId','CarpetaBNPropietarioCI']
+)
 
 """
+ 
+CarpetaBP
+	CarpetaBPId,decimal
+	CarpetaBPFechaRegistro,datetime
+	CarpetaBPRazonSocial,char
+	CarpetaBPRUT,char
+	CarpetaBPDireccionProductor,char
+	CarpetaBPDepartamentoProductor,char
+	CarpetaBPCuidadProductor,char
+	CarpetaBPTelefonoProductor,char
+	CarpetaBPCelularProductor,char
+	CarpetaBPFaxProductor,char
+	CarpetaBPMailProductor,char
+	CarpetaBPNombreEstabl,char
+	CarpetaBPDepartamentoEstabl,char
+	CarpetaBPSeccionCatastralEstabl,smallint
+	CarpetaBPSeccionJudicialEstabl,smallint
+	CarpetaBPSeccionPolicialEstabl,smallint
+	CarpetaBPCIRepLegal,int
+	CarpetaBPNombreRepLegal,char
+	CarpetaBPDireccionRepLegal,char
+	CarpetaBPDepartamentoRepLegal,char
+	CarpetaBPTelefonoRepLegal,char
+	CarpetaBPCelularRepLegal,char
+	CarpetaBPFaxRepLegal,char
+	CarpetaBPMailRepLegal,char
+	CarpetaBPCITecnico,int
+	CarpetaBPTipoProf,bit
+	CarpetaBPNombreTecnico,char
+	CarpetaBPDireccionTecnico,char
+	CarpetaBPTelefonoTecnico,char
+	CarpetaBPCelularTecnico,char
+	CarpetaBPFaxTecnico,char
+	CarpetaBPMailTecnico,char
+	CarpetaBPCIAutorizado,int
+	CarpetaBPNombAutorizado,char
+	CarpetaBPTelefAutorizado,char
+	CarpetaBPCelAutorizado,char
+	CarpetaBPFaxAutorizado,char
+	CarpetaBPMailAutorizado,char
+	CarpetaBPFechaHoraRegistroDig,datetime
+	CarpetaBPUsuario,char
+	CarpetaBPFechaHoraUltimaModif,datetime
+	CarpetaBPUsuarioUltimaModif,char
+	CarpetaBPDepartamentoTecnico,smallint
+	CarpetaBPCiudadTecnico,char
+	CarpetaBPCiudadRepLegal,char
+	CarpetaBPProcedencia,varchar
+	CarpetaBPEspeciesElegidas,varchar
+	CarpetaBPCarpetaBNNumero,int
+	CarpetaBPLaboreoSuelo,varchar
+	CarpetaBPControlMalezas,varchar
+	CarpetaBPControEnemigos,varchar
+	CarpetaBPTareasCulturales,varchar
+	CarpetaBPFertilizacion,varchar
+	CarpetaBPSistemaPlantacion,varchar
+	CarpetaBPForestacionObjetivo,varchar
+	CarpetaBPIncendiosOtrosElementos,varchar
+	CarpetaBPIncendiosProteccion,varchar
+	CarpetaBPPlagasProteccion,varchar
+	CarpetaBPUltimoNroProgFor,smallint
+	CarpetaBPUltimoNroCarRaleo,smallint
+	CarpetaBPCarpetaBN,char
+	CarpetaBPTelefonoEstabl,char
+	CarpetaBPUltimoTipoSuelo,smallint
+	CarpetaBPDireccionEstabl,char
+	CarpetaBPNroCarpeta,decimal
+	Migrado,bit
+	CarpetaBPLongitudGrados,decimal
+	CarpetaBPLongitudMinutos,decimal
+	CarpetaBPLongitudSegundos,decimal
+	CarpetaBPLatitudGrados,decimal
+	CarpetaBPLatitudMinutos,decimal
+	CarpetaBPLatitudSegundos,decimal
+	CarpetaBPProyCortaFinalVolum,money
+	CarpetaBPProyCortaFinalFecha,char
+	CarpetaBPExisCortaFinalVolum,money
+	CarpetaBPExisCortaFinalFecha,char
+"""
+
+db.define_table('CarpetaBP',
+    Field('CarpetaBPId', type='integer'),
+    Field('CarpetaBPFechaRegistro', type='datetime'),
+    Field('CarpetaBPRazonSocial', type='string'),
+    Field('CarpetaBPRUT', type="string"),
+    Field('CarpetaBPDireccionProductor', type="string"),
+    Field('CarpetaBPDepartamentoProductor', db.Departamentos),
+    Field('CarpetaBPCuidadProductor', type="string"),
+    Field('CarpetaBPTelefonoProductor', type="string"),
+    Field('CarpetaBPCelularProductor', type="string"),
+    Field('CarpetaBPFaxProductor', type="string"),
+    Field('CarpetaBPMailProductor', type="string"),
+    Field('CarpetaBPNombreEstabl', type="string"),
+    Field('CarpetaBPDepartamentoEstabl', db.Departamentos),
+    Field('CarpetaBPSeccionCatastralEstabl', type="integer"),
+    Field('CarpetaBPSeccionJudicialEstabl', type="integer"),
+    Field('CarpetaBPSeccionPolicialEstabl', type="integer"),
+    Field('CarpetaBPCIRepLegal', type="integer"),
+    Field('CarpetaBPNombreRepLegal', type="string"),
+    Field('CarpetaBPDireccionRepLegal', type="string"),
+    Field('CarpetaBPDepartamentoRepLegal', db.Departamentos),
+    Field('CarpetaBPTelefonoRepLegal', type="string"),
+    Field('CarpetaBPCelularRepLegal', type="string"),
+    Field('CarpetaBPFaxRepLegal', type="string"),
+    Field('CarpetaBPMailRepLegal', type="string"),
+    Field('CarpetaBPCITecnico', type="integer"),
+    Field('CarpetaBPTipoProf', type="string"), # ver
+    Field('CarpetaBPNombreTecnico', type="string"),
+    Field('CarpetaBPDireccionTecnico', type="string"),
+    Field('CarpetaBPTelefonoTecnico', type="string"),
+    Field('CarpetaBPCelularTecnico', type="string"),
+    Field('CarpetaBPFaxTecnico', type="string"),
+    Field('CarpetaBPMailTecnico', type="string"),
+    Field('CarpetaBPCIAutorizado', type="integer"),
+    Field('CarpetaBPNombAutorizado', type="string"),
+    Field('CarpetaBPTelefAutorizado', type="string"),
+    Field('CarpetaBPCelAutorizado', type="string"),
+    Field('CarpetaBPFaxAutorizado', type="string"),
+    Field('CarpetaBPMailAutorizado', type="string"),
+    Field('CarpetaBPFechaHoraRegistroDig', type="datetime"),
+    Field('CarpetaBPUsuario', type="string"),
+    Field('CarpetaBPFechaHoraUltimaModif', type="datetime"),
+    Field('CarpetaBPUsuarioUltimaModif', type="string"),
+    Field('CarpetaBPDepartamentoTecnico', type="integer"),
+    Field('CarpetaBPCiudadTecnico', type="string"),
+    Field('CarpetaBPCiudadRepLegal', type="string"),
+    Field('CarpetaBPProcedencia', type="string"),
+    Field('CarpetaBPEspeciesElegidas', type="string"),
+    Field('CarpetaBPCarpetaBNNumero', type="integer"),
+    Field('CarpetaBPLaboreoSuelo', type="string"),
+    Field('CarpetaBPControlMalezas', type="string"),
+    Field('CarpetaBPControEnemigos', type="string"),
+    Field('CarpetaBPTareasCulturales', type="string"),
+    Field('CarpetaBPFertilizacion', type="string"),
+    Field('CarpetaBPSistemaPlantacion', type="string"),
+    Field('CarpetaBPForestacionObjetivo', type="string"),
+    Field('CarpetaBPIncendiosOtrosElementos', type="string"),
+    Field('CarpetaBPIncendiosProteccion', type="string"),
+    Field('CarpetaBPPlagasProteccion', type="string"),
+    Field('CarpetaBPUltimoNroProgFor', type="integer"),
+    Field('CarpetaBPUltimoNroCarRaleo', type="integer"),
+    Field('CarpetaBPCarpetaBN', type="string"),
+    Field('CarpetaBPTelefonoEstabl', type="string"),
+    Field('CarpetaBPUltimoTipoSuelo', type="integer"),
+    Field('CarpetaBPDireccionEstabl', type="string"),
+    Field('CarpetaBPNroCarpeta', type="decimal"),
+    Field('Migrado', type="string"), #ver
+    Field('CarpetaBPLongitudGrados', type="decimal"),
+    Field('CarpetaBPLongitudMinutos', type="decimal"),
+    Field('CarpetaBPLongitudSegundos', type="decimal"),
+    Field('CarpetaBPLatitudGrados', type="decimal"),
+    Field('CarpetaBPLatitudMinutos', type="decimal"),
+    Field('CarpetaBPLatitudSegundos', type="decimal"),
+    Field('CarpetaBPProyCortaFinalVolum', type="integer"), # Money??
+    Field('CarpetaBPProyCortaFinalFecha', type="string"),
+    Field('CarpetaBPExisCortaFinalVolum', type="integer"),
+    Field('CarpetaBPExisCortaFinalFecha', type="string"),
+    primarykey=['CarpetaBPId']
+)
+
+ 
+"""
+CarpetaBPCarRaleo
+	CarpetaBPId,decimal
+	CarpetaBPCarRaleoId,decimal
+	CarpetaBPCarRaleoPlantacionAnio,smallint
+	CarpetaBPCarRaleoMetroPorHectarea,decimal
+	CarpetaBPCarRaleoAlturaEstimada,smallint
+	CarpetaBPCarRaleoDensidad,decimal
+	CarpetaBPCarRaleoSuperficieRaleo,decimal
+	CarpetaBPCarRaleoRodalEdad,smallint
+	CarpetaBPCarRaleoSupEfectivaAPodar,decimal
+	EspecieGeneroCarRaleoCodEspecie,decimal
+	EspecieGeneroCarRaleoCodGenero,char
+	EspecieGeneroCarRaleoEspecieNombre,char
+	EspecieGeneroCarRaleoGeneroNombre,char
+""" 
+
+db.define_table('CarpetaBPCarRaleo',
+    Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+    Field('CarpetaBPCarRaleoId', type='decimal'),
+    Field('CarpetaBPCarRaleoPlantacionAnio', type='integer'),
+    Field('CarpetaBPCarRaleoMetroPorHectarea', type='decimal'),
+    Field('CarpetaBPCarRaleoAlturaEstimada', type="integer"),
+    Field('CarpetaBPCarRaleoDensidad', type="decimal"),
+    Field('CarpetaBPCarRaleoSuperficieRaleo', type="decimal"),
+    Field('CarpetaBPCarRaleoRodalEdad', type="integer"),
+    Field('CarpetaBPCarRaleoSupEfectivaAPodar', type="decimal"),
+    Field('EspecieGeneroCarRaleoCodEspecie', db.EspecieGenero),
+    Field('EspecieGeneroCarRaleoCodGenero', db.EspecieGenero),
+    Field('CarpetaBNPropietarioFax', type="string"),
+    Field('EspecieGeneroCarRaleoEspecieNombre', db.EspecieGeneroNombre),
+    Field('EspecieGeneroCarRaleoGeneroNombre', db.EspecieGeneroNombre),
+    primarykey=['CarpetaBPId','CarpetaBPCarRaleoId']
+)
+
+"""
+CarpetaBPGrupoDeSueloPorPadron
+	CarpetaBPId,decimal
+	CarpetaBPGrupoDeSueloPorPadronNroPadron,decimal
+"""
+
+db.define_table('CarpetaBPGrupoDeSueloPorPadron',
+    Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+    Field('CarpetaBPGrupoDeSueloPorPadronNroPadron', type='decimal'),
+    primarykey=['CarpetaBPId','CarpetaBPGrupoDeSueloPorPadronNroPadron']
+)
+
+"""
+CarpetaBPGrupoDeSueloPorPadronGrupoDeSue
+	CarpetaBPId,decimal
+	CarpetaBPGrupoDeSueloPorPadronNroPadron,decimal
+	TipoSueloId,char
+	CarpetaBPGrupoDeSueloPorPadronGrupoDeSue,decimal
+"""
+
+db.define_table('CarpetaBPGrupoDeSueloPorPadronGrupoDeSue',
+    Field('CarpetaBPId', db.CarpetaBPGrupoDeSueloPorPadron.CarpetaBPId),
+    Field('CarpetaBPGrupoDeSueloPorPadronNroPadron', db.CarpetaBPGrupoDeSueloPorPadron.CarpetaBPGrupoDeSueloPorPadronNroPadron),
+    Field('TipoSueloId', type='string'),
+    Field('CarpetaBPGrupoDeSueloPorPadronGrupoDeSue', type='decimal'),
+    primarykey=['CarpetaBPId','CarpetaBPGrupoDeSueloPorPadronNroPadron']
+)
+
+"""
+CarpetaBPObjForestacion
+	CarpetaBPId,decimal
+	CarpetaBPObjForestacionId,smallint
+"""
+
+db.define_table('CarpetaBPObjForestacion',
+    Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+    Field('CarpetaBPObjForestacionId', type='integer'),
+    primarykey=['CarpetaBPId','CarpetaBPObjForestacionId']
+)
+
+""" 
+CarpetaBPPadron
+	CarpetaBPId,decimal
+	CarpetaBPPadronId,decimal
+	CarpetaBPPadronSupBN,decimal
+	CarpetaBPPadronSupBP,decimal
+	EspecieGeneroPadronGeneroNombre,char
+	EspecieGeneroPadronEspecieNombre,char
+	EspecieGeneroPadronCodGenero,char
+	EspecieGeneroPadronCodEspecie,decimal
+	CarpetaBPPadronPlantacionAnio,smallint
+	CarpetaBPPadronDensidadPlantacion,decimal
+	CarpetaBPPadronSupEfectiva,decimal
+	CarpetaBPPadronSupTotal,decimal
+"""
+
+db.define_table('CarpetaBPPadron',
+    Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+    Field('CarpetaBPPadronId', type='decimal'),
+    Field('CarpetaBPPadronSupBN', type='decimal'),
+    Field('CarpetaBPPadronSupBP', type='decimal'),
+    Field('EspecieGeneroPadronGeneroNombre', type='string'),
+    Field('EspecieGeneroPadronEspecieNombre', type='string'),
+    Field('EspecieGeneroPadronCodGenero', db.EspecieGenero),
+    Field('EspecieGeneroPadronCodEspecie', db.EspecieGenero),
+    Field('CarpetaBPPadronPlantacionAnio', type='integer'),
+    Field('CarpetaBPPadronDensidadPlantacion', type='decimal'),
+    Field('CarpetaBPPadronSupEfectiva', type='decimal'),
+    Field('CarpetaBPPadronSupTotal', type='decimal'),
+    primarykey=['CarpetaBPId','CarpetaBPPadronId','EspecieGeneroPadronGeneroNombre','EspecieGeneroPadronEspecieNombre','CarpetaBPPadronPlantacionAnio']
+)
+
+"""
+CarpetaBPProgFor
+	CarpetaBPId,decimal
+	CarpetaBPProgForId,decimal
+	CarpetaBPProgForDensidadPlantacion,decimal
+	CarpetaBPProgForSupTotal,decimal
+	CarpetaBPProgForPadron,decimal
+	EspecieGeneroProgForEspecieNombre,char
+	EspecieGeneroProgForGeneroNombre,char
+	EspecieGeneroProgForCodEspecie,decimal
+	EspecieGeneroProgForCodGenero,char
+	CarpetaBPProgForSupAfectada,decimal
+	CarpetaBPProgForSupEfectiva,decimal
+	CarpetaBPProgForPlantacionAnio,smallint
+"""
+
+db.define_table('CarpetaBPProgFor',
+    Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+    Field('CarpetaBPProgForId', type='decimal'),
+    Field('CarpetaBPProgForDensidadPlantacion', type='decimal'),
+    Field('CarpetaBPProgForSupTotal', type='decimal'),
+    Field('CarpetaBPProgForPadron', type='decimal'),
+    Field('EspecieGeneroProgForEspecieNombre', type='string'),
+    Field('EspecieGeneroProgForGeneroNombre', type='string'),
+    Field('EspecieGeneroProgForCodEspecie', db.EspecieGenero),
+    Field('EspecieGeneroProgForCodGenero', db.EspecieGenero),
+    Field('CarpetaBPProgForSupAfectada', type='decimal'),
+    Field('CarpetaBPProgForSupEfectiva', type='decimal'),
+    Field('CarpetaBPProgForPlantacionAnio', type='integer'),
+    primarykey=['CarpetaBPId','CarpetaBPProgForId']
+)
+
+"""
+CarpetaBPTitular
+	CarpetaBPId,decimal
+	CarpetaBPTitularCI,int
+	CarpetaBPTitularNombre,char
+	CarpetaBPTitularDir,char
+	CarpetaBPTitularTelefono,char
+	CarpetaBPTitularFax,char
+	CarpetaBPTitularCelular,char
+	CarpetaBPTitularMail,char
+	CarpetaBPTitularCiudad,char
+	CarpetaBPTitularDep,char
+	CarpetaBPTitularOtros,char
+	CarpetaBPTitularEsUsufructurario,bit
+	CarpetaBPTitularEsPromComprador,bit
+	CarpetaBPTitularEsComodatario,bit
+	CarpetaBPTitularEsArrendatario,bit
+	CarpetaBPTitularEsPropietario,bit
+	DGFTitularEnCalidadDeId,smallint
+"""
+
+db.define_table('CarpetaBPTitular',
+    Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+    Field('CarpetaBPTitularCI', type='integer'),
+    Field('CarpetaBPTitularNombre', type='string'),
+    Field('CarpetaBPTitularDir', type='string'),
+    Field('CarpetaBPTitularTelefono', type='string'),
+    Field('CarpetaBPTitularFax', type='string'),
+    Field('CarpetaBPTitularCelular', type='string'),
+    Field('CarpetaBPTitularMail', type='string'),
+    Field('CarpetaBPTitularCiudad', type='string'),
+    Field('CarpetaBPTitularDep', db.Departamentos),
+    Field('CarpetaBPTitularOtros', type='string'),
+    Field('CarpetaBPTitularEsUsufructurario', type='string'), #ver
+    Field('CarpetaBPTitularEsPromComprador', type='string'), #ver    
+    Field('CarpetaBPTitularEsComodatario', type='string'), #ver
+    Field('CarpetaBPTitularEsArrendatario', type='string'), #ver
+    Field('CarpetaBPTitularEsPropietario', type='string'), #ver
+    Field('DGFTitularEnCalidadDeId', db.DGFTitularEnCalidadDe),
+    primarykey=['CarpetaBPId','CarpetaBPTitularCI']
+)
+
+"""
+Departamentos
+	DepartamentosId,char
+	DepartamentosNombre,char
+"""
+
+db.define_table('Departamentos',
+    Field('DepartamentosId', type='decimal'),
+    Field('DepartamentosNombre', type='string'),
+    primarykey=['DepartamentosId']
+)
+
+"""
+DGFTitularEnCalidadDe
+	DGFTitularEnCalidadDeId,smallint
+	DGFTitularEnCalidadDeDescripcion,char
+"""
+
+db.define_table('DGFTitularEnCalidadDe',
+    Field('DGFTitularEnCalidadDeId', type='integer'),
+    Field('DGFTitularEnCalidadDeDescripcion', type='string'),
+    primarykey=['DGFTitularEnCalidadDeId']
+)
+
+"""
+Especie
+	EspecieId,decimal
+	GeneroId,char
+	GeneroNombre,char
+	EspecieNombre,char
+"""
+
+db.define_table('Especie',
+    Field('EspecieId', type='decimal'),
+    Field('GeneroId', type='string'),
+    Field('GeneroNombre', type='string'),
+    Field('EspecieNombre', type='string'),
+    primarykey=['EspecieId','GeneroId']
+)
+
+"""
+EspecieBP
+	EspecieBPCarpeta,decimal
+	EspecieBPPadron,decimal
+	EspecieBPFechaHoraRegistroDig,datetime
+	EspecieBPUsuario,char
+	EspecieBPUsuarioUltimaModif,char
+	EspecieBPFechaHoraUltimaModif,datetime
+"""
+
+db.define_table('EspecieBP',
+    Field('EspecieBPCarpeta', type='decimal'),
+    Field('EspecieBPPadron', type='decimal'),
+    Field('EspecieBPFechaHoraRegistroDig', type='datetime'),
+    Field('EspecieBPUsuario', type='string'),
+    Field('EspecieBPUsuarioUltimaModif', type='string'),
+    Field('EspecieBPFechaHoraUltimaModif', type='datetime'),
+    primarykey=['EspecieBPCarpeta','EspecieBPPadron']
+)
+
+"""
+EspecieGenero
+	EspecieGeneroEspecie,decimal
+	EspecieGeneroGenero,char
+	EspecieGeneroEspecieNombre,char
+	EspecieGeneroGeneroNombre,char
+"""
+
+db.define_table('EspecieGenero',
+    Field('EspecieGeneroEspecie', type='decimal'),
+    Field('EspecieGeneroGenero', type='string'),
+    Field('EspecieGeneroEspecieNombre', type='string'),
+    Field('EspecieGeneroGeneroNombre', type='string'),
+    primarykey=['EspecieGeneroEspecie','EspecieGeneroGenero']
+)
+
+ 
+""" 
+EspecieGeneroNombre
+	EspecieGeneroNombreGenero,char
+	EspecieGeneroNombreEspecie,char
+""" 
+
+db.define_table('EspecieGeneroNombre',
+    Field('EspecieGeneroNombreGenero', type='string'),
+    Field('EspecieGeneroNombreEspecie', type='string'),
+    primarykey=['EspecieGeneroNombreGenero','EspecieGeneroNombreEspecie']
+)
+
+"""
+Genero
+	GeneroId,char
+	GeneroNombre,char
+"""
+
+db.define_table('Genero',
+    Field('GeneroId', type='string'),
+    Field('GeneroNombre', type='string'),
+    primarykey=['GeneroId','GeneroNombre']
+)
+
+"""
+GrupoDeSuelos
+	GrupoDeSuelosId,char
+	GrupoDeSuelosNombre,char
+"""
+
+db.define_table('GrupoDeSuelos',
+    Field('GrupoDeSuelosId', type='string'),
+    Field('GrupoDeSuelosNombre', type='string'),
+    primarykey=['GrupoDeSuelosId']
+)
+
+"""
+Operacion
+	OperacionId,smallint
+	OperacionNombre,char
+"""
+
+db.define_table('Operacion',
+    Field('OperacionId', type='integer'),
+    Field('OperacionNombre', type='string'),
+    primarykey=['OperacionId']
+)
+
+"""
+PlanDeManejoBN
+	PlanDeManejoBNId,decimal
+	CarpetaBNId,char
+	OperacionId,smallint
+	PlanDeManejoBNUsuario,char
+	PlanDeManejoBNFechaHoraRegistroDig,datetime
+"""
+
+db.define_table('PlanDeManejoBN',
+    Field('PlanDeManejoBNId', type='decimal'),
+    Field('CarpetaBNId', type='string'),
+    Field('OperacionId', type='integer'),
+    Field('PlanDeManejoBNUsuario', type='string'),
+    Field('PlanDeManejoBNFechaHoraRegistroDig', type='datetime'),
+    primarykey=['PlanDeManejoBNId']
+)
+ 
+"""
+PlanDeManejoBNPadron
+	PlanDeManejoBNId,decimal
+	FormPlanManejoBNCarpeta,char
+	FormPlanManejoBNPadron,decimal
+	PlanDeManejoBNPadronSupACortar,decimal
+	PlanDeManejoBNPadronToneladasEstimadas,smallint
+	PlanDeManejoBNPadronPlazo,smallint
+	PlanDeManejoBNPadronFundamentacion,varchar
+"""
 
 
+db.define_table('PlanDeManejoBNPadron',
+    Field('PlanDeManejoBNId', type='decimal'),
+    Field('FormPlanManejoBNCarpeta', db.CarpetaBN.CarpetaBNId),
+    Field('FormPlanManejoBNPadron', type='decimal'),
+    Field('PlanDeManejoBNPadronSupACortar', type='decimal'),
+    Field('PlanDeManejoBNPadronToneladasEstimadas', type='integer'),
+    Field('PlanDeManejoBNPadronPlazo', type='integer'),
+    Field('PlanDeManejoBNPadronFundamentacion', type='string'),
+    primarykey=['PlanDeManejoBNId','FormPlanManejoBNCarpeta','FormPlanManejoBNPadron']
+)
+
+"""
+TempCarpetaBN
+	TempCarpetaBNId,char
+	TempCarpetaBNFechaRegistro,datetime
+	TempCarpetaBNNombreEstabl,char
+	CarpetaBNDepartamentoEstabl,char
+	TempCarpetaBNSeccionCatastralEstabl,smallint
+	TempCarpetaBNSeccionJudicialEstabl,smallint
+	TempCarpetaBNSeccionPolicialEstabl,smallint
+	TempCarpetaBNParajeEstabl,char
+	TempCarpetaBNCIRepLegal,int
+	TempCarpetaBNNombreRepLegal,char
+	TempCarpetaBNDireccionRepLegal,char
+	CarpetaBNDepartamentoRepLegal,char
+	TempCarpetaBNTelefonoRepLegal,char
+	TempCarpetaBNCelularRepLegal,char
+	TempCarpetaBNFaxRepLegal,char
+	TempCarpetaBNMailRepLegal,char
+	TempCarpetaBNCITecnico,int
+	TempCarpetaBNTipoProfesional,bit
+	TempCarpetaBNNombreTecnico,char
+	TempCarpetaBNDireccionTecnico,char
+	TempCarpetaBNTelefonoTecnico,char
+	TempCarpetaBNCelularTecnico,char
+	TempCarpetaBNFaxTecnico,char
+	TempCarpetaBNMailTecnico,char
+	AsociacionesId,smallint
+	TempCarpetaBNTipoRebrote,smallint
+	TempCarpetaBNEstadoSanitario,varchar
+	TempCarpetaBNInvEspExoticas,bit
+	TempCarpetaBNIncForestales,bit
+	TempCarpetaBNAccionesAntropicas,varchar
+	TempCarpetaBNAreaArboladaTotal,decimal
+	TempCarpetaBNAreaArboladaBN,decimal
+	TempCarpetaBNAreaArboladaBP,decimal
+	TempCarpetaBNFechaHoraRegistroDig,datetime
+	TempCarpetaBNUsuario,char
+	TempCarpetaBNNroCarpeta,int
+"""
+
+db.define_table('TempCarpetaBN',
+    Field('TempCarpetaBNId', type='string'),
+    Field('TempCarpetaBNFechaRegistro', type='datetime'),
+    Field('TempCarpetaBNNombreEstabl', type='string'),
+    Field('CarpetaBNDepartamentoEstabl', db.Departamentos),
+    Field('TempCarpetaBNSeccionCatastralEstabl', type='integer'),
+    Field('TempCarpetaBNSeccionJudicialEstabl', type='integer'),
+    Field('TempCarpetaBNSeccionPolicialEstabl', type='integer'),
+    Field('TempCarpetaBNParajeEstabl', type='string'),
+    Field('TempCarpetaBNCIRepLegal', type='integer'),
+    Field('TempCarpetaBNNombreRepLegal', type='string'),
+    Field('TempCarpetaBNDireccionRepLegal', type='string'),
+    Field('CarpetaBNDepartamentoRepLegal', db.Departamentos),
+    Field('TempCarpetaBNTelefonoRepLegal', type='string'),
+    Field('TempCarpetaBNCelularRepLegal', type='string'),
+    Field('TempCarpetaBNFaxRepLegal', type='string'),
+    Field('TempCarpetaBNMailRepLegal', type='string'),
+    Field('TempCarpetaBNCITecnico', type='integer'),
+    Field('TempCarpetaBNTipoProfesional', type='string'), #ver
+    Field('TempCarpetaBNNombreTecnico', type='string'),
+    Field('TempCarpetaBNDireccionTecnico', type='string'),
+    Field('TempCarpetaBNTelefonoTecnico', type='string'),
+    Field('TempCarpetaBNCelularTecnico', type='string'),
+    Field('TempCarpetaBNFaxTecnico', type='string'),
+    Field('TempCarpetaBNMailTecnico', type='string'),
+    Field('AsociacionesId', db.Asociaciones.AsociacionesId),
+    Field('TempCarpetaBNTipoRebrote', type='integer'),
+    Field('TempCarpetaBNEstadoSanitario', type='string'),
+    Field('TempCarpetaBNInvEspExoticas', type='string'), #ver
+    Field('TempCarpetaBNIncForestales', type='string'), #ver
+    Field('TempCarpetaBNAccionesAntropicas', type='string'),
+    Field('TempCarpetaBNAreaArboladaTotal', type='decimal'),
+    Field('TempCarpetaBNAreaArboladaBN', type='decimal'),
+    Field('TempCarpetaBNAreaArboladaBP', type='decimal'),
+    Field('TempCarpetaBNFechaHoraRegistroDig', type='datetime'),
+    Field('TempCarpetaBNFechaHoraRegistroDig', type='string'),
+    Field('TempCarpetaBNFechaHoraRegistroDig', type='integer'),
+    primarykey=['TempCarpetaBNId']
+)
+
+""" 
+TempCarpetaBNPadron
+	TempCarpetaBNId,char
+	TempCarpetaBNPadronId,decimal
+	TempCarpetaBNPadronSeccJudicial,smallint
+	TempCarpetaBNPadronSupBN,decimal
+	TempCarpetaBNPadronSupBP,decimal
+	TempCarpetaBNPadronTotal,decimal
+	TempCarpetaBNPadronSupPadron,decimal
+	TempCarpetaBNPadronSeccPolicial,smallint
+"""
+
+db.define_table('TempCarpetaBNPadron',
+    Field('TempCarpetaBNId', type='string'),
+    Field('TempCarpetaBNPadronId', type='decimal'),
+    Field('TempCarpetaBNPadronSeccJudicial', type='integer'),
+    Field('TempCarpetaBNPadronSupBN', type='decimal'),
+    Field('TempCarpetaBNPadronSupBP', type='decimal'),
+    Field('TempCarpetaBNPadronTotal', type='decimal'),
+    Field('TempCarpetaBNPadronSupPadron', type='decimal'),
+    Field('TempCarpetaBNPadronSeccPolicial', type='integer'),
+    primarykey=['PlanDeManejoBNId','TempCarpetaBNPadronId','TempCarpetaBNPadronSeccJudicial']
+)
+
+"""
+TempCarpetaBNPropietario
+	TempCarpetaBNId,char
+	TempCarpetaBNPropietarioCI,int
+	TempCarpetaBNPropietarioNombre,char
+	TempCarpetaBNPropietarioRazonSocial,char
+	TempCarpetaBNPropietarioRUT,char
+	TempCarpetaBNPropietarioDireccion,char
+	TempCarpetaBNPropietarioCuidad,char
+	TempCarpetaBNPropietarioTelefono,char
+	TempCarpetaBNPropietarioCelular,char
+	TempCarpetaBNPropietarioFax,char
+	TempCarpetaBNPropietarioMail,char
+	TempCarpetaBNPropietarioDep,char
+"""
+
+db.define_table('TempCarpetaBNPropietario',
+    Field('TempCarpetaBNId', db.CarpetaBN),
+    Field('TempCarpetaBNPropietarioCI', type='integer'),
+    Field('TempCarpetaBNPropietarioNombre', type='string'),
+    Field('TempCarpetaBNPropietarioRazonSocial', type='string'),
+    Field('TempCarpetaBNPropietarioRUT', type="string"),
+    Field('TempCarpetaBNPropietarioDireccion', type="string"),
+    Field('TempCarpetaBNPropietarioCuidad', type="string"),
+    Field('TempCarpetaBNPropietarioTelefono', type="string"),
+    Field('TempCarpetaBNPropietarioCelular', type="string"),
+    Field('TempCarpetaBNPropietarioFax', type="string"),
+    Field('TempCarpetaBNPropietarioMail', type="string"),
+    Field('TempCarpetaBNPropietarioDep', db.Departamentos),
+    primarykey=['CarpetaBNId','CarpetaBNPropietarioCI']
+)
+
+
+"""
+TipoSuelo
+	TipoSueloId,char
+	TipoSueloNombre,char
+"""
+
+db.define_table('TipoSuelo',
+    Field('TipoSueloId', type='string'),
+    Field('TipoSueloNombre', type='string'),
+    primarykey=['TipoSueloId']
+)
+
+"""
+Usuario
+	UsuarioNombre,char
+	UsuarioNombreApellido,char
+""" 
+
+db.define_table('Usuario',
+    Field('UsuarioNombre', type='string'),
+    Field('UsuarioNombreApellido', type='string'),
+    primarykey=['UsuarioNombre']
+) 
+ 
+""" 
+PK
+Asociaciones
+	AsociacionesId
+Calificacion
+	CalificacionId
+CalificacionBP
+	CalificacionBPCarpeta
+	CalificacionBPPadron
+	CalificacionId
+CarpetaBN
+	CarpetaBNId
+CarpetaBNPadron
+	CarpetaBNId
+	CarpetaBNPadronId
+	CarpetaBNPadronSeccJudicial
+CarpetaBNPropietario
+	CarpetaBNId
+	CarpetaBNPropietarioCI
+CarpetaBP
+	CarpetaBPId
+CarpetaBPCarRaleo
+	CarpetaBPId
+	CarpetaBPCarRaleoId
+CarpetaBPGrupoDeSueloPorPadron
+	CarpetaBPId
+	CarpetaBPGrupoDeSueloPorPadronNroPadron
+CarpetaBPGrupoDeSueloPorPadronGrupoDeSue
+	CarpetaBPId
+	CarpetaBPGrupoDeSueloPorPadronNroPadron
+	TipoSueloId
+CarpetaBPObjForestacion
+	CarpetaBPId
+	CarpetaBPObjForestacionId
+CarpetaBPPadron
+	CarpetaBPId
+	CarpetaBPPadronId
+	EspecieGeneroPadronGeneroNombre
+	EspecieGeneroPadronEspecieNombre
+	CarpetaBPPadronPlantacionAnio
+CarpetaBPProgFor
+	CarpetaBPId
+	CarpetaBPProgForId
+CarpetaBPTitular
+	CarpetaBPId
+	CarpetaBPTitularCI
+Departamentos
+	DepartamentosId
+DGFTitularEnCalidadDe
+	DGFTitularEnCalidadDeId
+Especie
+	EspecieId
+	GeneroId
+EspecieBP
+	EspecieBPCarpeta
+	EspecieBPPadron
+EspecieGenero
+	EspecieGeneroEspecie
+	EspecieGeneroGenero
+EspecieGeneroNombre
+	EspecieGeneroNombreGenero
+	EspecieGeneroNombreEspecie
+Genero
+	GeneroId
+	GeneroNombre
+GrupoDeSuelos
+	GrupoDeSuelosId
+Operacion
+	OperacionId
+PlanDeManejoBN
+	PlanDeManejoBNId
+PlanDeManejoBNPadron
+	PlanDeManejoBNId
+	FormPlanManejoBNCarpeta
+	FormPlanManejoBNPadron
+TempCarpetaBN
+	TempCarpetaBNId
+TempCarpetaBNPadron
+	TempCarpetaBNId
+	TempCarpetaBNPadronId
+	TempCarpetaBNPadronSeccJudicial
+TempCarpetaBNPropietario
+	TempCarpetaBNId
+	TempCarpetaBNPropietarioCI
+TipoSuelo
+	TipoSueloId
+Usuario
+	UsuarioNombre
+FK
+Asociaciones
+	AsociacionesId,CarpetaBN,AsociacionesId
+	AsociacionesId,TempCarpetaBN,AsociacionesId
+Calificacion
+	CalificacionId,CalificacionBP,CalificacionId
+CalificacionBP
+CarpetaBN
+	CarpetaBNId,CarpetaBNPadron,CarpetaBNId
+	CarpetaBNId,CarpetaBNPropietario,CarpetaBNId
+	CarpetaBNId,PlanDeManejoBNPadron,FormPlanManejoBNCarpeta
+CarpetaBNPadron
+CarpetaBNPropietario
+CarpetaBP
+	CarpetaBPId,CarpetaBPCarRaleo,CarpetaBPId
+	CarpetaBPId,CarpetaBPGrupoDeSueloPorPadron,CarpetaBPId
+	CarpetaBPId,CarpetaBPObjForestacion,CarpetaBPId
+	CarpetaBPId,CarpetaBPPadron,CarpetaBPId
+	CarpetaBPId,CarpetaBPProgFor,CarpetaBPId
+	CarpetaBPId,CarpetaBPTitular,CarpetaBPId
+CarpetaBPCarRaleo
+CarpetaBPGrupoDeSueloPorPadron
+	CarpetaBPId,CarpetaBPGrupoDeSueloPorPadronGrupoDeSue,CarpetaBPId
+	CarpetaBPGrupoDeSueloPorPadronNroPadron,CarpetaBPGrupoDeSueloPorPadronGrupoDeSue,CarpetaBPGrupoDeSueloPorPadronNroPadron
+CarpetaBPGrupoDeSueloPorPadronGrupoDeSue
+CarpetaBPObjForestacion
+CarpetaBPPadron
+CarpetaBPProgFor
+CarpetaBPTitular
+Departamentos
+	DepartamentosId,CarpetaBN,CarpetaBNDepartamentoEstabl
+	DepartamentosId,CarpetaBN,CarpetaBNDepartamentoRepLegal
+	DepartamentosId,CarpetaBNPropietario,CarpetaBNPropietarioDep
+	DepartamentosId,CarpetaBP,CarpetaBPDepartamentoEstabl
+	DepartamentosId,CarpetaBP,CarpetaBPDepartamentoProductor
+	DepartamentosId,CarpetaBP,CarpetaBPDepartamentoRepLegal
+	DepartamentosId,CarpetaBPTitular,CarpetaBPTitularDep
+	DepartamentosId,TempCarpetaBN,CarpetaBNDepartamentoEstabl
+	DepartamentosId,TempCarpetaBN,CarpetaBNDepartamentoRepLegal
+	DepartamentosId,TempCarpetaBNPropietario,TempCarpetaBNPropietarioDep
+DGFTitularEnCalidadDe
+	DGFTitularEnCalidadDeId,CarpetaBPTitular,DGFTitularEnCalidadDeId
+Especie
+EspecieBP
+EspecieGenero
+	EspecieGeneroEspecie,CarpetaBPCarRaleo,EspecieGeneroCarRaleoCodEspecie
+	EspecieGeneroGenero,CarpetaBPCarRaleo,EspecieGeneroCarRaleoCodGenero
+	EspecieGeneroEspecie,CarpetaBPPadron,EspecieGeneroPadronCodEspecie
+	EspecieGeneroGenero,CarpetaBPPadron,EspecieGeneroPadronCodGenero
+	EspecieGeneroEspecie,CarpetaBPProgFor,EspecieGeneroProgForCodEspecie
+	EspecieGeneroGenero,CarpetaBPProgFor,EspecieGeneroProgForCodGenero
+EspecieGeneroNombre
+	EspecieGeneroNombreGenero,CarpetaBPCarRaleo,EspecieGeneroCarRaleoGeneroNombre
+	EspecieGeneroNombreEspecie,CarpetaBPCarRaleo,EspecieGeneroCarRaleoEspecieNombre
+	EspecieGeneroNombreGenero,CarpetaBPPadron,EspecieGeneroPadronGeneroNombre
+	EspecieGeneroNombreEspecie,CarpetaBPPadron,EspecieGeneroPadronEspecieNombre
+	EspecieGeneroNombreGenero,CarpetaBPProgFor,EspecieGeneroProgForGeneroNombre
+	EspecieGeneroNombreEspecie,CarpetaBPProgFor,EspecieGeneroProgForEspecieNombre
+Genero
+	GeneroId,Especie,GeneroId
+	GeneroNombre,Especie,GeneroNombre
+GrupoDeSuelos
+Operacion
+	OperacionId,PlanDeManejoBN,OperacionId
+PlanDeManejoBN
+	PlanDeManejoBNId,PlanDeManejoBNPadron,PlanDeManejoBNId
+PlanDeManejoBNPadron
+TempCarpetaBN
+	TempCarpetaBNId,TempCarpetaBNPadron,TempCarpetaBNId
+	TempCarpetaBNId,TempCarpetaBNPropietario,TempCarpetaBNId
+TempCarpetaBNPadron
+TempCarpetaBNPropietario
+TipoSuelo
+	TipoSueloId,CarpetaBPGrupoDeSueloPorPadronGrupoDeSue,TipoSueloId
+Usuario
+"""
