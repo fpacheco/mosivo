@@ -5,10 +5,11 @@ Asociaciones
 	AsociacionesDescripcion,char
 """
 
-db.define_table('Asociaciones',
+db2.define_table('Asociaciones',
     Field('AsociacionesId', type='integer'),
     Field('AsociacionesDescripcion', type="string"),
-    primarykey=['AsociacionesId']
+    primarykey=['AsociacionesId'],
+    migrate=False
 )
 
 
@@ -17,10 +18,11 @@ Calificacion
 	CalificacionId,char
 	CalificacionDescripcion,char
 """
-db.define_table('Calificacion',
+db2.define_table('Calificacion',
     Field('CalificacionId', type='integer'),
     Field('CalificacionDescripcion', type="string"),
-    primarykey=['CalificacionId']
+    primarykey=['CalificacionId'],
+    migrate=False
 )
  
 """ 
@@ -34,16 +36,17 @@ CalificacionBP
 	CalifBPUsuarioUltimaModif,char
 	CalifBPFechaHoraUltimaModif,datetime
 """
-db.define_table('CalificacionBP',
+db2.define_table('CalificacionBP',
     Field('CalificacionBPCarpeta', type='integer'),
     Field('CalificacionBPPadron', type='integer'),
     Field('CalificacionBPMatricula', type='string'),
-    Field('CalificacionId', db.Calificacion.CalificacionId),
+    Field('CalificacionId', db2.Calificacion.CalificacionId),
     Field('CalifBPFechaHoraRegistroDig', type="datetime"),
     Field('CalifBPUsuario', type="string"),
     Field('CalifBPUsuarioUltimaModif', type="string"),
     Field('CalifBPFechaHoraUltimaModif', type="datetime"),
-    primarykey=['CalificacionBPCarpeta','CalificacionBPPadron','CalificacionId']
+    primarykey=['CalificacionBPCarpeta','CalificacionBPPadron','CalificacionId'],
+    migrate=False
 )
 
  
@@ -87,11 +90,11 @@ CarpetaBN
 	CarpetaBNNroCarpeta,int
 """ 
 
-db.define_table('CarpetaBN',
+db2.define_table('CarpetaBN',
     Field('CarpetaBNId', type='integer'),
     Field('CarpetaBNFechaRegistro', type='datetime'),
     Field('CarpetaBNNombreEstabl', type='string'),
-    Field('CarpetaBNDepartamentoEstabl', db.Departamentos.DepartamentosId),
+    Field('CarpetaBNDepartamentoEstabl', db2.Departamentos.DepartamentosId),
     Field('CarpetaBNSeccionCatastralEstabl', type="integer"),
     Field('CarpetaBNSeccionJudicialEstabl', type="integer"),
     Field('CarpetaBNSeccionPolicialEstabl', type="integer"),
@@ -99,7 +102,7 @@ db.define_table('CarpetaBN',
     Field('CarpetaBNCIRepLegal', type="integer"),
     Field('CarpetaBNNombreRepLegal', type="string"),
     Field('CarpetaBNDireccionRepLegal', type="string"),
-    Field('CarpetaBNDepartamentoRepLegal', db.Departamentos.DepartamentosId),
+    Field('CarpetaBNDepartamentoRepLegal', db2.Departamentos.DepartamentosId),
     Field('CarpetaBNTelefonoRepLegal', type="string"),
     Field('CarpetaBNCelularRepLegal', type="string"),
     Field('CarpetaBNFaxRepLegal', type="string"),
@@ -111,17 +114,20 @@ db.define_table('CarpetaBN',
     Field('CarpetaBNCelularTecnico', type="string"),
     Field('CarpetaBNFaxTecnico', type="string"),
     Field('CarpetaBNMailTecnico', type="string"),
-    Field('CarpetaBNTipoProfesional', type="string"), # ver
+    Field('CarpetaBNTipoProfesional', type="boolean"), # ver
     Field('CarpetaBNTipoRebrote', type="integer"),
     Field('CarpetaBNEstadoSanitario', type="string"),
+    Field('CarpetaBNInvEspExoticas', type="boolean"),
+    Field('CarpetaBNIncForestales', type="boolean"),
     Field('CarpetaBNAreaArboladaTotal', type="decimal"),
     Field('CarpetaBNAreaArboladaBN', type="decimal"),
     Field('CarpetaBNAreaArboladaBP', type="decimal"),
     Field('CarpetaBNFechaHoraRegistroDig', type="datetime"),
     Field('CarpetaBNUsuario', type="string"),
-    Field('AsociacionesId', db.Asociaciones.AsociacionesId),
+    Field('AsociacionesId', db2.Asociaciones.AsociacionesId),
     Field('CarpetaBNNroCarpeta', type="integer"),
-    primarykey=['CarpetaBNId']
+    primarykey=['CarpetaBNId'],
+    migrate=False
 )
  
 """ 
@@ -135,8 +141,8 @@ CarpetaBNPadron
 	CarpetaBNPadronTotal,decimal
 	CarpetaBNPadronSupPadron,decimal
 """
-db.define_table('CarpetaBNPadron',
-    Field('CarpetaBNId', db.CarpetaBN.CarpetaBNId),
+db2.define_table('CarpetaBNPadron',
+    Field('CarpetaBNId', db2.CarpetaBN.CarpetaBNId),
     Field('CarpetaBNPadronId', type='decimal'),
     Field('CarpetaBNPadronSeccJudicial', type='integer'),
     Field('CarpetaBNPadronSeccPolicial', type='integer'),
@@ -144,7 +150,8 @@ db.define_table('CarpetaBNPadron',
     Field('CarpetaBNPadronSupBP', type="decimal"),
     Field('CarpetaBNPadronTotal', type="decimal"),
     Field('CarpetaBNPadronSupPadron', type="decimal"),
-    primarykey=['CarpetaBNId','CarpetaBNPadronId','CarpetaBNPadronSeccJudicial']
+    primarykey=['CarpetaBNId','CarpetaBNPadronId','CarpetaBNPadronSeccJudicial'],
+    migrate=False
 )
 
 """ 
@@ -164,20 +171,21 @@ CarpetaBNPropietario
 	CarpetaBNPropietarioMail,char
 """
 
-db.define_table('CarpetaBNPropietario',
-    Field('CarpetaBNId', db.CarpetaBN.CarpetaBNId),
+db2.define_table('CarpetaBNPropietario',
+    Field('CarpetaBNId', db2.CarpetaBN.CarpetaBNId),
     Field('CarpetaBNPropietarioCI', type='integer'),
     Field('CarpetaBNPropietarioNombre', type='string'),
     Field('CarpetaBNPropietarioRazonSocial', type='string'),
     Field('CarpetaBNPropietarioRUT', type="string"),
     Field('CarpetaBNPropietarioDireccion', type="string"),
-    Field('CarpetaBNPropietarioDep', db.Departamentos.DepartamentosId),
+    Field('CarpetaBNPropietarioDep', db2.Departamentos.DepartamentosId),
     Field('CarpetaBNPropietarioCiudad', type="string"),
     Field('CarpetaBNPropietarioTelefono', type="string"),
     Field('CarpetaBNPropietarioCelular', type="string"),
     Field('CarpetaBNPropietarioFax', type="string"),
     Field('CarpetaBNPropietarioMail', type="string"),
-    primarykey=['CarpetaBNId','CarpetaBNPropietarioCI']
+    primarykey=['CarpetaBNId','CarpetaBNPropietarioCI'],
+    migrate=False
 )
 
 """
@@ -261,33 +269,33 @@ CarpetaBP
 	CarpetaBPExisCortaFinalFecha,char
 """
 
-db.define_table('CarpetaBP',
+db2.define_table('CarpetaBP',
     Field('CarpetaBPId', type='integer'),
     Field('CarpetaBPFechaRegistro', type='datetime'),
     Field('CarpetaBPRazonSocial', type='string'),
     Field('CarpetaBPRUT', type="string"),
     Field('CarpetaBPDireccionProductor', type="string"),
-    Field('CarpetaBPDepartamentoProductor', db.Departamentos),
+    Field('CarpetaBPDepartamentoProductor', db2.Departamentos.DepartamentosId),
     Field('CarpetaBPCuidadProductor', type="string"),
     Field('CarpetaBPTelefonoProductor', type="string"),
     Field('CarpetaBPCelularProductor', type="string"),
     Field('CarpetaBPFaxProductor', type="string"),
     Field('CarpetaBPMailProductor', type="string"),
     Field('CarpetaBPNombreEstabl', type="string"),
-    Field('CarpetaBPDepartamentoEstabl', db.Departamentos),
+    Field('CarpetaBPDepartamentoEstabl', db2.Departamentos.DepartamentosId),
     Field('CarpetaBPSeccionCatastralEstabl', type="integer"),
     Field('CarpetaBPSeccionJudicialEstabl', type="integer"),
     Field('CarpetaBPSeccionPolicialEstabl', type="integer"),
     Field('CarpetaBPCIRepLegal', type="integer"),
     Field('CarpetaBPNombreRepLegal', type="string"),
     Field('CarpetaBPDireccionRepLegal', type="string"),
-    Field('CarpetaBPDepartamentoRepLegal', db.Departamentos),
+    Field('CarpetaBPDepartamentoRepLegal', db2.Departamentos.DepartamentosId),
     Field('CarpetaBPTelefonoRepLegal', type="string"),
     Field('CarpetaBPCelularRepLegal', type="string"),
     Field('CarpetaBPFaxRepLegal', type="string"),
     Field('CarpetaBPMailRepLegal', type="string"),
     Field('CarpetaBPCITecnico', type="integer"),
-    Field('CarpetaBPTipoProf', type="string"), # ver
+    Field('CarpetaBPTipoProf', type="boolean"), # ver
     Field('CarpetaBPNombreTecnico', type="string"),
     Field('CarpetaBPDireccionTecnico', type="string"),
     Field('CarpetaBPTelefonoTecnico', type="string"),
@@ -327,18 +335,19 @@ db.define_table('CarpetaBP',
     Field('CarpetaBPUltimoTipoSuelo', type="integer"),
     Field('CarpetaBPDireccionEstabl', type="string"),
     Field('CarpetaBPNroCarpeta', type="decimal"),
-    Field('Migrado', type="string"), #ver
+    Field('Migrado', type="boolean"), #ver
     Field('CarpetaBPLongitudGrados', type="decimal"),
     Field('CarpetaBPLongitudMinutos', type="decimal"),
     Field('CarpetaBPLongitudSegundos', type="decimal"),
     Field('CarpetaBPLatitudGrados', type="decimal"),
     Field('CarpetaBPLatitudMinutos', type="decimal"),
     Field('CarpetaBPLatitudSegundos', type="decimal"),
-    Field('CarpetaBPProyCortaFinalVolum', type="integer"), # Money??
+    Field('CarpetaBPProyCortaFinalVolum', type="decimal"), # Money??
     Field('CarpetaBPProyCortaFinalFecha', type="string"),
-    Field('CarpetaBPExisCortaFinalVolum', type="integer"),
+    Field('CarpetaBPExisCortaFinalVolum', type="decimal"),
     Field('CarpetaBPExisCortaFinalFecha', type="string"),
-    primarykey=['CarpetaBPId']
+    primarykey=['CarpetaBPId'],
+    migrate=False
 )
 
  
@@ -359,8 +368,8 @@ CarpetaBPCarRaleo
 	EspecieGeneroCarRaleoGeneroNombre,char
 """ 
 
-db.define_table('CarpetaBPCarRaleo',
-    Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+db2.define_table('CarpetaBPCarRaleo',
+    Field('CarpetaBPId', db2.CarpetaBP.CarpetaBPId),
     Field('CarpetaBPCarRaleoId', type='decimal'),
     Field('CarpetaBPCarRaleoPlantacionAnio', type='integer'),
     Field('CarpetaBPCarRaleoMetroPorHectarea', type='decimal'),
@@ -369,12 +378,13 @@ db.define_table('CarpetaBPCarRaleo',
     Field('CarpetaBPCarRaleoSuperficieRaleo', type="decimal"),
     Field('CarpetaBPCarRaleoRodalEdad', type="integer"),
     Field('CarpetaBPCarRaleoSupEfectivaAPodar', type="decimal"),
-    Field('EspecieGeneroCarRaleoCodEspecie', db.EspecieGenero),
-    Field('EspecieGeneroCarRaleoCodGenero', db.EspecieGenero),
+    Field('EspecieGeneroCarRaleoCodEspecie', db2.EspecieGenero.EspecieGeneroEspecie),
+    Field('EspecieGeneroCarRaleoCodGenero', db2.EspecieGenero.EspecieGeneroGenero),
     Field('CarpetaBNPropietarioFax', type="string"),
-    Field('EspecieGeneroCarRaleoEspecieNombre', db.EspecieGeneroNombre),
-    Field('EspecieGeneroCarRaleoGeneroNombre', db.EspecieGeneroNombre),
-    primarykey=['CarpetaBPId','CarpetaBPCarRaleoId']
+    Field('EspecieGeneroCarRaleoEspecieNombre', db2.EspecieGeneroNombre.EspecieGeneroNombreEspecie),
+    Field('EspecieGeneroCarRaleoGeneroNombre', db2.EspecieGeneroNombre.EspecieGeneroNombreGenero),
+    primarykey=['CarpetaBPId','CarpetaBPCarRaleoId'],
+    migrate=False
 )
 
 """
@@ -383,10 +393,11 @@ CarpetaBPGrupoDeSueloPorPadron
 	CarpetaBPGrupoDeSueloPorPadronNroPadron,decimal
 """
 
-db.define_table('CarpetaBPGrupoDeSueloPorPadron',
-    Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+db2.define_table('CarpetaBPGrupoDeSueloPorPadron',
+    Field('CarpetaBPId', db2.CarpetaBP.CarpetaBPId),
     Field('CarpetaBPGrupoDeSueloPorPadronNroPadron', type='decimal'),
-    primarykey=['CarpetaBPId','CarpetaBPGrupoDeSueloPorPadronNroPadron']
+    primarykey=['CarpetaBPId','CarpetaBPGrupoDeSueloPorPadronNroPadron'],
+    migrate=False
 )
 
 """
@@ -397,12 +408,13 @@ CarpetaBPGrupoDeSueloPorPadronGrupoDeSue
 	CarpetaBPGrupoDeSueloPorPadronGrupoDeSue,decimal
 """
 
-db.define_table('CarpetaBPGrupoDeSueloPorPadronGrupoDeSue',
-    Field('CarpetaBPId', db.CarpetaBPGrupoDeSueloPorPadron.CarpetaBPId),
-    Field('CarpetaBPGrupoDeSueloPorPadronNroPadron', db.CarpetaBPGrupoDeSueloPorPadron.CarpetaBPGrupoDeSueloPorPadronNroPadron),
+db2.define_table('CarpetaBPGrupoDeSueloPorPadronGrupoDeSue',
+    Field('CarpetaBPId', db2.CarpetaBPGrupoDeSueloPorPadron.CarpetaBPId),
+    Field('CarpetaBPGrupoDeSueloPorPadronNroPadron', db2.CarpetaBPGrupoDeSueloPorPadron.CarpetaBPGrupoDeSueloPorPadronNroPadron),
     Field('TipoSueloId', type='string'),
     Field('CarpetaBPGrupoDeSueloPorPadronGrupoDeSue', type='decimal'),
-    primarykey=['CarpetaBPId','CarpetaBPGrupoDeSueloPorPadronNroPadron']
+    primarykey=['CarpetaBPId','CarpetaBPGrupoDeSueloPorPadronNroPadron'],
+    migrate=False
 )
 
 """
@@ -411,10 +423,11 @@ CarpetaBPObjForestacion
 	CarpetaBPObjForestacionId,smallint
 """
 
-db.define_table('CarpetaBPObjForestacion',
-    Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+db2.define_table('CarpetaBPObjForestacion',
+    Field('CarpetaBPId', db2.CarpetaBP.CarpetaBPId),
     Field('CarpetaBPObjForestacionId', type='integer'),
-    primarykey=['CarpetaBPId','CarpetaBPObjForestacionId']
+    primarykey=['CarpetaBPId','CarpetaBPObjForestacionId'],
+    migrate=False
 )
 
 """ 
@@ -433,20 +446,21 @@ CarpetaBPPadron
 	CarpetaBPPadronSupTotal,decimal
 """
 
-db.define_table('CarpetaBPPadron',
-    Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+db2.define_table('CarpetaBPPadron',
+    Field('CarpetaBPId', db2.CarpetaBP.CarpetaBPId),
     Field('CarpetaBPPadronId', type='decimal'),
     Field('CarpetaBPPadronSupBN', type='decimal'),
     Field('CarpetaBPPadronSupBP', type='decimal'),
-    Field('EspecieGeneroPadronGeneroNombre', type='string'),
-    Field('EspecieGeneroPadronEspecieNombre', type='string'),
-    Field('EspecieGeneroPadronCodGenero', db.EspecieGenero),
-    Field('EspecieGeneroPadronCodEspecie', db.EspecieGenero),
+    Field('EspecieGeneroPadronGeneroNombre', db2.EspecieGeneroNombre.EspecieGeneroNombreGenero),
+    Field('EspecieGeneroPadronEspecieNombre', db2.EspecieGeneroNombre.EspecieGeneroNombreEspecie),
+    Field('EspecieGeneroPadronCodGenero', db2.EspecieGenero.EspecieGeneroGenero),
+    Field('EspecieGeneroPadronCodEspecie', db2.EspecieGenero.EspecieGeneroEspecie),
     Field('CarpetaBPPadronPlantacionAnio', type='integer'),
     Field('CarpetaBPPadronDensidadPlantacion', type='decimal'),
     Field('CarpetaBPPadronSupEfectiva', type='decimal'),
     Field('CarpetaBPPadronSupTotal', type='decimal'),
-    primarykey=['CarpetaBPId','CarpetaBPPadronId','EspecieGeneroPadronGeneroNombre','EspecieGeneroPadronEspecieNombre','CarpetaBPPadronPlantacionAnio']
+    primarykey=['CarpetaBPId','CarpetaBPPadronId','EspecieGeneroPadronGeneroNombre','EspecieGeneroPadronEspecieNombre','CarpetaBPPadronPlantacionAnio'],
+    migrate=False
 )
 
 """
@@ -465,20 +479,21 @@ CarpetaBPProgFor
 	CarpetaBPProgForPlantacionAnio,smallint
 """
 
-db.define_table('CarpetaBPProgFor',
-    Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+db2.define_table('CarpetaBPProgFor',
+    Field('CarpetaBPId', db2.CarpetaBP.CarpetaBPId),
     Field('CarpetaBPProgForId', type='decimal'),
     Field('CarpetaBPProgForDensidadPlantacion', type='decimal'),
     Field('CarpetaBPProgForSupTotal', type='decimal'),
     Field('CarpetaBPProgForPadron', type='decimal'),
-    Field('EspecieGeneroProgForEspecieNombre', type='string'),
-    Field('EspecieGeneroProgForGeneroNombre', type='string'),
-    Field('EspecieGeneroProgForCodEspecie', db.EspecieGenero),
-    Field('EspecieGeneroProgForCodGenero', db.EspecieGenero),
+    Field('EspecieGeneroProgForEspecieNombre', db2.EspecieGeneroNombre.EspecieGeneroNombreEspecie),
+    Field('EspecieGeneroProgForGeneroNombre', db2.EspecieGeneroNombre.EspecieGeneroNombreGenero),
+    Field('EspecieGeneroProgForCodEspecie', db2.EspecieGenero.EspecieGeneroEspecie),
+    Field('EspecieGeneroProgForCodGenero', db2.EspecieGenero.EspecieGeneroGenero),
     Field('CarpetaBPProgForSupAfectada', type='decimal'),
     Field('CarpetaBPProgForSupEfectiva', type='decimal'),
     Field('CarpetaBPProgForPlantacionAnio', type='integer'),
-    primarykey=['CarpetaBPId','CarpetaBPProgForId']
+    primarykey=['CarpetaBPId','CarpetaBPProgForId'],
+    migrate=False
 )
 
 """
@@ -502,8 +517,8 @@ CarpetaBPTitular
 	DGFTitularEnCalidadDeId,smallint
 """
 
-db.define_table('CarpetaBPTitular',
-    Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+db2.define_table('CarpetaBPTitular',
+    Field('CarpetaBPId', db2.CarpetaBP.CarpetaBPId),
     Field('CarpetaBPTitularCI', type='integer'),
     Field('CarpetaBPTitularNombre', type='string'),
     Field('CarpetaBPTitularDir', type='string'),
@@ -512,15 +527,16 @@ db.define_table('CarpetaBPTitular',
     Field('CarpetaBPTitularCelular', type='string'),
     Field('CarpetaBPTitularMail', type='string'),
     Field('CarpetaBPTitularCiudad', type='string'),
-    Field('CarpetaBPTitularDep', db.Departamentos),
+    Field('CarpetaBPTitularDep', db2.Departamentos.DepartamentosId),
     Field('CarpetaBPTitularOtros', type='string'),
-    Field('CarpetaBPTitularEsUsufructurario', type='string'), #ver
-    Field('CarpetaBPTitularEsPromComprador', type='string'), #ver    
-    Field('CarpetaBPTitularEsComodatario', type='string'), #ver
-    Field('CarpetaBPTitularEsArrendatario', type='string'), #ver
-    Field('CarpetaBPTitularEsPropietario', type='string'), #ver
-    Field('DGFTitularEnCalidadDeId', db.DGFTitularEnCalidadDe),
-    primarykey=['CarpetaBPId','CarpetaBPTitularCI']
+    Field('CarpetaBPTitularEsUsufructurario', type='boolean'), #ver
+    Field('CarpetaBPTitularEsPromComprador', type='boolean'), #ver    
+    Field('CarpetaBPTitularEsComodatario', type='boolean'), #ver
+    Field('CarpetaBPTitularEsArrendatario', type='boolean'), #ver
+    Field('CarpetaBPTitularEsPropietario', type='boolean'), #ver
+    Field('DGFTitularEnCalidadDeId', db2.DGFTitularEnCalidadDe.DGFTitularEnCalidadDeId),
+    primarykey=['CarpetaBPId','CarpetaBPTitularCI'],
+    migrate=False
 )
 
 """
@@ -529,10 +545,11 @@ Departamentos
 	DepartamentosNombre,char
 """
 
-db.define_table('Departamentos',
+db2.define_table('Departamentos',
     Field('DepartamentosId', type='decimal'),
     Field('DepartamentosNombre', type='string'),
-    primarykey=['DepartamentosId']
+    primarykey=['DepartamentosId'],
+    migrate=False
 )
 
 """
@@ -541,10 +558,11 @@ DGFTitularEnCalidadDe
 	DGFTitularEnCalidadDeDescripcion,char
 """
 
-db.define_table('DGFTitularEnCalidadDe',
+db2.define_table('DGFTitularEnCalidadDe',
     Field('DGFTitularEnCalidadDeId', type='integer'),
     Field('DGFTitularEnCalidadDeDescripcion', type='string'),
-    primarykey=['DGFTitularEnCalidadDeId']
+    primarykey=['DGFTitularEnCalidadDeId'],
+    migrate=False
 )
 
 """
@@ -555,12 +573,13 @@ Especie
 	EspecieNombre,char
 """
 
-db.define_table('Especie',
+db2.define_table('Especie',
     Field('EspecieId', type='decimal'),
-    Field('GeneroId', type='string'),
-    Field('GeneroNombre', type='string'),
+    Field('GeneroId', db2.Genero.GeneroId),
+    Field('GeneroNombre', db2.Genero.GeneroNombre),
     Field('EspecieNombre', type='string'),
-    primarykey=['EspecieId','GeneroId']
+    primarykey=['EspecieId','GeneroId'],
+    migrate=False
 )
 
 """
@@ -573,14 +592,15 @@ EspecieBP
 	EspecieBPFechaHoraUltimaModif,datetime
 """
 
-db.define_table('EspecieBP',
+db2.define_table('EspecieBP',
     Field('EspecieBPCarpeta', type='decimal'),
     Field('EspecieBPPadron', type='decimal'),
     Field('EspecieBPFechaHoraRegistroDig', type='datetime'),
     Field('EspecieBPUsuario', type='string'),
     Field('EspecieBPUsuarioUltimaModif', type='string'),
     Field('EspecieBPFechaHoraUltimaModif', type='datetime'),
-    primarykey=['EspecieBPCarpeta','EspecieBPPadron']
+    primarykey=['EspecieBPCarpeta','EspecieBPPadron'],
+    migrate=False
 )
 
 """
@@ -591,12 +611,13 @@ EspecieGenero
 	EspecieGeneroGeneroNombre,char
 """
 
-db.define_table('EspecieGenero',
+db2.define_table('EspecieGenero',
     Field('EspecieGeneroEspecie', type='decimal'),
     Field('EspecieGeneroGenero', type='string'),
     Field('EspecieGeneroEspecieNombre', type='string'),
     Field('EspecieGeneroGeneroNombre', type='string'),
-    primarykey=['EspecieGeneroEspecie','EspecieGeneroGenero']
+    primarykey=['EspecieGeneroEspecie','EspecieGeneroGenero'],
+    migrate=False
 )
 
  
@@ -606,10 +627,11 @@ EspecieGeneroNombre
 	EspecieGeneroNombreEspecie,char
 """ 
 
-db.define_table('EspecieGeneroNombre',
+db2.define_table('EspecieGeneroNombre',
     Field('EspecieGeneroNombreGenero', type='string'),
     Field('EspecieGeneroNombreEspecie', type='string'),
-    primarykey=['EspecieGeneroNombreGenero','EspecieGeneroNombreEspecie']
+    primarykey=['EspecieGeneroNombreGenero','EspecieGeneroNombreEspecie'],
+    migrate=False
 )
 
 """
@@ -618,10 +640,11 @@ Genero
 	GeneroNombre,char
 """
 
-db.define_table('Genero',
+db2.define_table('Genero',
     Field('GeneroId', type='string'),
     Field('GeneroNombre', type='string'),
-    primarykey=['GeneroId','GeneroNombre']
+    primarykey=['GeneroId','GeneroNombre'],
+    migrate=False
 )
 
 """
@@ -630,10 +653,11 @@ GrupoDeSuelos
 	GrupoDeSuelosNombre,char
 """
 
-db.define_table('GrupoDeSuelos',
+db2.define_table('GrupoDeSuelos',
     Field('GrupoDeSuelosId', type='string'),
     Field('GrupoDeSuelosNombre', type='string'),
-    primarykey=['GrupoDeSuelosId']
+    primarykey=['GrupoDeSuelosId'],
+    migrate=False
 )
 
 """
@@ -642,10 +666,11 @@ Operacion
 	OperacionNombre,char
 """
 
-db.define_table('Operacion',
-    Field('OperacionId', type='integer'),
+db2.define_table('Operacion',
+    Field('OperacionId', db2.Operacion.OperacionId),
     Field('OperacionNombre', type='string'),
-    primarykey=['OperacionId']
+    primarykey=['OperacionId'],
+    migrate=False
 )
 
 """
@@ -657,13 +682,14 @@ PlanDeManejoBN
 	PlanDeManejoBNFechaHoraRegistroDig,datetime
 """
 
-db.define_table('PlanDeManejoBN',
-    Field('PlanDeManejoBNId', type='decimal'),
+db2.define_table('PlanDeManejoBN',
+    Field('PlanDeManejoBNId', db2.PlanDeManejoBN.PlanDeManejoBNId),
     Field('CarpetaBNId', type='string'),
     Field('OperacionId', type='integer'),
     Field('PlanDeManejoBNUsuario', type='string'),
     Field('PlanDeManejoBNFechaHoraRegistroDig', type='datetime'),
-    primarykey=['PlanDeManejoBNId']
+    primarykey=['PlanDeManejoBNId'],
+    migrate=False
 )
  
 """
@@ -678,15 +704,16 @@ PlanDeManejoBNPadron
 """
 
 
-db.define_table('PlanDeManejoBNPadron',
+db2.define_table('PlanDeManejoBNPadron',
     Field('PlanDeManejoBNId', type='decimal'),
-    Field('FormPlanManejoBNCarpeta', db.CarpetaBN.CarpetaBNId),
+    Field('FormPlanManejoBNCarpeta', db2.CarpetaBN.CarpetaBNId),
     Field('FormPlanManejoBNPadron', type='decimal'),
     Field('PlanDeManejoBNPadronSupACortar', type='decimal'),
     Field('PlanDeManejoBNPadronToneladasEstimadas', type='integer'),
     Field('PlanDeManejoBNPadronPlazo', type='integer'),
     Field('PlanDeManejoBNPadronFundamentacion', type='string'),
-    primarykey=['PlanDeManejoBNId','FormPlanManejoBNCarpeta','FormPlanManejoBNPadron']
+    primarykey=['PlanDeManejoBNId','FormPlanManejoBNCarpeta','FormPlanManejoBNPadron'],
+    migrate=False
 )
 
 """
@@ -729,11 +756,11 @@ TempCarpetaBN
 	TempCarpetaBNNroCarpeta,int
 """
 
-db.define_table('TempCarpetaBN',
-    Field('TempCarpetaBNId', type='string'),
+db2.define_table('TempCarpetaBN',
+    Field('TempCarpetaBNId', db2.TempCarpetaBN.TempCarpetaBNId),
     Field('TempCarpetaBNFechaRegistro', type='datetime'),
     Field('TempCarpetaBNNombreEstabl', type='string'),
-    Field('CarpetaBNDepartamentoEstabl', db.Departamentos),
+    Field('CarpetaBNDepartamentoEstabl', db2.Departamentos.DepartamentosId),
     Field('TempCarpetaBNSeccionCatastralEstabl', type='integer'),
     Field('TempCarpetaBNSeccionJudicialEstabl', type='integer'),
     Field('TempCarpetaBNSeccionPolicialEstabl', type='integer'),
@@ -741,24 +768,24 @@ db.define_table('TempCarpetaBN',
     Field('TempCarpetaBNCIRepLegal', type='integer'),
     Field('TempCarpetaBNNombreRepLegal', type='string'),
     Field('TempCarpetaBNDireccionRepLegal', type='string'),
-    Field('CarpetaBNDepartamentoRepLegal', db.Departamentos),
+    Field('CarpetaBNDepartamentoRepLegal', db2.Departamentos.DepartamentosId),
     Field('TempCarpetaBNTelefonoRepLegal', type='string'),
     Field('TempCarpetaBNCelularRepLegal', type='string'),
     Field('TempCarpetaBNFaxRepLegal', type='string'),
     Field('TempCarpetaBNMailRepLegal', type='string'),
     Field('TempCarpetaBNCITecnico', type='integer'),
-    Field('TempCarpetaBNTipoProfesional', type='string'), #ver
+    Field('TempCarpetaBNTipoProfesional', type='boolean'), #ver
     Field('TempCarpetaBNNombreTecnico', type='string'),
     Field('TempCarpetaBNDireccionTecnico', type='string'),
     Field('TempCarpetaBNTelefonoTecnico', type='string'),
     Field('TempCarpetaBNCelularTecnico', type='string'),
     Field('TempCarpetaBNFaxTecnico', type='string'),
     Field('TempCarpetaBNMailTecnico', type='string'),
-    Field('AsociacionesId', db.Asociaciones.AsociacionesId),
+    Field('AsociacionesId', db2.Asociaciones.AsociacionesId),
     Field('TempCarpetaBNTipoRebrote', type='integer'),
     Field('TempCarpetaBNEstadoSanitario', type='string'),
-    Field('TempCarpetaBNInvEspExoticas', type='string'), #ver
-    Field('TempCarpetaBNIncForestales', type='string'), #ver
+    Field('TempCarpetaBNInvEspExoticas', type='boolean'), #ver
+    Field('TempCarpetaBNIncForestales', type='boolean'), #ver
     Field('TempCarpetaBNAccionesAntropicas', type='string'),
     Field('TempCarpetaBNAreaArboladaTotal', type='decimal'),
     Field('TempCarpetaBNAreaArboladaBN', type='decimal'),
@@ -766,7 +793,8 @@ db.define_table('TempCarpetaBN',
     Field('TempCarpetaBNFechaHoraRegistroDig', type='datetime'),
     Field('TempCarpetaBNFechaHoraRegistroDig', type='string'),
     Field('TempCarpetaBNFechaHoraRegistroDig', type='integer'),
-    primarykey=['TempCarpetaBNId']
+    primarykey=['TempCarpetaBNId'],
+    migrate=False
 )
 
 """ 
@@ -781,8 +809,8 @@ TempCarpetaBNPadron
 	TempCarpetaBNPadronSeccPolicial,smallint
 """
 
-db.define_table('TempCarpetaBNPadron',
-    Field('TempCarpetaBNId', type='string'),
+db2.define_table('TempCarpetaBNPadron',
+    Field('TempCarpetaBNId', db2.TempCarpetaBN.TempCarpetaBNId),
     Field('TempCarpetaBNPadronId', type='decimal'),
     Field('TempCarpetaBNPadronSeccJudicial', type='integer'),
     Field('TempCarpetaBNPadronSupBN', type='decimal'),
@@ -790,7 +818,8 @@ db.define_table('TempCarpetaBNPadron',
     Field('TempCarpetaBNPadronTotal', type='decimal'),
     Field('TempCarpetaBNPadronSupPadron', type='decimal'),
     Field('TempCarpetaBNPadronSeccPolicial', type='integer'),
-    primarykey=['PlanDeManejoBNId','TempCarpetaBNPadronId','TempCarpetaBNPadronSeccJudicial']
+    primarykey=['PlanDeManejoBNId','TempCarpetaBNPadronId','TempCarpetaBNPadronSeccJudicial'],
+    migrate=False
 )
 
 """
@@ -809,8 +838,8 @@ TempCarpetaBNPropietario
 	TempCarpetaBNPropietarioDep,char
 """
 
-db.define_table('TempCarpetaBNPropietario',
-    Field('TempCarpetaBNId', db.CarpetaBN),
+db2.define_table('TempCarpetaBNPropietario',
+    Field('TempCarpetaBNId', db2.CarpetaBN),
     Field('TempCarpetaBNPropietarioCI', type='integer'),
     Field('TempCarpetaBNPropietarioNombre', type='string'),
     Field('TempCarpetaBNPropietarioRazonSocial', type='string'),
@@ -821,8 +850,9 @@ db.define_table('TempCarpetaBNPropietario',
     Field('TempCarpetaBNPropietarioCelular', type="string"),
     Field('TempCarpetaBNPropietarioFax', type="string"),
     Field('TempCarpetaBNPropietarioMail', type="string"),
-    Field('TempCarpetaBNPropietarioDep', db.Departamentos),
-    primarykey=['CarpetaBNId','CarpetaBNPropietarioCI']
+    Field('TempCarpetaBNPropietarioDep', db2.Departamentos.DepartamentosId),
+    primarykey=['CarpetaBNId','CarpetaBNPropietarioCI'],
+    migrate=False
 )
 
 
@@ -832,10 +862,11 @@ TipoSuelo
 	TipoSueloNombre,char
 """
 
-db.define_table('TipoSuelo',
-    Field('TipoSueloId', type='string'),
+db2.define_table('TipoSuelo',
+    Field('TipoSueloId', db2.TipoSuelo.TipoSueloId),
     Field('TipoSueloNombre', type='string'),
-    primarykey=['TipoSueloId']
+    primarykey=['TipoSueloId'],
+    migrate=False
 )
 
 """
@@ -844,10 +875,11 @@ Usuario
 	UsuarioNombreApellido,char
 """ 
 
-db.define_table('Usuario',
+db2.define_table('Usuario',
     Field('UsuarioNombre', type='string'),
     Field('UsuarioNombreApellido', type='string'),
-    primarykey=['UsuarioNombre']
+    primarykey=['UsuarioNombre'],
+    migrate=False
 ) 
  
 """ 
