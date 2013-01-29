@@ -13,7 +13,9 @@
 
 if not request.env.web2py_runtime_gae:
     ## if NOT running on Google App Engine use SQLite or other DB
-    db = DAL('postgres://jgalan:12jgalan12@localhost/mosivo', migrate_enabled=True)
+    db = DAL('sqlite://storage.db', migrate_enabled=True)
+    db2 = DAL('postgres://jgalan:12jgalan12@localhost/mosivo', migrate_enabled=False)
+    #db2 = DAL('postgres://mosivo:12mosivo12@192.168.1.2/mosivo', migrate_enabled=True)
 else:
     ## connect to Google BigTable (optional 'google:datastore://namespace')
     db = DAL('google:datastore')
@@ -46,6 +48,7 @@ auth = Auth(db)
 crud, service, plugins = Crud(db), Service(), PluginManager()
 
 ## create all tables needed by auth if not custom tables
+
 auth.define_tables(username=False, signature=False)
 
 ## configure email
@@ -106,6 +109,8 @@ if VERSIONING_DB:
 import pyodbc
 # Global variable to MSSQL Server (Database DGF)
 #mssqlcon = pyodbc.connect(CON_STR2)
+
+
 if IN_DGF:
     #mssqlcon = pyodbc.connect(CON_STR2)
     mssqlcon = pyodbc.connect(CON_STR2)
