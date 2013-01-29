@@ -7,10 +7,9 @@ Asociaciones
 
 db.define_table('Asociaciones',
     Field('AsociacionesId', type='integer'),
-    Field('AsociacionesDescripcion', type="string"),
+    Field('AsociacionesDescripcion', type='string'),
     primarykey=['AsociacionesId']
 )
-
 
 """
 Calificacion
@@ -25,8 +24,8 @@ db.define_table('Calificacion',
  
 """ 
 CalificacionBP
-	CalificacionBPCarpeta,decimal
-	CalificacionBPPadron,decimal
+	CalificacionBPCarpeta,double
+	CalificacionBPPadron,double
 	CalificacionBPMatricula,char
 	CalificacionId,char
 	CalifBPFechaHoraRegistroDig,datetime
@@ -38,13 +37,15 @@ db.define_table('CalificacionBP',
     Field('CalificacionBPCarpeta', type='integer'),
     Field('CalificacionBPPadron', type='integer'),
     Field('CalificacionBPMatricula', type='string'),
-    Field('CalificacionId', db.Calificacion.CalificacionId),
-    Field('CalifBPFechaHoraRegistroDig', type="datetime"),
+    Field('CalificacionId', type='integer'),
+    Field('CalificacionId', type='integer'),
+    Field('CalifBPFechaHoraRegistroDig', type='datetime'),
     Field('CalifBPUsuario', type="string"),
     Field('CalifBPUsuarioUltimaModif', type="string"),
-    Field('CalifBPFechaHoraUltimaModif', type="datetime"),
+    Field('CalifBPFechaHoraUltimaModif', type='datetime'),
     primarykey=['CalificacionBPCarpeta','CalificacionBPPadron','CalificacionId']
 )
+
 
  
 """
@@ -78,9 +79,9 @@ CarpetaBN
 	CarpetaBNInvEspExoticas,bit
 	CarpetaBNIncForestales,bit
 	CarpetaBNAccionesAntropicas,varchar
-	CarpetaBNAreaArboladaTotal,decimal
-	CarpetaBNAreaArboladaBN,decimal
-	CarpetaBNAreaArboladaBP,decimal
+	CarpetaBNAreaArboladaTotal,double
+	CarpetaBNAreaArboladaBN,double
+	CarpetaBNAreaArboladaBP,double
 	CarpetaBNFechaHoraRegistroDig,datetime
 	CarpetaBNUsuario,char
 	AsociacionesId,smallint
@@ -91,7 +92,8 @@ db.define_table('CarpetaBN',
     Field('CarpetaBNId', type='integer'),
     Field('CarpetaBNFechaRegistro', type='datetime'),
     Field('CarpetaBNNombreEstabl', type='string'),
-    Field('CarpetaBNDepartamentoEstabl', db.Departamentos.DepartamentosId),
+    #Field('CarpetaBNDepartamentoEstabl', db.Departamentos.DepartamentosId),
+    Field('CarpetaBNDepartamentoEstabl', type='integer'),
     Field('CarpetaBNSeccionCatastralEstabl', type="integer"),
     Field('CarpetaBNSeccionJudicialEstabl', type="integer"),
     Field('CarpetaBNSeccionPolicialEstabl', type="integer"),
@@ -99,7 +101,8 @@ db.define_table('CarpetaBN',
     Field('CarpetaBNCIRepLegal', type="integer"),
     Field('CarpetaBNNombreRepLegal', type="string"),
     Field('CarpetaBNDireccionRepLegal', type="string"),
-    Field('CarpetaBNDepartamentoRepLegal', db.Departamentos.DepartamentosId),
+    #Field('CarpetaBNDepartamentoRepLegal', db.Departamentos.DepartamentosId),
+    Field('CarpetaBNDepartamentoRepLegal', type="integer"),
     Field('CarpetaBNTelefonoRepLegal', type="string"),
     Field('CarpetaBNCelularRepLegal', type="string"),
     Field('CarpetaBNFaxRepLegal', type="string"),
@@ -114,12 +117,13 @@ db.define_table('CarpetaBN',
     Field('CarpetaBNTipoProfesional', type="string"), # ver
     Field('CarpetaBNTipoRebrote', type="integer"),
     Field('CarpetaBNEstadoSanitario', type="string"),
-    Field('CarpetaBNAreaArboladaTotal', type="decimal"),
-    Field('CarpetaBNAreaArboladaBN', type="decimal"),
-    Field('CarpetaBNAreaArboladaBP', type="decimal"),
-    Field('CarpetaBNFechaHoraRegistroDig', type="datetime"),
+    Field('CarpetaBNAreaArboladaTotal', type='double'),
+    Field('CarpetaBNAreaArboladaBN', type='double'),
+    Field('CarpetaBNAreaArboladaBP', type='double'),
+    Field('CarpetaBNFechaHoraRegistroDig', type='datetime'),
     Field('CarpetaBNUsuario', type="string"),
-    Field('AsociacionesId', db.Asociaciones.AsociacionesId),
+    #Field('AsociacionesId', db.Asociaciones.AsociacionesId),
+    Field('AsociacionesId', type="integer"),
     Field('CarpetaBNNroCarpeta', type="integer"),
     primarykey=['CarpetaBNId']
 )
@@ -127,23 +131,24 @@ db.define_table('CarpetaBN',
 """ 
 CarpetaBNPadron
 	CarpetaBNId,char
-	CarpetaBNPadronId,decimal
+	CarpetaBNPadronId,double
 	CarpetaBNPadronSeccJudicial,smallint
 	CarpetaBNPadronSeccPolicial,smallint
-	CarpetaBNPadronSupBN,decimal
-	CarpetaBNPadronSupBP,decimal
-	CarpetaBNPadronTotal,decimal
-	CarpetaBNPadronSupPadron,decimal
+	CarpetaBNPadronSupBN,double
+	CarpetaBNPadronSupBP,double
+	CarpetaBNPadronTotal,double
+	CarpetaBNPadronSupPadron,double
 """
 db.define_table('CarpetaBNPadron',
-    Field('CarpetaBNId', db.CarpetaBN.CarpetaBNId),
-    Field('CarpetaBNPadronId', type='decimal'),
+    #Field('CarpetaBNId', db.CarpetaBN.CarpetaBNId),
+    Field('CarpetaBNId', type='integer'),
+    Field('CarpetaBNPadronId', type='double'),
     Field('CarpetaBNPadronSeccJudicial', type='integer'),
     Field('CarpetaBNPadronSeccPolicial', type='integer'),
-    Field('CarpetaBNPadronSupBN', type="decimal"),
-    Field('CarpetaBNPadronSupBP', type="decimal"),
-    Field('CarpetaBNPadronTotal', type="decimal"),
-    Field('CarpetaBNPadronSupPadron', type="decimal"),
+    Field('CarpetaBNPadronSupBN', type='double'),
+    Field('CarpetaBNPadronSupBP', type='double'),
+    Field('CarpetaBNPadronTotal', type='double'),
+    Field('CarpetaBNPadronSupPadron', type='double'),
     primarykey=['CarpetaBNId','CarpetaBNPadronId','CarpetaBNPadronSeccJudicial']
 )
 
@@ -165,13 +170,15 @@ CarpetaBNPropietario
 """
 
 db.define_table('CarpetaBNPropietario',
-    Field('CarpetaBNId', db.CarpetaBN.CarpetaBNId),
+    #Field('CarpetaBNId', db.CarpetaBN.CarpetaBNId),
+    Field('CarpetaBNId', type='integer'),    
     Field('CarpetaBNPropietarioCI', type='integer'),
     Field('CarpetaBNPropietarioNombre', type='string'),
     Field('CarpetaBNPropietarioRazonSocial', type='string'),
     Field('CarpetaBNPropietarioRUT', type="string"),
     Field('CarpetaBNPropietarioDireccion', type="string"),
-    Field('CarpetaBNPropietarioDep', db.Departamentos.DepartamentosId),
+    #Field('CarpetaBNPropietarioDep', db.Departamentos.DepartamentosId),
+    Field('CarpetaBNPropietarioDep', type='integer'),
     Field('CarpetaBNPropietarioCiudad', type="string"),
     Field('CarpetaBNPropietarioTelefono', type="string"),
     Field('CarpetaBNPropietarioCelular', type="string"),
@@ -183,7 +190,7 @@ db.define_table('CarpetaBNPropietario',
 """
  
 CarpetaBP
-	CarpetaBPId,decimal
+	CarpetaBPId,double
 	CarpetaBPFechaRegistro,datetime
 	CarpetaBPRazonSocial,char
 	CarpetaBPRUT,char
@@ -247,14 +254,14 @@ CarpetaBP
 	CarpetaBPTelefonoEstabl,char
 	CarpetaBPUltimoTipoSuelo,smallint
 	CarpetaBPDireccionEstabl,char
-	CarpetaBPNroCarpeta,decimal
+	CarpetaBPNroCarpeta,double
 	Migrado,bit
-	CarpetaBPLongitudGrados,decimal
-	CarpetaBPLongitudMinutos,decimal
-	CarpetaBPLongitudSegundos,decimal
-	CarpetaBPLatitudGrados,decimal
-	CarpetaBPLatitudMinutos,decimal
-	CarpetaBPLatitudSegundos,decimal
+	CarpetaBPLongitudGrados,double
+	CarpetaBPLongitudMinutos,double
+	CarpetaBPLongitudSegundos,double
+	CarpetaBPLatitudGrados,double
+	CarpetaBPLatitudMinutos,double
+	CarpetaBPLatitudSegundos,double
 	CarpetaBPProyCortaFinalVolum,money
 	CarpetaBPProyCortaFinalFecha,char
 	CarpetaBPExisCortaFinalVolum,money
@@ -267,21 +274,24 @@ db.define_table('CarpetaBP',
     Field('CarpetaBPRazonSocial', type='string'),
     Field('CarpetaBPRUT', type="string"),
     Field('CarpetaBPDireccionProductor', type="string"),
-    Field('CarpetaBPDepartamentoProductor', db.Departamentos),
+    #Field('CarpetaBPDepartamentoProductor', db.Departamentos),
+    Field('CarpetaBPDepartamentoProductor', type='integer'),    
     Field('CarpetaBPCuidadProductor', type="string"),
     Field('CarpetaBPTelefonoProductor', type="string"),
     Field('CarpetaBPCelularProductor', type="string"),
     Field('CarpetaBPFaxProductor', type="string"),
     Field('CarpetaBPMailProductor', type="string"),
     Field('CarpetaBPNombreEstabl', type="string"),
-    Field('CarpetaBPDepartamentoEstabl', db.Departamentos),
+    #Field('CarpetaBPDepartamentoEstabl', db.Departamentos),
+    Field('CarpetaBPDepartamentoEstabl', type='integer'),    
     Field('CarpetaBPSeccionCatastralEstabl', type="integer"),
     Field('CarpetaBPSeccionJudicialEstabl', type="integer"),
     Field('CarpetaBPSeccionPolicialEstabl', type="integer"),
     Field('CarpetaBPCIRepLegal', type="integer"),
     Field('CarpetaBPNombreRepLegal', type="string"),
     Field('CarpetaBPDireccionRepLegal', type="string"),
-    Field('CarpetaBPDepartamentoRepLegal', db.Departamentos),
+    #Field('CarpetaBPDepartamentoRepLegal', db.Departamentos),
+    Field('CarpetaBPDepartamentoRepLegal', type="integer"),    
     Field('CarpetaBPTelefonoRepLegal', type="string"),
     Field('CarpetaBPCelularRepLegal', type="string"),
     Field('CarpetaBPFaxRepLegal', type="string"),
@@ -300,9 +310,9 @@ db.define_table('CarpetaBP',
     Field('CarpetaBPCelAutorizado', type="string"),
     Field('CarpetaBPFaxAutorizado', type="string"),
     Field('CarpetaBPMailAutorizado', type="string"),
-    Field('CarpetaBPFechaHoraRegistroDig', type="datetime"),
+    Field('CarpetaBPFechaHoraRegistroDig', type='datetime'),
     Field('CarpetaBPUsuario', type="string"),
-    Field('CarpetaBPFechaHoraUltimaModif', type="datetime"),
+    Field('CarpetaBPFechaHoraUltimaModif', type='datetime'),
     Field('CarpetaBPUsuarioUltimaModif', type="string"),
     Field('CarpetaBPDepartamentoTecnico', type="integer"),
     Field('CarpetaBPCiudadTecnico', type="string"),
@@ -326,14 +336,14 @@ db.define_table('CarpetaBP',
     Field('CarpetaBPTelefonoEstabl', type="string"),
     Field('CarpetaBPUltimoTipoSuelo', type="integer"),
     Field('CarpetaBPDireccionEstabl', type="string"),
-    Field('CarpetaBPNroCarpeta', type="decimal"),
+    Field('CarpetaBPNroCarpeta', type='double'),
     Field('Migrado', type="string"), #ver
-    Field('CarpetaBPLongitudGrados', type="decimal"),
-    Field('CarpetaBPLongitudMinutos', type="decimal"),
-    Field('CarpetaBPLongitudSegundos', type="decimal"),
-    Field('CarpetaBPLatitudGrados', type="decimal"),
-    Field('CarpetaBPLatitudMinutos', type="decimal"),
-    Field('CarpetaBPLatitudSegundos', type="decimal"),
+    Field('CarpetaBPLongitudGrados', type='double'),
+    Field('CarpetaBPLongitudMinutos', type='double'),
+    Field('CarpetaBPLongitudSegundos', type='double'),
+    Field('CarpetaBPLatitudGrados', type='double'),
+    Field('CarpetaBPLatitudMinutos', type='double'),
+    Field('CarpetaBPLatitudSegundos', type='double'),
     Field('CarpetaBPProyCortaFinalVolum', type="integer"), # Money??
     Field('CarpetaBPProyCortaFinalFecha', type="string"),
     Field('CarpetaBPExisCortaFinalVolum', type="integer"),
@@ -344,146 +354,161 @@ db.define_table('CarpetaBP',
  
 """
 CarpetaBPCarRaleo
-	CarpetaBPId,decimal
-	CarpetaBPCarRaleoId,decimal
+	CarpetaBPId,double
+	CarpetaBPCarRaleoId,double
 	CarpetaBPCarRaleoPlantacionAnio,smallint
-	CarpetaBPCarRaleoMetroPorHectarea,decimal
+	CarpetaBPCarRaleoMetroPorHectarea,double
 	CarpetaBPCarRaleoAlturaEstimada,smallint
-	CarpetaBPCarRaleoDensidad,decimal
-	CarpetaBPCarRaleoSuperficieRaleo,decimal
+	CarpetaBPCarRaleoDensidad,double
+	CarpetaBPCarRaleoSuperficieRaleo,double
 	CarpetaBPCarRaleoRodalEdad,smallint
-	CarpetaBPCarRaleoSupEfectivaAPodar,decimal
-	EspecieGeneroCarRaleoCodEspecie,decimal
+	CarpetaBPCarRaleoSupEfectivaAPodar,double
+	EspecieGeneroCarRaleoCodEspecie,double
 	EspecieGeneroCarRaleoCodGenero,char
 	EspecieGeneroCarRaleoEspecieNombre,char
 	EspecieGeneroCarRaleoGeneroNombre,char
 """ 
 
 db.define_table('CarpetaBPCarRaleo',
-    Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
-    Field('CarpetaBPCarRaleoId', type='decimal'),
+    #Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+    Field('CarpetaBPId', type='integer'),    
+    Field('CarpetaBPCarRaleoId', type='double'),
     Field('CarpetaBPCarRaleoPlantacionAnio', type='integer'),
-    Field('CarpetaBPCarRaleoMetroPorHectarea', type='decimal'),
+    Field('CarpetaBPCarRaleoMetroPorHectarea', type='double'),
     Field('CarpetaBPCarRaleoAlturaEstimada', type="integer"),
-    Field('CarpetaBPCarRaleoDensidad', type="decimal"),
-    Field('CarpetaBPCarRaleoSuperficieRaleo', type="decimal"),
+    Field('CarpetaBPCarRaleoDensidad', type='double'),
+    Field('CarpetaBPCarRaleoSuperficieRaleo', type='double'),
     Field('CarpetaBPCarRaleoRodalEdad', type="integer"),
-    Field('CarpetaBPCarRaleoSupEfectivaAPodar', type="decimal"),
-    Field('EspecieGeneroCarRaleoCodEspecie', db.EspecieGenero),
-    Field('EspecieGeneroCarRaleoCodGenero', db.EspecieGenero),
+    Field('CarpetaBPCarRaleoSupEfectivaAPodar', type='double'),
+    #Field('EspecieGeneroCarRaleoCodEspecie', db.EspecieGenero),
+    #Field('EspecieGeneroCarRaleoCodGenero', db.EspecieGenero),
+    Field('EspecieGeneroCarRaleoCodEspecie', type="integer"),
+    Field('EspecieGeneroCarRaleoCodGenero', type="integer"),
     Field('CarpetaBNPropietarioFax', type="string"),
-    Field('EspecieGeneroCarRaleoEspecieNombre', db.EspecieGeneroNombre),
-    Field('EspecieGeneroCarRaleoGeneroNombre', db.EspecieGeneroNombre),
+    #Field('EspecieGeneroCarRaleoEspecieNombre', db.EspecieGeneroNombre),
+    #Field('EspecieGeneroCarRaleoGeneroNombre', db.EspecieGeneroNombre),
+    Field('EspecieGeneroCarRaleoEspecieNombre', type="integer"),
+    Field('EspecieGeneroCarRaleoGeneroNombre', type="integer"),
     primarykey=['CarpetaBPId','CarpetaBPCarRaleoId']
 )
 
 """
 CarpetaBPGrupoDeSueloPorPadron
-	CarpetaBPId,decimal
-	CarpetaBPGrupoDeSueloPorPadronNroPadron,decimal
+	CarpetaBPId,double
+	CarpetaBPGrupoDeSueloPorPadronNroPadron,double
 """
 
 db.define_table('CarpetaBPGrupoDeSueloPorPadron',
-    Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
-    Field('CarpetaBPGrupoDeSueloPorPadronNroPadron', type='decimal'),
+    #Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+    Field('CarpetaBPId', type="integer"),
+    Field('CarpetaBPGrupoDeSueloPorPadronNroPadron', type='double'),
     primarykey=['CarpetaBPId','CarpetaBPGrupoDeSueloPorPadronNroPadron']
 )
 
 """
 CarpetaBPGrupoDeSueloPorPadronGrupoDeSue
-	CarpetaBPId,decimal
-	CarpetaBPGrupoDeSueloPorPadronNroPadron,decimal
+	CarpetaBPId,double
+	CarpetaBPGrupoDeSueloPorPadronNroPadron,double
 	TipoSueloId,char
-	CarpetaBPGrupoDeSueloPorPadronGrupoDeSue,decimal
+	CarpetaBPGrupoDeSueloPorPadronGrupoDeSue,double
 """
 
 db.define_table('CarpetaBPGrupoDeSueloPorPadronGrupoDeSue',
-    Field('CarpetaBPId', db.CarpetaBPGrupoDeSueloPorPadron.CarpetaBPId),
-    Field('CarpetaBPGrupoDeSueloPorPadronNroPadron', db.CarpetaBPGrupoDeSueloPorPadron.CarpetaBPGrupoDeSueloPorPadronNroPadron),
+    #Field('CarpetaBPId', db.CarpetaBPGrupoDeSueloPorPadron.CarpetaBPId),
+    #Field('CarpetaBPGrupoDeSueloPorPadronNroPadron', db.CarpetaBPGrupoDeSueloPorPadron.CarpetaBPGrupoDeSueloPorPadronNroPadron),
+    Field('CarpetaBPId', type="integer"),
+    Field('CarpetaBPGrupoDeSueloPorPadronNroPadron', type="integer"),
     Field('TipoSueloId', type='string'),
-    Field('CarpetaBPGrupoDeSueloPorPadronGrupoDeSue', type='decimal'),
+    Field('CarpetaBPGrupoDeSueloPorPadronGrupoDeSue', type='double'),
     primarykey=['CarpetaBPId','CarpetaBPGrupoDeSueloPorPadronNroPadron']
 )
 
 """
 CarpetaBPObjForestacion
-	CarpetaBPId,decimal
+	CarpetaBPId,double
 	CarpetaBPObjForestacionId,smallint
 """
 
 db.define_table('CarpetaBPObjForestacion',
-    Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+    #Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+    Field('CarpetaBPId', type='integer'),
     Field('CarpetaBPObjForestacionId', type='integer'),
     primarykey=['CarpetaBPId','CarpetaBPObjForestacionId']
 )
 
 """ 
 CarpetaBPPadron
-	CarpetaBPId,decimal
-	CarpetaBPPadronId,decimal
-	CarpetaBPPadronSupBN,decimal
-	CarpetaBPPadronSupBP,decimal
+	CarpetaBPId,double
+	CarpetaBPPadronId,double
+	CarpetaBPPadronSupBN,double
+	CarpetaBPPadronSupBP,double
 	EspecieGeneroPadronGeneroNombre,char
 	EspecieGeneroPadronEspecieNombre,char
 	EspecieGeneroPadronCodGenero,char
-	EspecieGeneroPadronCodEspecie,decimal
+	EspecieGeneroPadronCodEspecie,double
 	CarpetaBPPadronPlantacionAnio,smallint
-	CarpetaBPPadronDensidadPlantacion,decimal
-	CarpetaBPPadronSupEfectiva,decimal
-	CarpetaBPPadronSupTotal,decimal
+	CarpetaBPPadronDensidadPlantacion,double
+	CarpetaBPPadronSupEfectiva,double
+	CarpetaBPPadronSupTotal,double
 """
 
 db.define_table('CarpetaBPPadron',
-    Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
-    Field('CarpetaBPPadronId', type='decimal'),
-    Field('CarpetaBPPadronSupBN', type='decimal'),
-    Field('CarpetaBPPadronSupBP', type='decimal'),
+    #Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+    Field('CarpetaBPId', type='integer'),
+    Field('CarpetaBPPadronId', type='double'),
+    Field('CarpetaBPPadronSupBN', type='double'),
+    Field('CarpetaBPPadronSupBP', type='double'),
     Field('EspecieGeneroPadronGeneroNombre', type='string'),
     Field('EspecieGeneroPadronEspecieNombre', type='string'),
-    Field('EspecieGeneroPadronCodGenero', db.EspecieGenero),
-    Field('EspecieGeneroPadronCodEspecie', db.EspecieGenero),
+    #Field('EspecieGeneroPadronCodGenero', db.EspecieGenero),
+    #Field('EspecieGeneroPadronCodEspecie', db.EspecieGenero),
+    Field('EspecieGeneroPadronCodGenero', type='integer'),
+    Field('EspecieGeneroPadronCodEspecie', type='integer'),
     Field('CarpetaBPPadronPlantacionAnio', type='integer'),
-    Field('CarpetaBPPadronDensidadPlantacion', type='decimal'),
-    Field('CarpetaBPPadronSupEfectiva', type='decimal'),
-    Field('CarpetaBPPadronSupTotal', type='decimal'),
+    Field('CarpetaBPPadronDensidadPlantacion', type='double'),
+    Field('CarpetaBPPadronSupEfectiva', type='double'),
+    Field('CarpetaBPPadronSupTotal', type='double'),
     primarykey=['CarpetaBPId','CarpetaBPPadronId','EspecieGeneroPadronGeneroNombre','EspecieGeneroPadronEspecieNombre','CarpetaBPPadronPlantacionAnio']
 )
 
 """
 CarpetaBPProgFor
-	CarpetaBPId,decimal
-	CarpetaBPProgForId,decimal
-	CarpetaBPProgForDensidadPlantacion,decimal
-	CarpetaBPProgForSupTotal,decimal
-	CarpetaBPProgForPadron,decimal
+	CarpetaBPId,double
+	CarpetaBPProgForId,double
+	CarpetaBPProgForDensidadPlantacion,double
+	CarpetaBPProgForSupTotal,double
+	CarpetaBPProgForPadron,double
 	EspecieGeneroProgForEspecieNombre,char
 	EspecieGeneroProgForGeneroNombre,char
-	EspecieGeneroProgForCodEspecie,decimal
+	EspecieGeneroProgForCodEspecie,double
 	EspecieGeneroProgForCodGenero,char
-	CarpetaBPProgForSupAfectada,decimal
-	CarpetaBPProgForSupEfectiva,decimal
+	CarpetaBPProgForSupAfectada,double
+	CarpetaBPProgForSupEfectiva,double
 	CarpetaBPProgForPlantacionAnio,smallint
 """
 
 db.define_table('CarpetaBPProgFor',
-    Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
-    Field('CarpetaBPProgForId', type='decimal'),
-    Field('CarpetaBPProgForDensidadPlantacion', type='decimal'),
-    Field('CarpetaBPProgForSupTotal', type='decimal'),
-    Field('CarpetaBPProgForPadron', type='decimal'),
+    #Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+    Field('CarpetaBPId', type='integer'),
+    Field('CarpetaBPProgForId', type='double'),
+    Field('CarpetaBPProgForDensidadPlantacion', type='double'),
+    Field('CarpetaBPProgForSupTotal', type='double'),
+    Field('CarpetaBPProgForPadron', type='double'),
     Field('EspecieGeneroProgForEspecieNombre', type='string'),
     Field('EspecieGeneroProgForGeneroNombre', type='string'),
-    Field('EspecieGeneroProgForCodEspecie', db.EspecieGenero),
-    Field('EspecieGeneroProgForCodGenero', db.EspecieGenero),
-    Field('CarpetaBPProgForSupAfectada', type='decimal'),
-    Field('CarpetaBPProgForSupEfectiva', type='decimal'),
+    #Field('EspecieGeneroProgForCodEspecie', db.EspecieGenero),
+    #Field('EspecieGeneroProgForCodGenero', db.EspecieGenero),
+    Field('EspecieGeneroProgForCodEspecie', type='integer'),
+    Field('EspecieGeneroProgForCodGenero', type='integer'),
+    Field('CarpetaBPProgForSupAfectada', type='double'),
+    Field('CarpetaBPProgForSupEfectiva', type='double'),
     Field('CarpetaBPProgForPlantacionAnio', type='integer'),
     primarykey=['CarpetaBPId','CarpetaBPProgForId']
 )
 
 """
 CarpetaBPTitular
-	CarpetaBPId,decimal
+	CarpetaBPId,double
 	CarpetaBPTitularCI,int
 	CarpetaBPTitularNombre,char
 	CarpetaBPTitularDir,char
@@ -503,7 +528,8 @@ CarpetaBPTitular
 """
 
 db.define_table('CarpetaBPTitular',
-    Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+    #Field('CarpetaBPId', db.CarpetaBP.CarpetaBPId),
+    Field('CarpetaBPId', type='integer'),
     Field('CarpetaBPTitularCI', type='integer'),
     Field('CarpetaBPTitularNombre', type='string'),
     Field('CarpetaBPTitularDir', type='string'),
@@ -512,14 +538,16 @@ db.define_table('CarpetaBPTitular',
     Field('CarpetaBPTitularCelular', type='string'),
     Field('CarpetaBPTitularMail', type='string'),
     Field('CarpetaBPTitularCiudad', type='string'),
-    Field('CarpetaBPTitularDep', db.Departamentos),
+    #Field('CarpetaBPTitularDep', db.Departamentos),
+    Field('CarpetaBPTitularDep', type='integer'),
     Field('CarpetaBPTitularOtros', type='string'),
     Field('CarpetaBPTitularEsUsufructurario', type='string'), #ver
     Field('CarpetaBPTitularEsPromComprador', type='string'), #ver    
     Field('CarpetaBPTitularEsComodatario', type='string'), #ver
     Field('CarpetaBPTitularEsArrendatario', type='string'), #ver
     Field('CarpetaBPTitularEsPropietario', type='string'), #ver
-    Field('DGFTitularEnCalidadDeId', db.DGFTitularEnCalidadDe),
+    #Field('DGFTitularEnCalidadDeId', db.DGFTitularEnCalidadDe),
+    Field('DGFTitularEnCalidadDeId', type='integer'),
     primarykey=['CarpetaBPId','CarpetaBPTitularCI']
 )
 
@@ -530,7 +558,7 @@ Departamentos
 """
 
 db.define_table('Departamentos',
-    Field('DepartamentosId', type='decimal'),
+    Field('DepartamentosId', type='double'),
     Field('DepartamentosNombre', type='string'),
     primarykey=['DepartamentosId']
 )
@@ -549,14 +577,14 @@ db.define_table('DGFTitularEnCalidadDe',
 
 """
 Especie
-	EspecieId,decimal
+	EspecieId,double
 	GeneroId,char
 	GeneroNombre,char
 	EspecieNombre,char
 """
 
 db.define_table('Especie',
-    Field('EspecieId', type='decimal'),
+    Field('EspecieId', type='double'),
     Field('GeneroId', type='string'),
     Field('GeneroNombre', type='string'),
     Field('EspecieNombre', type='string'),
@@ -565,8 +593,8 @@ db.define_table('Especie',
 
 """
 EspecieBP
-	EspecieBPCarpeta,decimal
-	EspecieBPPadron,decimal
+	EspecieBPCarpeta,double
+	EspecieBPPadron,double
 	EspecieBPFechaHoraRegistroDig,datetime
 	EspecieBPUsuario,char
 	EspecieBPUsuarioUltimaModif,char
@@ -574,8 +602,8 @@ EspecieBP
 """
 
 db.define_table('EspecieBP',
-    Field('EspecieBPCarpeta', type='decimal'),
-    Field('EspecieBPPadron', type='decimal'),
+    Field('EspecieBPCarpeta', type='double'),
+    Field('EspecieBPPadron', type='double'),
     Field('EspecieBPFechaHoraRegistroDig', type='datetime'),
     Field('EspecieBPUsuario', type='string'),
     Field('EspecieBPUsuarioUltimaModif', type='string'),
@@ -585,14 +613,14 @@ db.define_table('EspecieBP',
 
 """
 EspecieGenero
-	EspecieGeneroEspecie,decimal
+	EspecieGeneroEspecie,double
 	EspecieGeneroGenero,char
 	EspecieGeneroEspecieNombre,char
 	EspecieGeneroGeneroNombre,char
 """
 
 db.define_table('EspecieGenero',
-    Field('EspecieGeneroEspecie', type='decimal'),
+    Field('EspecieGeneroEspecie', type='double'),
     Field('EspecieGeneroGenero', type='string'),
     Field('EspecieGeneroEspecieNombre', type='string'),
     Field('EspecieGeneroGeneroNombre', type='string'),
@@ -650,7 +678,7 @@ db.define_table('Operacion',
 
 """
 PlanDeManejoBN
-	PlanDeManejoBNId,decimal
+	PlanDeManejoBNId,double
 	CarpetaBNId,char
 	OperacionId,smallint
 	PlanDeManejoBNUsuario,char
@@ -658,7 +686,7 @@ PlanDeManejoBN
 """
 
 db.define_table('PlanDeManejoBN',
-    Field('PlanDeManejoBNId', type='decimal'),
+    Field('PlanDeManejoBNId', type='double'),
     Field('CarpetaBNId', type='string'),
     Field('OperacionId', type='integer'),
     Field('PlanDeManejoBNUsuario', type='string'),
@@ -668,10 +696,10 @@ db.define_table('PlanDeManejoBN',
  
 """
 PlanDeManejoBNPadron
-	PlanDeManejoBNId,decimal
+	PlanDeManejoBNId,double
 	FormPlanManejoBNCarpeta,char
-	FormPlanManejoBNPadron,decimal
-	PlanDeManejoBNPadronSupACortar,decimal
+	FormPlanManejoBNPadron,double
+	PlanDeManejoBNPadronSupACortar,double
 	PlanDeManejoBNPadronToneladasEstimadas,smallint
 	PlanDeManejoBNPadronPlazo,smallint
 	PlanDeManejoBNPadronFundamentacion,varchar
@@ -679,10 +707,11 @@ PlanDeManejoBNPadron
 
 
 db.define_table('PlanDeManejoBNPadron',
-    Field('PlanDeManejoBNId', type='decimal'),
-    Field('FormPlanManejoBNCarpeta', db.CarpetaBN.CarpetaBNId),
-    Field('FormPlanManejoBNPadron', type='decimal'),
-    Field('PlanDeManejoBNPadronSupACortar', type='decimal'),
+    Field('PlanDeManejoBNId', type='double'),
+    Field('FormPlanManejoBNCarpeta', type='integer'),
+    #Field('FormPlanManejoBNCarpeta', db.CarpetaBN.CarpetaBNId),
+    Field('FormPlanManejoBNPadron', type='double'),
+    Field('PlanDeManejoBNPadronSupACortar', type='double'),
     Field('PlanDeManejoBNPadronToneladasEstimadas', type='integer'),
     Field('PlanDeManejoBNPadronPlazo', type='integer'),
     Field('PlanDeManejoBNPadronFundamentacion', type='string'),
@@ -721,9 +750,9 @@ TempCarpetaBN
 	TempCarpetaBNInvEspExoticas,bit
 	TempCarpetaBNIncForestales,bit
 	TempCarpetaBNAccionesAntropicas,varchar
-	TempCarpetaBNAreaArboladaTotal,decimal
-	TempCarpetaBNAreaArboladaBN,decimal
-	TempCarpetaBNAreaArboladaBP,decimal
+	TempCarpetaBNAreaArboladaTotal,double
+	TempCarpetaBNAreaArboladaBN,double
+	TempCarpetaBNAreaArboladaBP,double
 	TempCarpetaBNFechaHoraRegistroDig,datetime
 	TempCarpetaBNUsuario,char
 	TempCarpetaBNNroCarpeta,int
@@ -733,7 +762,8 @@ db.define_table('TempCarpetaBN',
     Field('TempCarpetaBNId', type='string'),
     Field('TempCarpetaBNFechaRegistro', type='datetime'),
     Field('TempCarpetaBNNombreEstabl', type='string'),
-    Field('CarpetaBNDepartamentoEstabl', db.Departamentos),
+    Field('CarpetaBNDepartamentoEstabl', type='integer'),    
+    #Field('CarpetaBNDepartamentoEstabl', db.Departamentos),
     Field('TempCarpetaBNSeccionCatastralEstabl', type='integer'),
     Field('TempCarpetaBNSeccionJudicialEstabl', type='integer'),
     Field('TempCarpetaBNSeccionPolicialEstabl', type='integer'),
@@ -741,7 +771,8 @@ db.define_table('TempCarpetaBN',
     Field('TempCarpetaBNCIRepLegal', type='integer'),
     Field('TempCarpetaBNNombreRepLegal', type='string'),
     Field('TempCarpetaBNDireccionRepLegal', type='string'),
-    Field('CarpetaBNDepartamentoRepLegal', db.Departamentos),
+    #Field('CarpetaBNDepartamentoRepLegal', db.Departamentos),
+    Field('CarpetaBNDepartamentoRepLegal', type='integer'),    
     Field('TempCarpetaBNTelefonoRepLegal', type='string'),
     Field('TempCarpetaBNCelularRepLegal', type='string'),
     Field('TempCarpetaBNFaxRepLegal', type='string'),
@@ -754,15 +785,16 @@ db.define_table('TempCarpetaBN',
     Field('TempCarpetaBNCelularTecnico', type='string'),
     Field('TempCarpetaBNFaxTecnico', type='string'),
     Field('TempCarpetaBNMailTecnico', type='string'),
-    Field('AsociacionesId', db.Asociaciones.AsociacionesId),
+    #Field('AsociacionesId', db.Asociaciones.AsociacionesId),
+    Field('AsociacionesId', type='integer'),    
     Field('TempCarpetaBNTipoRebrote', type='integer'),
     Field('TempCarpetaBNEstadoSanitario', type='string'),
     Field('TempCarpetaBNInvEspExoticas', type='string'), #ver
     Field('TempCarpetaBNIncForestales', type='string'), #ver
     Field('TempCarpetaBNAccionesAntropicas', type='string'),
-    Field('TempCarpetaBNAreaArboladaTotal', type='decimal'),
-    Field('TempCarpetaBNAreaArboladaBN', type='decimal'),
-    Field('TempCarpetaBNAreaArboladaBP', type='decimal'),
+    Field('TempCarpetaBNAreaArboladaTotal', type='double'),
+    Field('TempCarpetaBNAreaArboladaBN', type='double'),
+    Field('TempCarpetaBNAreaArboladaBP', type='double'),
     Field('TempCarpetaBNFechaHoraRegistroDig', type='datetime'),
     Field('TempCarpetaBNFechaHoraRegistroDig', type='string'),
     Field('TempCarpetaBNFechaHoraRegistroDig', type='integer'),
@@ -772,25 +804,25 @@ db.define_table('TempCarpetaBN',
 """ 
 TempCarpetaBNPadron
 	TempCarpetaBNId,char
-	TempCarpetaBNPadronId,decimal
+	TempCarpetaBNPadronId,double
 	TempCarpetaBNPadronSeccJudicial,smallint
-	TempCarpetaBNPadronSupBN,decimal
-	TempCarpetaBNPadronSupBP,decimal
-	TempCarpetaBNPadronTotal,decimal
-	TempCarpetaBNPadronSupPadron,decimal
+	TempCarpetaBNPadronSupBN,double
+	TempCarpetaBNPadronSupBP,double
+	TempCarpetaBNPadronTotal,double
+	TempCarpetaBNPadronSupPadron,double
 	TempCarpetaBNPadronSeccPolicial,smallint
 """
 
 db.define_table('TempCarpetaBNPadron',
     Field('TempCarpetaBNId', type='string'),
-    Field('TempCarpetaBNPadronId', type='decimal'),
+    Field('TempCarpetaBNPadronId', type='double'),
     Field('TempCarpetaBNPadronSeccJudicial', type='integer'),
-    Field('TempCarpetaBNPadronSupBN', type='decimal'),
-    Field('TempCarpetaBNPadronSupBP', type='decimal'),
-    Field('TempCarpetaBNPadronTotal', type='decimal'),
-    Field('TempCarpetaBNPadronSupPadron', type='decimal'),
+    Field('TempCarpetaBNPadronSupBN', type='double'),
+    Field('TempCarpetaBNPadronSupBP', type='double'),
+    Field('TempCarpetaBNPadronTotal', type='double'),
+    Field('TempCarpetaBNPadronSupPadron', type='double'),
     Field('TempCarpetaBNPadronSeccPolicial', type='integer'),
-    primarykey=['PlanDeManejoBNId','TempCarpetaBNPadronId','TempCarpetaBNPadronSeccJudicial']
+    primarykey=['TempCarpetaBNId','TempCarpetaBNPadronId','TempCarpetaBNPadronSeccJudicial']
 )
 
 """
@@ -810,7 +842,8 @@ TempCarpetaBNPropietario
 """
 
 db.define_table('TempCarpetaBNPropietario',
-    Field('TempCarpetaBNId', db.CarpetaBN),
+    #Field('TempCarpetaBNId', db.CarpetaBN),
+    Field('TempCarpetaBNId', type='integer'),    
     Field('TempCarpetaBNPropietarioCI', type='integer'),
     Field('TempCarpetaBNPropietarioNombre', type='string'),
     Field('TempCarpetaBNPropietarioRazonSocial', type='string'),
@@ -821,8 +854,9 @@ db.define_table('TempCarpetaBNPropietario',
     Field('TempCarpetaBNPropietarioCelular', type="string"),
     Field('TempCarpetaBNPropietarioFax', type="string"),
     Field('TempCarpetaBNPropietarioMail', type="string"),
-    Field('TempCarpetaBNPropietarioDep', db.Departamentos),
-    primarykey=['CarpetaBNId','CarpetaBNPropietarioCI']
+    #Field('TempCarpetaBNPropietarioDep', db.Departamentos),
+    Field('TempCarpetaBNPropietarioDep', type='integer'),    
+    primarykey=['TempCarpetaBNId','TempCarpetaBNPropietarioCI']
 )
 
 

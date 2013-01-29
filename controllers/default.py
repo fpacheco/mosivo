@@ -6,7 +6,7 @@ def call(): return service()
 ### end requires
 
 def index():
-    return "MSV"
+    return dict()
     
 def mosivo():
     opts = []
