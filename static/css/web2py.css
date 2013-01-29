@@ -293,7 +293,12 @@ li.w2p_grid_breadcrumb_elem {
 
 .web2py_console form { vertical-align: middle; }
 .web2py_console input, .web2py_console select,
-.web2py_console a { margin: 2px; }
+.web2py_console a { 
+    margin-top: 10px;
+    margin-right: 5px;
+    margin-bottom: 0px;
+    margin-left: 0px; 
+}
 
 
 #wiki_page_body {
@@ -309,73 +314,232 @@ li.w2p_grid_breadcrumb_elem {
 .ie-lte8 div.flash:hover {filter:alpha(opacity=25);}
 .ie9 #w2p_query_panel {padding-bottom:2px}
 
-/* CUSTOM IGS */
+/* CUSTOM Ingesur */
 
-div.igsCB {
-    float: left;
-    width: 30px;
-    clear: both;
+.container > .columns > form > tr > td.w2p_fw {
+
+position: relative;
+
 }
 
-div.igsOtherCB {
-    float: left;
-    width: 30px;
-    clear: both;
+
+td.w2p_fc {
+
+display: none;
+
+position:absolute;
+
+left: px;
+
 }
 
-div.igsLabel {
-    float: left;
-    width: 150px;
+
+td.w2p_fw > textarea {
+
+width: 300px;
+
+height: 50px;
+
 }
 
-div.igsLabelRango {
-    float: left;
-    width: 180px;
+
+#nextTabs > ul > li {
+
+background: white;
+
 }
 
-div.igsRangoAnios > input {
-    width: 50px;
+
+#nextTabs > ul > li:hover {
+
+cursor: pointer;
+
+background: #1C94C4;
+
 }
 
-div.igsNumbers {
-    padding-left: 100px;
+
+#prevTabs > ul > li {
+
+background: white;
+
 }
 
-div.igsNumbers > input {
-    width: 75px;
-    float: left;
+
+#prevTabs > ul > li:hover {
+
+cursor: pointer;
+
+background: #1C94C4;
+
 }
 
-div.igsNumbers > label {
-    float: left;
-    width: 75px;
+
+input[type="submit"][disabled="disabled"] {
+
+color: gray;
+
 }
 
-div.igsSave {
-    clear: both;
+
+tr.floraSuelo {
+
+height: 47px;
+
 }
 
-div.igsTabbedLabel {
-    clear: both;
-    padding-left: 50px;
+
+tr.floraSueloAjax {
+
+height: 0px;
+
 }
 
-div.igsTabbedLabelRadio {
-    float: left;
-    padding-left: 100px;
+
+tr.floraSuelo > td {
+
+paddding-left: 50px;
+
 }
 
-div.igsNumbersRadio {
-    float: left;
-    padding-left: 35px;
+
+tr.floraSueloHeaders > th {
+
+paddding-left: 50px;
+
 }
 
-div.igsNumbersRadio > input {
-    width: 75px;
-    float: left;
+
+.ajaxresults{
+
+background: #ffffff;
+
+padding: 4px 4px;
+
+max-height: 400px;
+
+min-width: 300px;
+
+overflow: auto;
+
+position: absolute;
+
+z-index: 99;
+
+border: 1px solid #A9A9A9;
+
+border-width: 0 1px 1px 1px;
+
+-webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+
+-moz-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+
+-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+
+margin-top: -20px;
+
 }
 
-div.igsNumbersRadio > label {
-    float: left;
-    width: 75px;
+.ajaxresults a{
+
+color:#666666;
+
+}
+
+
+.ui-spinner {position: relative; border: 0px solid white; }
+
+.ui-spinner-buttons {position: absolute}
+
+.ui-spinner-button {overflow: hidden}
+
+
+tr.disabled {
+
+display: none;
+
+}
+
+
+.main > .container {
+
+width: 80%;
+
+overflow-x: auto;
+
+}
+
+
+select[multiple]{
+
+height: 86px;
+
+}
+
+
+select#todos {
+
+height: 150px;
+
+}
+
+
+select#asignados {
+
+height: 150px;
+
+}
+
+
+div.sendOptions{
+
+clear: both;
+
+}
+
+
+li {
+
+list-style: none;
+
+}
+
+
+ul#menuLateral {
+
+margin-left: 0px;
+
+}
+
+
+div.span12 {
+
+width: 1000px;
+
+
+}
+
+
+select{
+
+width:313px;
+
+}
+
+
+ul#menuLateral > a {
+
+width: 160px;
+
+white-space: normal;
+
+}
+
+
+#dialog {
+
+min-width: 507px;
+
+min-height: 204px;
+
 }

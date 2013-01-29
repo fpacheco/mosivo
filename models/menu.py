@@ -1,17 +1,12 @@
-"""
-response.title = settings.title
-response.subtitle = settings.subtitle
-response.meta.author = '%(author)s <%(author_email)s>' % settings
-response.meta.keywords = settings.keywords
-response.meta.description = settings.description
-response.menu = [
-(T('Index'),URL('default','index')==URL(),URL('default','index'),[]),
-]
+# -*- coding: utf-8 -*-
+u"""En este módulo se establece el menu de la aplicación
+
+    :TODO: recorrer menu por arbol
 """
 
 # For develop only
-if DEVELOP_MODE:
-    from gluon import *
+# if DEVELOP_MODE:
+from gluon import *
 
 # El menu es una lista de tuplas. Cada tupla:
 # (Nombre, Actual, url, [ ... sub-menu ... ])
@@ -120,7 +115,11 @@ menu = [
             ( M_USER,'Vegetation','queries','vegetation',[] ),
             ( M_USER,'Fauna','queries','fauna',[] ),
             ( M_USER,'Non-wood','queries','nonwood',[] ),
-            ( M_USER,'Environmental problems','queries','eviron',[] )
+            ( M_USER,'Environmental problems','queries','eviron',[] ),
+        ]
+    ),
+    ( M_ADMIN,'Load Data','data','loadData',
+        [
         ]
     ),
     ( M_USER,'User','user','index',
@@ -149,10 +148,33 @@ menu = [
 
 menuAdmin = [
     ( T('Home'), URL('default','index')==URL, URL('default','index'),[] ),
-    ( T('Models'), URL('models','index')==URL(), URL('models','index'),
-        [            
-            ( T('Wood'), URL('models','wood')==URL(), URL('models','wood'),[] ),
-            ( T('Biomass'),URL('models','biomass')==URL(), URL('models','biomass'),[] ),
+    ( T('Queries'), URL('queries','index')==URL(), URL(),
+        [    
+            ( T('Native forest'),URL('queries','nforest')==URL(), URL('queries','nforest'),[] ),
+            ( T('Planted forest'),URL('queries','pforest')==URL(), URL('queries','pforest'),[] ),  
+            ( T('Forest'),URL('queries','affor')==URL(), URL('queries','affor'),[] ),  
+            ( T('Non-wood products'), URL('queries','nonwood')==URL, URL('queries','nonwood'),[] ),    
+            ( T('Soil'),URL('queries','soil')==URL(), URL('queries','soil'),[] ),
+            ( T('Fauna'), URL('queries','fauna')==URL(), URL('queries','fauna'),[] ),
+            ( T('Flora'), URL('queries','flora')==URL(), URL('queries','flora'),[] ),
+            ( T('Vegetation cover'), URL('queries','vegetation')==URL(), URL('queries','vegetation'), [] ),
+            ( T('Water'), URL('queries','water')==URL(), URL('queries','water'),[] ),           
+            ( T('Forest Overview'), URL('queries','foverview')==URL(), URL('queries','foverview'),[] ),    
+            ( T('Relief'),URL('queries','relief')==URL(), URL('queries','relief'),[] ),        
+            ( T('Environmental problems'),URL('queries','eviron')==URL(), URL('queries','environ'),[] ),
+            ( T('Eucalyptus Sanitation'),URL('queries','esanitation')==URL(), URL('queries','esanitation'),[] ),
+            ( T('Pinus Sanitation'),URL('queries','psanitation')==URL(), URL('queries','psanitation'),[] ),
+            ( T('Invasive species'),URL('queries','especies_invasoras')==URL(), URL('queries','especies_invasoras'),[] ),
+            ( T('General'),URL('queries','general')==URL(), URL('queries','general'),[] ),
+        ]
+    ),
+    ( T('Data'), URL('admin','index')==URL(), URL('admin','index'),
+        [
+            ( T('Generate Latest Data'), URL('data','generateData')==URL, URL('data','generateData'),[] ),
+            ( T('Load Data'), URL('data','loadData')==URL, URL('data','loadData'),[] ),
+            ( T('Add and Edit Types'), URL('data','editTypes')==URL, URL('data','editTypes'),[] ),
+            ( T('Send Data'), URL('data','sendData')==URL, URL('data','sendData'),[] ),
+            ( T('Review Pending Samples'), URL('review','reviewIndex')==URL, URL('review','reviewIndex'),[] )          
         ]
     ),
     ( T('User'),URL('user','index')==URL(), URL('user','index'),
@@ -161,12 +183,21 @@ menuAdmin = [
             ( T('Change password'), URL('user','change_password')==URL(), URL('user','change_password'),[] ),
         ]
     ),
+    ( T('Media'),URL('default','index')==URL(), URL('default','index'),
+        [
+            ( T('Photos'), URL('data','photos')==URL(), URL('data','photos'),[] ),
+            ( T('Tracks'), URL('data','tracks')==URL(), URL('data','tracks'),[] ),
+        ]
+    ),
+    ( T('Maps'),URL('maps','index')==URL(), URL('maps','index'),
+        [
+        ]
+    ),
     ( T('Administration'), URL('admin','index')==URL(), URL('admin','index'),
         [
+            ( T('Samples\'s Follow Up'), URL('data','followup')==URL, URL('data','followup'),[] ),
             ( T('Users'), URL('admin','users')==URL(), URL('admin','users'), [] ),
-            ( T('Groups'), URL('admin','groups')==URL(), URL('admin','groups'), [] ),
-            ( T('Memberships'), URL('admin','memberships')==URL(), URL('admin','memberships'), [] ),
-            ( T('Statistics'), URL('admin','stats')==URL(), URL('amin','stats'),[] ),
+            ( T('Memberships'), URL('admin','memberships')==URL(), URL('admin','memberships'), [] )
             
         ]
     ),
@@ -185,18 +216,39 @@ menuAdmin = [
 
 menuUser = [
     ( T('Home'), URL('default','index')==URL, URL('default','index'),[] ),
-    ( T('Models'), URL('models','index')==URL(), URL('models','index'),
+    ( T('Queries'), URL('queries','index')==URL(), URL('queries','index'),
         [            
-            ( T('Wood'), URL('models','wood')==URL(), URL('models','wood'),[] ),
-            ( T('Biomass'),URL('models','biomass')==URL(), URL('models','biomass'),[] ),
+            ( T('Native forest'),URL('queries','nforest')==URL(), URL('queries','nforest'),[] ),
+            ( T('Planted forest'),URL('queries','pforest')==URL(), URL('queries','pforest'),[] ),  
+            ( T('Forest'),URL('queries','affor')==URL(), URL('queries','affor'),[] ),  
+            ( T('Non-wood products'), URL('queries','nonwood')==URL, URL('queries','nonwood'),[] ),    
+            ( T('Soil'),URL('queries','soil')==URL(), URL('queries','soil'),[] ),
+            ( T('Fauna'), URL('queries','fauna')==URL(), URL('queries','fauna'),[] ),
+            ( T('Flora'), URL('queries','flora')==URL(), URL('queries','flora'),[] ),
+            ( T('Vegetation cover'), URL('queries','vegetation')==URL(), URL('queries','vegetation'), [] ),
+            ( T('Water'), URL('queries','water')==URL(), URL('queries','water'),[] ),           
+            ( T('Forest Overview'), URL('queries','foverview')==URL(), URL('queries','foverview'),[] ),    
+            ( T('Relief'),URL('queries','relief')==URL(), URL('queries','relief'),[] ),        
+            ( T('Environmental problems'),URL('queries','eviron')==URL(), URL('queries','environ'),[] ),
+            ( T('Eucalyptus Sanitation'),URL('queries','esanitation')==URL(), URL('queries','esanitation'),[] ),
+            ( T('Pinus Sanitation'),URL('queries','psanitation')==URL(), URL('queries','psanitation'),[] ),
+            ( T('Invasive species'),URL('queries','especies_invasoras')==URL(), URL('queries','especies_invasoras'),[] ),
+            ( T('General'),URL('queries','general')==URL(), URL('queries','general'),[] ),
+            
+        ]
+    ),
+    ( T('Maps'),URL('maps','index')==URL(), URL('maps','index'),
+        [
         ]
     ),
     ( T('User'),URL('user','index')==URL(), URL('user','index'),
         [
+
             ( T('Profile'), URL('user','profile')==URL(), URL('user','profile'),[] ),
             ( T('Change password'), URL('user','change_password')==URL(), URL('user','change_password'),[] ),
         ]
     ),
+    
     ( T('About'),URL('about','index')==URL(), URL('about','index'),
         [
         ]
