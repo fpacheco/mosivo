@@ -84,3 +84,21 @@ def getProyecto():
     if request.get_vars['id']:
         proyecto = local_import('msv/proyecto' , reload=True).Proyecto(mssqlcon, int(request.get_vars['id']))
         proyecto = local_import('msv/proyecto' , reload=True).Proyecto(int(request.get_vars['id']))
+
+def testFolder():
+    folder_id = -1
+    if request.get_vars['folder_id']:
+        folder_id = int(request.get_vars['folder_id'])
+    folder = local_import('folder' , reload=True).Folder(mssqlcon.cursor(), folder_id)
+    if request.get_vars['query'] == "location":
+        return folder.location()
+    elif request.get_vars['query'] == "registries":
+        return folder.registries()
+    elif request.get_vars['query'] == "cuts":
+        return folder.cuts()
+    elif request.get_vars['query'] == "justiceSection":
+        return folder.justiceSection()
+    elif request.get_vars['query'] == "policeSection":
+        return folder.policeSection()
+    elif request.get_vars['query'] == "cadastralSection":
+        return folder.cadastralSection()

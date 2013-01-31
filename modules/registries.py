@@ -1,4 +1,6 @@
-class Registries:
+# -*- coding: utf-8 -*-
+
+class Registries():
 	"""
 	Class which holds the registries of the Folder
 	"""

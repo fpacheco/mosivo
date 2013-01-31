@@ -1,5 +1,5 @@
-
-class Folder:
+# -*- coding: utf-8 -*-
+class Folder():
 
 	def __init__(self, cursor, folder_id):
 		"""
