@@ -14,7 +14,7 @@
 if not request.env.web2py_runtime_gae:
     ## if NOT running on Google App Engine use SQLite or other DB
     db = DAL('sqlite://storage.db', migrate_enabled=True)
-    db2 = DAL('postgres://jgalan:12jgalan12@localhost/mosivo', migrate_enabled=False)
+    db2 = DAL('postgres://jgalan:12jgalan12@192.168.1.10/mosivo', migrate_enabled=False)
     #db2 = DAL('postgres://mosivo:12mosivo12@192.168.1.2/mosivo', migrate_enabled=True)
 else:
     ## connect to Google BigTable (optional 'google:datastore://namespace')
@@ -64,8 +64,8 @@ auth.settings.reset_password_requires_verification = True
 
 ## if you need to use OpenID, Facebook, MySpace, Twitter, Linkedin, etc.
 ## register with janrain.com, write your domain:api_key in private/janrain.key
-from gluon.contrib.login_methods.rpx_account import use_janrain
-use_janrain(auth,filename='private/janrain.key')
+#from gluon.contrib.login_methods.rpx_account import use_janrain
+#use_janrain(auth,filename='private/janrain.key')
 
 #########################################################################
 ## Define your tables below (or better in another model file) for example
@@ -92,7 +92,7 @@ mail.settings.sender = settings.email_sender
 mail.settings.login = settings.email_login
 
 #Para deshabilitar register
-auth.settings.actions_disabled.append('register')
+#auth.settings.actions_disabled.append('register')
 
 # Deshabilitar cración de grupos
 auth.settings.create_user_groups = False
@@ -105,6 +105,7 @@ if len(rows)==1:
 if VERSIONING_DB:
     # Versioning para todas las tablas
     auth.enable_record_versioning(db)
+    
 """
 import pyodbc
 # Global variable to MSSQL Server (Database DGF)
