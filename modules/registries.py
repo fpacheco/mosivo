@@ -14,9 +14,10 @@ class Registries():
 	    """
 		registriesDataSQL = """SELECT cbp.CarpetaBPId, cbpp.EspecieGeneroPadronGeneroNombre, cbpp.EspecieGeneroPadronEspecieNombre,
 				cbpp.CarpetaBPPadronPlantacionAnio, cbpp.CarpetaBPPadronDensidadPlantacion,
-				cbpp.CarpetaBPPadronSupEfectiva
-				FROM CarpetaBP cbp, CarpetaBPPadron cbpp
-				WHERE cbp.CarpetaBPId = cbpp.CarpetaBPId AND cbp.CarpetaBPId = """ + str(self.folder_id) + ";"
+				cbpp.CarpetaBPPadronSupEfectiva, ts.TipoSueloNombre
+				FROM CarpetaBP cbp, CarpetaBPPadron cbpp, CarpetaBPGrupoDeSueloPorPadronGrupoDeSue cbpgs, TipoSuelo ts
+				WHERE cbp.CarpetaBPId = cbpgs.CarpetaBPId AND cbpgs.TipoSueloId = ts.TipoSueloId AND 
+				cbp.CarpetaBPId = cbpp.CarpetaBPId AND cbp.CarpetaBPId = """ + str(self.folder_id) + ";"
 		self.cursor.execute(registriesDataSQL)
 		rows = self.cursor.fetchall()
 		ret = {}
@@ -27,6 +28,7 @@ class Registries():
 			data['year'] = row[3]
 			data['density'] = row[4]
 			data['efectiveArea'] = row[5]
+			data['soliType'] = row[6]
 			ret[row[0]].append(data)
 		return ret
 		

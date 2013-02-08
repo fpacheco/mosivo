@@ -102,3 +102,10 @@ def testFolder():
         return folder.policeSection()
     elif request.get_vars['query'] == "cadastralSection":
         return folder.cadastralSection()
+
+def toggleFooter():
+    if request.post_vars['action']:
+        if request.post_vars['action'] == 'show':
+            session.showFooter = True
+        elif request.post_vars['action'] == 'hide':
+            session.showFooter = False

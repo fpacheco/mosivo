@@ -66,7 +66,7 @@
   <script>
     $(document).ready(function(){
         $('#hideFooter').click(function() {
-            $.post('/ifn/default/toggleFooter', { action: "hide"});
+            $.post('/mosivo/default/toggleFooter', { action: "hide"});
             $("#hideFooter").slideUp('slow', function(){
                 $("#showFooter").show();
             });
@@ -74,7 +74,7 @@
             
         });
         $('#showFooter').click(function() {
-            $.post('/ifn/default/toggleFooter', { action: "show"});
+            $.post('/mosivo/default/toggleFooter', { action: "show"});
             $("#showFooter").animate({ 
                 top: "-=55px",
             }, 'slow', 'swing', function(){

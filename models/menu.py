@@ -155,7 +155,7 @@ menuAdmin = [
             
         ]
     ),
-    ( T('Model Configuration'), URL('default','index')==URL, URL('default','index'),[] ),
+    ( T('Model Configuration'), URL('config','index')==URL, URL('config','index'),[] ),
     ( T('About'),URL('about','index')==URL(), URL('about','index'),
         [
         ]
