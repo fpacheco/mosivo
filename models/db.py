@@ -12,7 +12,7 @@
 if not request.env.web2py_runtime_gae:
     ## if NOT running on Google App Engine use SQLite or other DB
     db = DAL('sqlite://storage.db', migrate_enabled=True)
-    db2 = DAL('postgres://jgalan:12jgalan12@192.168.1.10/mosivo', migrate_enabled=False)
+    #db2 = DAL('postgres://jgalan:12jgalan12@192.168.1.10/mosivo', migrate_enabled=False)
     #db2 = DAL('postgres://mosivo:12mosivo12@192.168.1.2/mosivo', migrate_enabled=True)
 else:
     ## connect to Google BigTable (optional 'google:datastore://namespace')
@@ -136,7 +136,7 @@ if VERSIONING_DB:
     # Versioning para todas las tablas
     auth.enable_record_versioning(db)
     
-"""
+
 import pyodbc
 # Global variable to MSSQL Server (Database DGF)
 #mssqlcon = pyodbc.connect(CON_STR2)
@@ -147,7 +147,7 @@ if IN_DGF:
     mssqlcon = pyodbc.connect(CON_STR2)
 else:
     mssqlcon = pyodbc.connect( "DSN=MoSiVo" )
-"""
+
     
 # Para trabajar con modules
 current.igs_trabajos = Storage()

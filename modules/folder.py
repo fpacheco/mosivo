@@ -99,3 +99,28 @@ class Folder():
 			return row[0]
 		else:
 			return None
+
+	def thinning(self):
+		thinningSQL = """SELECT CarpetaBPCarRaleoId, CarpetaBPCarRaleoPlantacionAnio, CarpetaBPCarRaleoMetroPorHectarea, CarpetaBPCarRaleoAlturaEstimada,
+				CarpetaBPCarRaleoDensidad, CarpetaBPCarRaleoSuperficieRaleo, CarpetaBPCarRaleoRodalEdad, CarpetaBPCarRaleoSupEfectivaAPodar,
+				EspecieGeneroCarRaleoGeneroNombre, EspecieGeneroCarRaleoEspecieNombre 
+				FROM CarpetaBPCarRaleo 
+				WHERE CarpetaBPId = """ + str(self.folder_id) + """
+				ORDER BY CarpetaBPCarRaleoPlantacionAnio ASC
+				""" + ";"
+		self.cursor.execute(thinningSQL)
+		rows = self.cursor.fetchall()
+		ret = {}
+		for row in rows:
+			data = {}
+			data['year'] = row[1]
+			data['mha'] = row[2]
+			data['estHeight'] = row[3]
+			data['density'] = row[4]
+			data['area'] = row[5]
+			data['age'] = row[6]
+			data['efectiveArea'] = row[7]
+			data['gender'] = row[8]
+			data['specie'] = row[9]
+			ret[row[0]].append(data)
+		return ret
