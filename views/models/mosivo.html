@@ -1,6 +1,52 @@
 {{extend 'layout.html'}}
 {{=form}}
 <script>
+    $(document).ready(function(){
+        loadValues();
+    });
+
+    function loadValues(){
+        $.getJSON('/mosivo/models/departments', function(data) {
+            var items = "";
+
+            $.each(data, function(key, val) {
+                items += '<option value="' + key + '">' + val + '</option>';
+            });
+
+            $("#departamento").html(items);
+        });
+
+        $.getJSON('/mosivo/models/registries', function(data) {
+            var items = "";
+
+            $.each(data, function(key, val) {
+                items += '<option value="' + key + '">' + val + '</option>';
+            });
+
+            $("#padron").html(items);
+        });
+
+        $.getJSON('/mosivo/models/justiceSection', function(data) {
+            var items = "";
+
+            $.each(data, function(key, val) {
+                items += '<option value="' + key + '">' + val + '</option>';
+            });
+
+            $("#seccionJudicial").html(items);
+        });
+
+        $.getJSON('/mosivo/models/region', function(data) {
+            var items = "";
+
+            $.each(data, function(key, val) {
+                items += '<option value="' + key + '">' + val + '</option>';
+            });
+
+            $("#region").html(items);
+        });
+    }
+
     $("#padronCB").click(function(){
         if ($("#padronCB").is(':checked')){
             $("#padron").removeAttr("disabled");

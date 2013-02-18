@@ -550,3 +550,52 @@ input.btn[type="submit"] {
     width: 200px;
     margin-top: 8px;
 }
+
+#rango1 {
+    width: 40px;
+    margin-right: 10px;
+}
+
+#rango2 {
+    width: 40px;
+    margin-left: 10px;
+}
+
+#yearSeparator {
+    display: inline;
+    height: 30px;
+    width: 10px;
+    line-height: 30px;
+}
+
+.igsCB {
+    display: inline;
+    float: left;
+    margin-right: 5px;
+}
+
+.igsLabel {
+    float: left;
+    width: 200px;
+}
+
+.igsTabbedLabel {
+    margin-left: 50px;
+}
+
+.igsSelects > select {
+    width: 100px;
+    vertical-align: middle;
+}
+
+.igsNumbers {
+    margin-left: 100px;
+}
+
+.igsOtherLabel {
+    width: 200px;
+}
+
+.igsRow {
+    //height: 50px;
+}

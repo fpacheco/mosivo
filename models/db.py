@@ -140,14 +140,15 @@ if VERSIONING_DB:
 import pyodbc
 # Global variable to MSSQL Server (Database DGF)
 #mssqlcon = pyodbc.connect(CON_STR2)
-
+mssqlcon = ""
+"""
 
 if IN_DGF:
     #mssqlcon = pyodbc.connect(CON_STR2)
     mssqlcon = pyodbc.connect(CON_STR2)
 else:
     mssqlcon = pyodbc.connect( "DSN=MoSiVo" )
-
+"""
     
 # Para trabajar con modules
 current.igs_trabajos = Storage()
