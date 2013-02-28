@@ -9,7 +9,7 @@
         $.getJSON('/mosivo/models/departments', function(data) {
             var items = "";
 
-            $.each(data, function(key, val) {
+            $.each(data.rows, function(key, val) {
                 items += '<option value="' + key + '">' + val + '</option>';
             });
 
@@ -19,7 +19,7 @@
         $.getJSON('/mosivo/models/registries', function(data) {
             var items = "";
 
-            $.each(data, function(key, val) {
+            $.each(data.rows, function(key, val) {
                 items += '<option value="' + key + '">' + val + '</option>';
             });
 
@@ -29,7 +29,7 @@
         $.getJSON('/mosivo/models/justiceSection', function(data) {
             var items = "";
 
-            $.each(data, function(key, val) {
+            $.each(data.rows, function(key, val) {
                 items += '<option value="' + key + '">' + val + '</option>';
             });
 
@@ -39,7 +39,7 @@
         $.getJSON('/mosivo/models/region', function(data) {
             var items = "";
 
-            $.each(data, function(key, val) {
+            $.each(data.rows, function(key, val) {
                 items += '<option value="' + key + '">' + val + '</option>';
             });
 

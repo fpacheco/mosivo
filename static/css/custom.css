@@ -579,6 +579,11 @@ input.btn[type="submit"] {
     width: 200px;
 }
 
+.igsLabel > label {
+    height: 30px;
+    line-height: 30px;
+}
+
 .igsTabbedLabel {
     margin-left: 50px;
 }
@@ -586,10 +591,16 @@ input.btn[type="submit"] {
 .igsSelects > select {
     width: 100px;
     vertical-align: middle;
+    margin-top: 2px;
 }
 
 .igsNumbers {
     margin-left: 100px;
+}
+
+.igsNumbers > label, .igsNumbers > input {
+    float:left;
+    margin-top: 0px;
 }
 
 .igsOtherLabel {
