@@ -9,9 +9,18 @@
 ## be redirected to HTTPS, uncomment the line below:
 # request.requires_https()
 
+
+# Conetarse a DGF
+if IN_DGF:
+  dgfdb=DAL("mssql://fpacheco:fpacheco@192.168.20.7/DGF",migrate_enabled=False,migrate=False)
+else:
+  dgfdb=DAL('sqlite://dgf_database.db',migrate_enabled=False,migrate=False)
+
+
 if not request.env.web2py_runtime_gae:
     ## if NOT running on Google App Engine use SQLite or other DB
-    db = DAL('sqlite://storage.db', migrate_enabled=True)
+    db = DAL('postgres://mosivo:12mosivo12@localhost/mosivo')
+    #db = DAL('sqlite://storage.db', migrate_enabled=True)
     #db2 = DAL('postgres://jgalan:12jgalan12@192.168.1.10/mosivo', migrate_enabled=False)
     #db2 = DAL('postgres://mosivo:12mosivo12@192.168.1.2/mosivo', migrate_enabled=True)
 else:
@@ -137,11 +146,11 @@ if VERSIONING_DB:
     auth.enable_record_versioning(db)
     
 
+"""
 import pyodbc
 # Global variable to MSSQL Server (Database DGF)
 #mssqlcon = pyodbc.connect(CON_STR2)
 mssqlcon = ""
-"""
 
 if IN_DGF:
     #mssqlcon = pyodbc.connect(CON_STR2)
