@@ -1,8 +1,0 @@
-dbro.define_table(u'Access',
-    Field(u'IDpiani',u'bigint'),
-    Field(u'FECHAACT',u'smalldatetime'),
-    Field(u'PROY',u'int'),
-    Field(u'DPTO',u'char'),
-    Field(u'SECJUD',u'int'),
-    Field(u'PRESENTADO',u'int'),
-    Field(u'SupEstab',u'int'),

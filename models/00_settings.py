@@ -50,3 +50,7 @@ CON_STR2 = "DSN=%s;UID=%s;PWD=%s" % (
     MSSQL_USER,
     MSSQL_PASS,
 )
+
+# Eliminar en produccion
+from gluon.custom_import import track_changes
+track_changes(True)

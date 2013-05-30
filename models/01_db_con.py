@@ -9,13 +9,17 @@
 ## be redirected to HTTPS, uncomment the line below:
 # request.requires_https()
 
+### RFPV borrar
+# from gluon.dal import DAL, Field
+# from gluon import T
+# from gluon import current, request, session, response
 
+### RFPV - Ya no es necesario
 # Conetarse a DGF
-if IN_DGF:
-  dgfdb=DAL("mssql://fpacheco:fpacheco@192.168.20.7/DGF",migrate_enabled=False,migrate=False)
-else:
-  dgfdb=DAL('sqlite://dgf_database.db',migrate_enabled=False,migrate=False)
-
+# if IN_DGF:
+#   dgfdb=DAL("mssql://fpacheco:fpacheco@192.168.20.7/DGF", migrate_enabled=False, migrate=False)
+# else:
+#   dgfdb=DAL('sqlite://dgf_database.db', migrate_enabled=False, migrate=False)
 
 if not request.env.web2py_runtime_gae:
     ## if NOT running on Google App Engine use SQLite or other DB
@@ -27,7 +31,7 @@ else:
     ## connect to Google BigTable (optional 'google:datastore://namespace')
     db = DAL('google:datastore')
     ## store sessions and tickets there
-    session.connect(request, response, db = db)
+    session.connect(request, response, db=db)
     ## or store session in Memcache, Redis, etc.
     ## from gluon.contrib.memdb import MEMDB
     ## from google.appengine.api.memcache import Client
@@ -57,7 +61,7 @@ crud, service, plugins = Crud(db), Service(), PluginManager()
 ## create all tables needed by auth if not custom tables
 
 #######################################
-db.define_table('auth_user',
+db.define_table('auth_user', 
     Field('first_name', type='string',
           label=T('First Name')),
     Field('last_name', type='string',
@@ -67,17 +71,17 @@ db.define_table('auth_user',
     Field('password', type='password',
           readable=False,
           label=T('Password')),
-    Field('created_on','datetime',default=request.now,
-          label=T('Created On'),writable=False,readable=False),
-    Field('modified_on','datetime',default=request.now,
-          label=T('Modified On'),writable=False,readable=False,
-          update=request.now),
-    Field('registration_key',default='',
-          writable=False,readable=False),
-    Field('reset_password_key',default='',
-          writable=False,readable=False),
-    Field('registration_id',default='',
-          writable=False,readable=False),
+    Field('created_on','datetime', default=request.now,
+          label=T('Created On'), writable=False,readable=False),
+    Field('modified_on','datetime', default=request.now,
+          label=T('Modified On'), writable=False, readable=False,
+          update=request.now), 
+    Field('registration_key', default='', 
+          writable=False, readable=False),
+    Field('reset_password_key', default='',
+          writable=False, readable=False),
+    Field('registration_id', default='',
+          writable=False, readable=False),
     format='%(first_name)s  %(last_name)s',
     migrate=settings.migrate)
 
@@ -86,10 +90,10 @@ db.auth_user.last_name.requires = IS_NOT_EMPTY(error_message=auth.messages.is_em
 db.auth_user.password.requires = CRYPT(key=auth.settings.hmac_key)
 db.auth_user.email.requires = (IS_EMAIL(error_message=auth.messages.invalid_email),
                                IS_NOT_IN_DB(db, db.auth_user.email))
-auth.define_tables(migrate = settings.migrate)
+auth.define_tables(migrate=settings.migrate)
 
 ## configure email
-mail=auth.settings.mailer
+mail = auth.settings.mailer
 mail.settings.server = 'logging' or 'smtp.gmail.com:587'
 mail.settings.sender = 'you@gmail.com'
 mail.settings.login = 'username:password'
@@ -104,8 +108,8 @@ auth.settings.reset_password_requires_verification = True
 #from gluon.contrib.login_methods.rpx_account import use_janrain
 #use_janrain(auth,filename='private/janrain.key')
 
-rows = db(db.auth_group.role=='users').select(db.auth_group.id)
-if len(rows)==1:
+rows = db(db.auth_group.role == 'users').select(db.auth_group.id)
+if len(rows) == 1:
     auth.settings.everybody_group_id=rows[0].id
 
 #########################################################################
@@ -137,15 +141,13 @@ mail.settings.login = settings.email_login
 auth.settings.create_user_groups = False
 
 # Todos los usuarios al grupo users
-rows = db(db.auth_group.role=='users').select(db.auth_group.id)
-if len(rows)==1:
+rows = db(db.auth_group.role == 'users').select(db.auth_group.id)
+if len(rows) == 1:
     auth.settings.everybody_group_id=rows[0].id
 
 if VERSIONING_DB:
     # Versioning para todas las tablas
     auth.enable_record_versioning(db)
-    
-
 """
 import pyodbc
 # Global variable to MSSQL Server (Database DGF)
@@ -158,7 +160,7 @@ if IN_DGF:
 else:
     mssqlcon = pyodbc.connect( "DSN=MoSiVo" )
 """
-    
+
 # Para trabajar con modules
-current.igs_trabajos = Storage()
-current.igs_trabajos.db = db
+# current.igs_trabajos = Storage()
+# current.igs_trabajos.db = db

@@ -1,7 +1,22 @@
 # coding: utf8
 # try something like
+
+from getdatafromdgf.model import DGFModel
+dgfdb = DGFModel().rdb
+
+def index():
+	urls = ["","","","",""]
+	return dict()
+
 def departamentos():
-    return dict( grid=SQLFORM.grid(dgfdb.Deptos) )
+    q = dgfdb(
+        dgfdb.Deptos
+    ).select(
+        dgfdb.Deptos.Nombre,
+        orderby=dgfdb.Deptos.Nombre
+    )
+    return dict( grid=q )
+    #return dict( grid=SQLFORM.grid(dgfdb.Deptos) )
 
 def carpetas_p():
     return dict( grid=SQLFORM.grid(dgfdb.Carpetas_P) )
