@@ -1,29 +1,22 @@
 # -*- coding: utf-8 -*-
 
-#########################################################################
+######################################################################
 ## This scaffolding model makes your app work on Google App Engine too
 ## File is released under public domain and you can use without limitations
-#########################################################################
+######################################################################
 
 ## if SSL/HTTPS is properly configured and you want all HTTP requests to
 ## be redirected to HTTPS, uncomment the line below:
 # request.requires_https()
 
 ### RFPV borrar
-# from gluon.dal import DAL, Field
-# from gluon import T
-# from gluon import current, request, session, response
-
-### RFPV - Ya no es necesario
-# Conetarse a DGF
-# if IN_DGF:
-#   dgfdb=DAL("mssql://fpacheco:fpacheco@192.168.20.7/DGF", migrate_enabled=False, migrate=False)
-# else:
-#   dgfdb=DAL('sqlite://dgf_database.db', migrate_enabled=False, migrate=False)
+from gluon.dal import DAL, Field
+#from gluon import T
+#from gluon import current, request, session, response
 
 if not request.env.web2py_runtime_gae:
     ## if NOT running on Google App Engine use SQLite or other DB
-    db = DAL('postgres://mosivo:12mosivo12@localhost/mosivo')
+    db = DAL('postgres://mosivo:12mosivo12@localhost/mosivo', migrate_enabled=True)
     #db = DAL('sqlite://storage.db', migrate_enabled=True)
     #db2 = DAL('postgres://jgalan:12jgalan12@192.168.1.10/mosivo', migrate_enabled=False)
     #db2 = DAL('postgres://mosivo:12mosivo12@192.168.1.2/mosivo', migrate_enabled=True)
@@ -61,7 +54,7 @@ crud, service, plugins = Crud(db), Service(), PluginManager()
 ## create all tables needed by auth if not custom tables
 
 #######################################
-db.define_table('auth_user', 
+db.define_table('auth_user',
     Field('first_name', type='string',
           label=T('First Name')),
     Field('last_name', type='string',
@@ -72,11 +65,11 @@ db.define_table('auth_user',
           readable=False,
           label=T('Password')),
     Field('created_on','datetime', default=request.now,
-          label=T('Created On'), writable=False,readable=False),
+          label=T('Created On'), writable=False, readable=False),
     Field('modified_on','datetime', default=request.now,
           label=T('Modified On'), writable=False, readable=False,
-          update=request.now), 
-    Field('registration_key', default='', 
+          update=request.now),
+    Field('registration_key', default='',
           writable=False, readable=False),
     Field('reset_password_key', default='',
           writable=False, readable=False),
@@ -148,19 +141,3 @@ if len(rows) == 1:
 if VERSIONING_DB:
     # Versioning para todas las tablas
     auth.enable_record_versioning(db)
-"""
-import pyodbc
-# Global variable to MSSQL Server (Database DGF)
-#mssqlcon = pyodbc.connect(CON_STR2)
-mssqlcon = ""
-
-if IN_DGF:
-    #mssqlcon = pyodbc.connect(CON_STR2)
-    mssqlcon = pyodbc.connect(CON_STR2)
-else:
-    mssqlcon = pyodbc.connect( "DSN=MoSiVo" )
-"""
-
-# Para trabajar con modules
-# current.igs_trabajos = Storage()
-# current.igs_trabajos.db = db

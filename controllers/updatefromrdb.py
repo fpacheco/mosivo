@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
+
+@auth.requires_membership('admin')
 def index():
     """Default
     """
     return dict()
-    
+
+
+@auth.requires_membership('admin')
 def update():
     """Update remote data to local database
     """
@@ -11,10 +15,7 @@ def update():
     from getremotedata.model import  DGFModel
     dgfdb = DGFModel().rdb
     uProc = UpdateFromRDB(db,dgfdb)
-    uProc.uDepartamento()
-    uProc.uGenero()
-    print uProc.gCodToId()
-    uProc.uEspecie()
-    uProc.uCarpeta()
+    uProc.uPlan()
+    uProc.uRodalp()
     # print uProc.dCodToId()
     return dict()

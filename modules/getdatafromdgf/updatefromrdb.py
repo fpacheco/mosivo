@@ -18,7 +18,7 @@ class UpdateFromRDB():
         self.rdb = rdb
 
     # def uDepartamento(self):
-    #     """Get data DGF.Deptos    
+    #     """Get data DGF.Deptos
     #     """
     #     # print "uDepartamento"
     #     # print self.rdb.tables()
@@ -26,7 +26,7 @@ class UpdateFromRDB():
 
     #     rQ = self.rdb(
     #         self.rdb.Deptos
-    #     ).select(            
+    #     ).select(
     #         self.rdb.Deptos.Codigo,
     #         self.rdb.Deptos.Nombre,
     #         self.rdb.Deptos.Numero,
@@ -51,12 +51,12 @@ class UpdateFromRDB():
         """Get genero data from DGF.Plantas    
         """
         rQ = self.rdb(
-            (self.rdb.Planes.CodG_Dec==self.rdb.Plantas.CodG)
+            (self.rdb.Planes.CodG_Dec == self.rdb.Plantas.CodG)
         ).select(
             self.rdb.Planes.CodG_Dec,
             self.rdb.Plantas.Genero,           
-            orderby = self.rdb.Planes.CodG_Dec,
-            distinct = True
+            orderby=self.rdb.Planes.CodG_Dec,
+            distinct=True
         )
 
         if len(rQ) > 0:
@@ -68,8 +68,8 @@ class UpdateFromRDB():
             for row in rQ:
                 # print "%s | %s" % (row.Plantas.Genero,row.Planes.CodG_Dec)
                 self.ldb.genero.insert(
-                    nombre = row.Plantas.Genero,
-                    codigo = row.Planes.CodG_Dec
+                    nombre=row.Plantas.Genero,
+                    codigo=row.Planes.CodG_Dec
                 )
             self.ldb.commit()
 
@@ -77,14 +77,14 @@ class UpdateFromRDB():
         """Get especie data from DGF.Plantas    
         """
         rQ = self.rdb(
-            (self.rdb.Planes.CodG_Dec==self.rdb.Plantas.CodG) & 
-            (self.rdb.Planes.CodE_Dec==self.rdb.Plantas.CodE)
+            (self.rdb.Planes.CodG_Dec == self.rdb.Plantas.CodG) &
+            (self.rdb.Planes.CodE_Dec == self.rdb.Plantas.CodE)
         ).select(
             self.rdb.Planes.CodG_Dec,
             self.rdb.Planes.CodE_Dec,
             self.rdb.Plantas.Especie,            
-            orderby = self.rdb.Planes.CodG_Dec,
-            distinct = True
+            orderby=self.rdb.Planes.CodG_Dec,
+            distinct=True
         )
 
         if len(rQ) > 0:
