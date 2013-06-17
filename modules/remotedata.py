@@ -7,20 +7,22 @@ class RemoteData(object):
     """Only one plugin at time
     """
     
-    def __init__(self,plugPath):
+    def __init__(self,plugdir):
         self.pm = PluginManager()
-        self.pm.setPluginsDir(plugPath)
+        if len(plugdir)>0:            
+            self.pm.setPluginsDir( plugdir )
         self.__loadPluginId = None
         self.__plugin = None
         
         
-    def plugins(self):
-        return self.pm.pluginsInfo()
+    def pluginsMetadata(self):
+        return ( self.pm.pluginsMetadata() )
     
     
     def loadPlugin(self,plugid):
         """Only one plugin at time
         """
+        print "RemoteData.loadPlugin: %s" % plugid
         self.pm.unloadAll()
         self.pm.loadPlugin(plugid)
         self.__loadPluginId = plugid
@@ -31,7 +33,7 @@ class RemoteData(object):
         
     
     def unloadPlugin(self):
-        self.pm.unloadPlugin(self.__loadPluginId)
+        self.pm.unloadPlugin( self.__loadPluginId )
         self.__loadPluginId = None
         self.__plugin = None
 

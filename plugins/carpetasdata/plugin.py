@@ -2,7 +2,7 @@
 """This module update relevant data from remote database (DGF) database to local database (mosivo)
 """
 
-from modules.daplugin.iplugin import IPlugin
+from daplugin.iplugin import IPlugin
 from model import DGFModel
 
 class Plugin(IPlugin):

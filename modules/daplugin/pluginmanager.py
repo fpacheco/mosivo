@@ -3,12 +3,18 @@
 """
 
 class PluginManager(object):
+    """Manager plugin class
+
+    This class manage plugins 
+    """
 
     def __init__(self):
-        self.__pluginsDir = str()
-        self.__pluginsInfo = {}
+        self.__pluginsDir = None
+        self.__loadedPlugins = []
+        self.__pluginsMetadata = dict()           
 
-    def __readPluginsInfo(self):
+
+    def __readPluginsMetadata(self):
         from os import listdir
         from os.path import isfile, isdir, join, basename 
         from ConfigParser import ConfigParser
@@ -24,7 +30,8 @@ class PluginManager(object):
                         bfn = basename( af )
                         if isfile( af ) and bfn.endswith('mosivoplugin'):
                             dirname = d
-                            plugid = f.split('.')[0]                            
+                            plugid = f.split('.')[0]
+                            print "PluginManager.__readPluginsMetadata:%s (%s)" % (plugid,dirname)                            
                             config = ConfigParser()
                             config.read( af )
                             name = config.get(plugid,'name')
@@ -34,85 +41,111 @@ class PluginManager(object):
                             author = config.get(plugid,'author')
                             email = config.get(plugid,'email')
                             webpage = config.get(plugid,'webpage')
-                            self.__pluginsInfo[plugid] = {
-                                'name': name,                                
-                                'version': version,
-                                'category': category,
-                                'dirname': dirname, 
-                                'description': description,
-                                'author': author,
-                                'email': email,
-                                'webpage': webpage,
-                                'plugin': None                                                
-                            }
+                            minmosver = config.get(plugid,'minmosver')
+                            ret = dict( name=name,
+                                version=version,
+                                category=category,
+                                description=description,
+                                author=author,
+                                email=email,
+                                minmosver=minmosver,
+                                dirname=dirname                                     
+                            )
+                            print ret 
+                            self.__pluginsMetadata[plugid] = ret 
 
 
-    def pluginsInfo(self):
-        return self.__pluginsInfo
+
+    def pluginsMetadata(self):
+        """Plugins metadata for all plugin in plugins directory
+        """
+        return ( self.__pluginsMetadata )
 
 
-    def setPluginsDir(self, plugPath):
+    def setPluginsDir(self, pluginsdir):
+        """Set plugins directory
+        """        
         from os.path import isdir
-        if isdir( plugPath ):            
-            self.__pluginsDir = plugPath
-            self.__readPluginsInfo()
+        if isdir( pluginsdir ):
+            self.__pluginsDir = pluginsdir
+            self.__readPluginsMetadata()
 
     
     def pluginsDir(self):
+        """Get plugins directory
+        """        
         return self.__pluginsDir
     
-    def pluginInfo(self, plugid):        
-        if self.__pluginsInfo.has_key(plugid):
-            return self.__pluginsInfo[plugid]
+    def pluginMetadata(self, plugid):
+        """Get metadata for plugid plugin
+        """                
+        if self.__pluginsMetadata.has_key(plugid):
+            return ( self.__pluginsMetadata[plugid] )
 
     def loadPlugin(self, plugid):
-        if self.__pluginsInfo.has_key(plugid):
-            #_temp = __import__('spam.ham', globals(), locals(), ['eggs', 'sausage'], -1)
-            #eggs = _temp.eggs
-            #saus = _temp.sausage
-            #import importlib
-            #foo = importlib.import_module('home.fpacheco.Descargas.web2py.applications.mosivo.plugins.dgfdata')
-            from os.path import basename
-            pbp = basename( self.__pluginsDir )             
-            ppath = "%s.%s" % (pbp,self.__pluginsInfo[plugid].dirname)
-            
-            print "PluginManager.loadPlugin.ppath: %s" % ppath
-            
-            plug = __import__(ppath)
-            self.__pluginsInfo[plugid]['plugin'] = plug.Plugin()
-            self.__pluginsInfo[plugid]['plugin'].load()
- 
-    def plugin(self,plugid):
-        if self.__pluginsInfo.has_key(plugid) and self.isLoaded(plugid):
-            return self.__pluginsInfo[plugid]['plugin']
-                
-    def isLoaded(self,plugid):
-        if self.__pluginsInfo.has_key(plugid):
-            return ( self.__pluginsInfo[plugid]['plugin'] == None )
+        """Load the plugin
+        """        
+        # _temp = __import__('spam.ham', globals(), locals(), ['eggs', 'sausage'], -1)
+        # eggs = _temp.eggs
+        # saus = _temp.sausage
+        # import importlib
+        # foo = importlib.import_module('home.fpacheco.Descargas.web2py.applications.mosivo.plugins.dgfdata')
+        from os.path import basename
+        import sys
+        print "PluginManager.loadPlugin.syspath: %s" % sys.path
+        sys.path.append( '/home.net/fpacheco/Descargas/web2py.git/applications/mosivo/plugins/dgfdata' )
         
+        """        
+        pbp = basename( self.__pluginsDir )
+        print "PluginManager.loadPlugin.ppath: %s" % self.__pluginsMetadata[plugid]
+        ppath= "%s.%s.%s.%s.%s" % ( 'applications', 'mosivo', pbp, self.__pluginsMetadata[plugid]['dirname'], 'plugin')        
+        print "PluginManager.loadPlugin.ppath: %s" % ppath        
+        #_ip = __import__( ppath, globals(), locals(), ['plugin'], -1)
+        _ip = __import__( ppath )
+        """
+        _ip = __import__( "plugin" )
+        print _ip
+        #module = __import__(module_name)
+        #class_ = getattr(module, class_name)
+        #instance = class_()
+        class_ = getattr(_ip, 'Plugin')        
+        _plugin = class_()
+        # _ip.Plugin()
+        if not _plugin in self.__loadedPlugins:
+            _plugin.load()
+            self.__loadedPlugins.append( _plugin )
+ 
     def loadedPlugins(self):
-        """List of key of loaded __pluginsInfo 
+        return ( self.__loadedPlugins )    
+
+
+    def loadedPluginsKeys(self):
+        """List of key of loaded plugins 
         """
         res = []
-        for p in self.__pluginsInfo:
-            if self.isLoaded(p):
-                res.append(p)
+        for k in self.__pluginsInfo:            
+            res.append( k )
         return res
+   
+                
+    def isLoaded(self,plugid):
+        for p in self.__loadedPlugins:
+            if p['id'] == plugid:
+                return (True)
+        return (False)    
 
+                
     def unloadAll(self):
         """Unload all loaded plugins
         """
-        kk = self.loadedPlugins()
-        """
-        if len(kk)>0:
-            for k in kk:
-                self.unloadPlugin(k)        
-        """
-        for k in kk:
-            self.unloadPlugin(k)        
+        for p in self.__loadedPlugins:
+            p.unload()
+        self.__loadedPlugins = []
 
-        
+
     def unloadPlugin(self, plugid):
-        if self.__pluginsInfo.has_key(plugid) and self.isLoaded(plugid):
-            self.__pluginsInfo[plugid]['plugin'].unload()
-            self.__pluginsInfo[plugid]['plugin'] = None
+        for p in self.__loadedPlugins:
+            if p['id'] == plugid:
+                p.unload()
+                self.__loadedPlugins.remove( p )
+                return

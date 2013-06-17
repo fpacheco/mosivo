@@ -1,61 +1,42 @@
 # -*- coding: utf-8 -*-
-"""This module update relevant data from remote database (DGF) database to local database (mosivo)
-"""
+from ipluginbase import IPluginBase
 
-class IPlugin(object):
-    id = None
+class IPlugin(IPluginBase):
+    """Interface plugin class
+
+    This class declare minimal interface for plugin implementation 
+    """
+
 
     def __init__(self):
-        self.isLoaded = False
-        self.__readPluginInfo()
+        super(IPluginBase, self).__init__() 
 
-    def __readPluginInfo(self):
-        from os import listdir
-        from os.path import isfile, isdir, join, basename, abspath 
-        from ConfigParser import ConfigParser
-      
-        ldir = listdir( '.' )
-        ldir.sort()
-        for f in ldir:
-            if isfile( f ) and f.endswith('mosivoplugin'):                
-                self.id = f.split('.')[0]                            
-                config = ConfigParser()
-                config.read( f )
-                self.name = config.get(self.id,'name')
-                self.version = config.get(self.id,'version')
-                self.category = config.get(self.id,'category')
-                self.description = config.get(self.id,'description')
-                self.author = config.get(self.id,'author')
-                self.email = config.get(self.id,'email')
-                self.webpage = config.get(self.id,'webpage')
-                self.dirname = basename( basename( abspath(f) ) )
 
-        
     def load(self):
-        if self.name and self.version and self.author and self.email:
+        """Plugin load interface
+        
+        Here you can declare your database connection and others. Don't forget
+        to call self.activate()  
+        """
+        if not self.isLoaded() and self.id and self.name and self.version and self.minmosver:
             try:
                 self.activate()
-                self.isLoaded = True                
             except:
-                print "Can not load module (id: %s, name: %s, version: %s). " % (self.id, self.name, self.version)            
+                print "Can't load module (id: %s, name: %s, version: %s). " % (self.id, self.name, self.version)            
             
 
     def unload(self):
-        if self.isLoaded:
+        """Plugin unload interface
+        
+        Here you can delete your database connection and others. Don't forget
+        to call self.deactivate()  
+        """        
+        if self.isLoaded():
             try:            
                 self.deactivate()
-                self.isLoaded = False
             except:
-                print "Can not unload module (id: %s, name: %s, version: %s). " % (self.id, self.name, self.version)
+                print "Can't unload module (id: %s, name: %s, version: %s). " % (self.id, self.name, self.version)
                 
-    def info(self):
-        return (self.id, self.name, self.version, self.category, self.description, self.author, self.email, self.webpage)
-
-    def activate(self):
-        pass
-
-    def deactivate(self):
-        pass
 
     def planes(self):
         """Retrieves planes data from remote database
@@ -72,6 +53,7 @@ class IPlugin(object):
         """
         pass
 
+
     def rodalesd(self):
         """Retrieves declared forest from remote database
     
@@ -86,6 +68,7 @@ class IPlugin(object):
             ]
         """        
         pass
+
 
     def ubicacionrodalesd(self):
         """Retrieves declared forest from remote database
@@ -102,6 +85,7 @@ class IPlugin(object):
         """        
         pass
 
+
     def gruposuelorodalesd(self):
         """Retrieves declared forest from remote database
     
@@ -116,6 +100,7 @@ class IPlugin(object):
             ]
         """        
         pass
+
 
     def turnorodalesd(self):
         """Retrieves declared forest from remote database
@@ -132,6 +117,7 @@ class IPlugin(object):
         """        
         pass
 
+
     def raleorodalesd(self):
         """Retrieves declared forest from remote database
     
@@ -147,25 +133,30 @@ class IPlugin(object):
         """        
         pass
 
+
     def rodalesp(self):
         """Retrieves projected forest from remote database. See
         """        
         pass
+
 
     def ubicacionrodalesp(self):
         """Retrieves projected forest from remote database. See
         """        
         pass
 
+
     def gruposuelorodalesp(self):
         """Retrieves projected forest from remote database. See
         """        
         pass
 
+
     def turnorodalesp(self):
         """Retrieves projected forest from remote database. See
         """        
         pass
+
 
     def raleorodalesp(self):
         """Retrieves projected forest from remote database. See

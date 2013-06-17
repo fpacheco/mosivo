@@ -54,7 +54,6 @@ def mosivo():
     return dict(form=form)
 
 
-
 def registries():
 	registriesSQL = """SELECT DISTINCT(CarpetaBPPadronId) 
 				FROM CarpetaBPPadron;"""
@@ -65,6 +64,7 @@ def registries():
 		ret.append(row[0])
 	import gluon.contrib.simplejson
 	return gluon.contrib.simplejson.dumps({'rows': ret})
+
 
 def justiceSection():
 	justiceSectionSQL = """SELECT DISTINCT(CarpetaBPSeccionJudicialEstabl) 
@@ -77,6 +77,7 @@ def justiceSection():
 	import gluon.contrib.simplejson
 	return gluon.contrib.simplejson.dumps({'rows': ret})
 
+
 def departments():
 	deptosSQL = """SELECT DISTINCT(DepartamentosNombre) 
 				FROM Departamentos;"""
@@ -87,6 +88,7 @@ def departments():
 		ret.append(row[0])
 	import gluon.contrib.simplejson
 	return gluon.contrib.simplejson.dumps({'rows': ret})
+
 
 def region():
 	""" 

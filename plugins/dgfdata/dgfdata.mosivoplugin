@@ -6,3 +6,4 @@ description=Remote data access plugin for MOSIVO. DGF database.
 author=InGeSur srl - Fernando Pacheco
 email=contacto@ingesur.com.uy
 webpage=http://www.ingesur.com.uy
+minmosver=1.0
