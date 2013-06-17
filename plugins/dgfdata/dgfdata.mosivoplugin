@@ -1,0 +1,8 @@
+[dgfdata]
+name=DGF data plugin
+version=1.0
+category=Remote data access
+description=Remote data access plugin for MOSIVO. DGF database. 
+author=InGeSur srl - Fernando Pacheco
+email=contacto@ingesur.com.uy
+webpage=http://www.ingesur.com.uy

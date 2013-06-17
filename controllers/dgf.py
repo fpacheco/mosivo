@@ -1,6 +1,8 @@
 # coding: utf8
 # try something like
 
+
+"""
 from getdatafromdgf.model import DGFModel
 dgfdb = DGFModel().rdb
 
@@ -44,3 +46,4 @@ def propietarios():
 def registro():
     return dict( grid=SQLFORM.grid(dgfdb.Registro) )
 
+"""

@@ -1,21 +1,22 @@
 # -*- coding: utf-8 -*-
-
-@auth.requires_membership('admin')
+if 0:
+    import static
+    
+    
+### @auth.requires_membership('admin')
 def index():
     """Default
     """
+    from remotedata import RemoteData
+    print "request.folder: %s" % request.folder    
+    rd = RemoteData( request.folder + "plugins" )
+    print "Plugins: %s" % rd.plugins()
+    rd.loadPlugin('dgfdata')
+    rd.planes()         
     return dict()
 
-
-@auth.requires_membership('admin')
+### @auth.requires_membership('admin')
 def update():
     """Update remote data to local database
     """
-    from getremotedata.updatefromrdb import UpdateFromRDB
-    from getremotedata.model import  DGFModel
-    dgfdb = DGFModel().rdb
-    uProc = UpdateFromRDB(db,dgfdb)
-    uProc.uPlan()
-    uProc.uRodalp()
-    # print uProc.dCodToId()
-    return dict()
+    print dict()

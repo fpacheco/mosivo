@@ -1,0 +1,8 @@
+[carpetasdata]
+name=Carpetas data plugin
+version=1.0
+category=Remote data access
+description=Remote data access plugin for MOSIVO. Carpetas database (ASIC-MVOTMA). 
+author=InGeSur srl - Fernando Pacheco
+email=contacto@ingesur.com.uy
+webpage=http://www.ingesur.com.uy
