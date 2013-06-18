@@ -1,31 +1,29 @@
 # -*- coding: utf-8 -*-
-"""This module update relevant data from remote database (DGF) database to local database (mosivo)
-"""
+# From modules directory 
 from daplugin.iplugin import IPlugin
+# From this directory
 from model import DGFModel
 
 class Plugin(IPlugin):
     
-    def __init__(self):                
-        super(Plugin, self).__init__()
-        print "dgfdata plugin __init__"
+    def __init__(self,plugpath):
+        super(Plugin, self).__init__( plugpath )
         
    
-    def activate(self):
-        super(Plugin, self).activate()
+    def load(self):
+        super(Plugin, self).load()
         self.rdb = DGFModel().db()
-        print "dgfdata plugin activate"
 
 
-    def deactivate(self):
-        super(Plugin, self).deactivate()        
+    def unload(self):        
+        super(Plugin, self).unload()   
         # Close db????
-        print "dgfdata plugin deactivate"
 
-        
+       
     def planes(self):
         res = []
         q = self.rdb(
+            (self.rdb.Carpetas_P.Codigo != None) &                     
             (self.rdb.Carpetas_P.Nro_Carpeta != None) & 
             (self.rdb.Carpetas_P.Longitud != None) &
             (self.rdb.Carpetas_P.Latitud != None) &
@@ -40,7 +38,6 @@ class Plugin(IPlugin):
         )
         for r in q:            
             res.append(
-                [r.Codigo, r.Nro_Carpeta,r.Longitud,r.Latitud]
+                [r.Codigo, r.Nro_Carpeta, r.Longitud, r.Latitud]
             )
         return res
-

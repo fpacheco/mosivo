@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """This module update relevant data from remote database (DGF) database to local database (mosivo)
 """
-if 0:
-    from gluon import current
-    from gluon.dal import DAL, Field
+import gluon
+from gluon.dal import  Field
+from gluon.dal import DAL 
+from gluon import current
 
 IN_DGF = False
-
 
 class DGFModel():
     """This class update all the tables necessary to the simulation
@@ -16,16 +16,20 @@ class DGFModel():
         """Class initialization function
         """
         # DGF connection. Please use read only user
-        if IN_DGF:
-            self.rdb = DAL("mssql://fpacheco:fpacheco@192.168.20.7/DGF", migrate_enabled=False, migrate=False)
-        else:
-            self.rdb = DAL('sqlite://dgf_database.db', migrate_enabled=False, migrate=False)
+        try:
+            if IN_DGF:
+                self.rdb = DAL("mssql://fpacheco:fpacheco@192.168.20.7/DGF", migrate_enabled=False, migrate=False)
+            else:
+                self.rdb = DAL('sqlite://dgf_database.db', migrate_enabled=False, migrate=False)
+            self.session = current.session
+            self.request = current.request
+            self.response = current.response
+            self.cache = current.cache
+            self.__define_tables()
+            print self.rdb.tables()
+        except:
+            print "DGFModel: Can't load database!."
 
-        self.session = current.session
-        self.request = current.request
-        self.response = current.response
-        self.cache = current.cache
-        self.__define_tables()
 
     def __define_tables(self):
         """Define all necessary tables in DGF
@@ -183,6 +187,7 @@ class DGFModel():
             primarykey=['Codigo'],
             migrate=False
         )
+
 
     def db(self):
         """

@@ -8,11 +8,9 @@ def index():
     """Default
     """
     from remotedata import RemoteData
-    print "request.folder: %s" % request.folder
     rd = RemoteData( request.folder + "plugins" )
-    print "Plugins: %s" % rd.pluginsMetadata()
-    rd.loadPlugin('dgfdata')
-    rd.planes()
+    rd.loadPlugin('dgfdata')        
+    rd.planes()    
     return dict()
 
 

@@ -8,43 +8,56 @@ class IPluginBase(object):
     """
 
 
-    def __init__(self):
-        self.__readPluginInfo()
+    def __init__(self, dirpath):
+        """Class initialization
+        """        
+        self.__dirPath = dirpath
         self.__isLoaded = False
-
+        self.__readPluginInfo()        
+        
 
     def __readPluginInfo(self):
-        print "IPluginBase.__readPluginInfo"
+        """Class initialization
+        """        
         from os import listdir
-        from os.path import isfile, basename, abspath 
+        from os.path import isdir, isfile, basename, abspath, join 
         from ConfigParser import ConfigParser
-        ldir = listdir( '.' )
-        ldir.sort()
-        for f in ldir:
-            if isfile( f ) and f.endswith('mosivoplugin'):                
-                self.id = f.split('.')[0]                            
-                config = ConfigParser()
-                config.read( f )
-                self.name = config.get(self.id,'name')
-                self.version = config.get(self.id,'version')
-                self.category = config.get(self.id,'category')
-                self.description = config.get(self.id,'description')
-                self.author = config.get(self.id,'author')
-                self.email = config.get(self.id,'email')
-                self.webpage = config.get(self.id,'webpage')
-                self.minmosver = config.get(self.id,'minmosver')
-                self.dirname = basename( abspath('.') )     
- 
+        if len(self.__dirPath)>0 and isdir(self.__dirPath):
+            ldir = listdir( self.__dirPath )
+            ldir.sort()
+            for f in ldir:
+                ff = join(self.__dirPath, f)
+                if isfile( ff ) and f.endswith('mosivoplugin'):                
+                    self.id = f.split('.')[0]                             
+                    config = ConfigParser()                    
+                    config.read( ff )
+                    self.name = config.get(self.id,'name')
+                    self.version = config.get(self.id,'version')
+                    self.category = config.get(self.id,'category')
+                    self.description = config.get(self.id,'description')
+                    self.author = config.get(self.id,'author')
+                    self.email = config.get(self.id,'email')
+                    self.webpage = config.get(self.id,'webpage')
+                    self.minmosver = config.get(self.id,'minmosver')
+                    self.dirname = basename( abspath('.') )
+                    return      
+
 
     def activate(self):
+        """Class initialization
+        """        
         self.__isLoaded = True
 
 
     def deactivate(self):
+        """Class initialization
+        """        
         self.__isLoaded = False
 
     
-    def info(self):
+    def metadata(self):
+        """Class initialization
+        """        
         ret = {
             'id': self.id,
             'name': self.name,
@@ -61,4 +74,6 @@ class IPluginBase(object):
 
     
     def isLoaded(self):
-        return ( self.__isLoaded == True )    
+        """Class initialization
+        """        
+        return ( self.__isLoaded )

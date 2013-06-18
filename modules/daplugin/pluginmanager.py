@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-"""This module update relevant data from remote database (DGF) database to local database (mosivo)
-"""
-
 class PluginManager(object):
     """Manager plugin class
 
@@ -9,12 +6,16 @@ class PluginManager(object):
     """
 
     def __init__(self):
+        """Class initialization
+        """
         self.__pluginsDir = None
         self.__loadedPlugins = []
         self.__pluginsMetadata = dict()           
 
 
     def __readPluginsMetadata(self):
+        """Private method that read metadata for a plugin
+        """        
         from os import listdir
         from os.path import isfile, isdir, join, basename 
         from ConfigParser import ConfigParser
@@ -42,7 +43,8 @@ class PluginManager(object):
                             email = config.get(plugid,'email')
                             webpage = config.get(plugid,'webpage')
                             minmosver = config.get(plugid,'minmosver')
-                            ret = dict( name=name,
+                            ret = dict( 
+                                name=name,
                                 version=version,
                                 category=category,
                                 description=description,
@@ -51,7 +53,6 @@ class PluginManager(object):
                                 minmosver=minmosver,
                                 dirname=dirname                                     
                             )
-                            print ret 
                             self.__pluginsMetadata[plugid] = ret 
 
 
@@ -64,6 +65,9 @@ class PluginManager(object):
 
     def setPluginsDir(self, pluginsdir):
         """Set plugins directory
+
+        Args:
+            pluginsdir: String with the path of the plugins directory        
         """        
         from os.path import isdir
         if isdir( pluginsdir ):
@@ -73,64 +77,98 @@ class PluginManager(object):
     
     def pluginsDir(self):
         """Get plugins directory
+        
+        Returns:
+            String with the path of the plugins directories        
         """        
         return self.__pluginsDir
+
     
     def pluginMetadata(self, plugid):
         """Get metadata for plugid plugin
+        
+        Args:
+            plugid: Id of this plugin
+        
+        Returns:
+            Metadata for this plugin.        
         """                
         if self.__pluginsMetadata.has_key(plugid):
             return ( self.__pluginsMetadata[plugid] )
 
+
     def loadPlugin(self, plugid):
-        """Load the plugin
+        """Load a plugin from his id
+
+        Args:
+            plugid: Id of this plugin        
         """        
-        # _temp = __import__('spam.ham', globals(), locals(), ['eggs', 'sausage'], -1)
-        # eggs = _temp.eggs
-        # saus = _temp.sausage
-        # import importlib
-        # foo = importlib.import_module('home.fpacheco.Descargas.web2py.applications.mosivo.plugins.dgfdata')
-        from os.path import basename
+        from os.path import abspath, join 
         import sys
-        print "PluginManager.loadPlugin.syspath: %s" % sys.path
-        sys.path.append( '/home.net/fpacheco/Descargas/web2py.git/applications/mosivo/plugins/dgfdata' )
         
-        """        
-        pbp = basename( self.__pluginsDir )
-        print "PluginManager.loadPlugin.ppath: %s" % self.__pluginsMetadata[plugid]
-        ppath= "%s.%s.%s.%s.%s" % ( 'applications', 'mosivo', pbp, self.__pluginsMetadata[plugid]['dirname'], 'plugin')        
-        print "PluginManager.loadPlugin.ppath: %s" % ppath        
-        #_ip = __import__( ppath, globals(), locals(), ['plugin'], -1)
-        _ip = __import__( ppath )
-        """
-        _ip = __import__( "plugin" )
-        print _ip
-        #module = __import__(module_name)
-        #class_ = getattr(module, class_name)
-        #instance = class_()
-        class_ = getattr(_ip, 'Plugin')        
-        _plugin = class_()
-        # _ip.Plugin()
+        # Add plugin directory to python path
+        pluginsPath = abspath('.') + '/applications/mosivo/plugins'
+        sys.path.append( pluginsPath )
+        
+        #Dynamic import Plugin class
+        _mod = "%s.plugin" % plugid 
+        _ip = __import__( _mod, fromlist=['Plugin'] )
+        class_ = getattr(_ip, 'Plugin')
+        _plugin = class_( join(self.__pluginsDir, plugid) )
         if not _plugin in self.__loadedPlugins:
-            _plugin.load()
-            self.__loadedPlugins.append( _plugin )
+            try:
+                _plugin.load()
+                self.__loadedPlugins.append( _plugin )
+            except:
+                print "Load error: Can't load plugin!" 
  
+ 
+    def loadedPlugin(self,plugid):
+        """Get a plugin from his id
+
+        Args:
+            plugid: Id of this plugin
+
+        Returns:
+            Dynamic loadad plugin 
+        """        
+        for p in self.__loadedPlugins:
+            if p.id == plugid:
+                return p
+    
+    
     def loadedPlugins(self):
-        return ( self.__loadedPlugins )    
+        """Get a list of loaded plugins
+        
+        Returns:
+            A list of loaded plugins        
+        """
+        return self.__loadedPlugins 
 
 
     def loadedPluginsKeys(self):
-        """List of key of loaded plugins 
+        """List of key of loaded plugins
+
+        Returns:
+            A list of keys of loaded plugins         
         """
         res = []
-        for k in self.__pluginsInfo:            
+        for k in self.__loadedPlugins:
             res.append( k )
         return res
    
                 
     def isLoaded(self,plugid):
+        """List of key of loaded plugins
+        
+        Args:
+            plugid: Id of this plugin         
+        
+        Returns:
+            True if is loaded
+        """
         for p in self.__loadedPlugins:
-            if p['id'] == plugid:
+            if p.id == plugid:
                 return (True)
         return (False)    
 
@@ -144,8 +182,10 @@ class PluginManager(object):
 
 
     def unloadPlugin(self, plugid):
+        """Unload a plugin b his id 
+        """        
         for p in self.__loadedPlugins:
-            if p['id'] == plugid:
+            if p.id == plugid:
                 p.unload()
                 self.__loadedPlugins.remove( p )
                 return

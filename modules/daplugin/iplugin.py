@@ -8,8 +8,10 @@ class IPlugin(IPluginBase):
     """
 
 
-    def __init__(self):
-        super(IPluginBase, self).__init__() 
+    def __init__(self,dirpath):
+        """Class initialization
+        """        
+        super(IPlugin, self).__init__(dirpath) 
 
 
     def load(self):
@@ -18,13 +20,12 @@ class IPlugin(IPluginBase):
         Here you can declare your database connection and others. Don't forget
         to call self.activate()  
         """
-        if not self.isLoaded() and self.id and self.name and self.version and self.minmosver:
+        if ( not self.isLoaded() ) and self.id and self.name and self.version and self.minmosver:
             try:
                 self.activate()
             except:
                 print "Can't load module (id: %s, name: %s, version: %s). " % (self.id, self.name, self.version)            
             
-
     def unload(self):
         """Plugin unload interface
         
@@ -37,12 +38,12 @@ class IPlugin(IPluginBase):
             except:
                 print "Can't unload module (id: %s, name: %s, version: %s). " % (self.id, self.name, self.version)
                 
-
+    
     def planes(self):
         """Retrieves planes data from remote database
     
         Returns:
-            A list of list [id, numerocarpeta,longitude,latitude]. 
+            A list of lists [id, numerocarpeta,longitude,latitude]. 
             For example:            
             
             [
