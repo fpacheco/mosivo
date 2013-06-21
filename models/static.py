@@ -1,6 +1,5 @@
 if 0:
     import gluon
-    from gluon.contrib.gql import GQLDB
     from gluon.html import A
     from gluon.html import B
     from gluon.html import BEAUTIFY
@@ -16,6 +15,7 @@ if 0:
     from gluon.html import IFRAME
     from gluon.html import IMG
     from gluon.html import INPUT
+    from gluon.dal import Field
     from gluon.validators import IS_ALPHANUMERIC
     from gluon.validators import IS_DATE
     from gluon.validators import IS_DATETIME

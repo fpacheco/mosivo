@@ -189,5 +189,6 @@ class DGFModel():
         Get the database connection
 
         :returns:  DAL connection for DGF database
+        :rtype: DAL connection 
         """
         return (self.rdb)

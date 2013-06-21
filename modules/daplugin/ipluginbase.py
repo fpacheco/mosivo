@@ -6,10 +6,24 @@ class IPluginBase(object):
 
     This class declare minimal interface for plugin implementation 
     """
+    
+    id = None #: Plugin unique identification string
+    name = None #: Plugin name string
+    version = None #: Plugin version string  
+    category = None #: Plugin category string 
+    description = None #: Plugin decription
+    author = None #: Plugin author name 
+    email = None #: Plugin author email
+    webpage = None  #: Plugin author web page       
+    minmosver = None  #: MoSiVo minimal version required for this plugin
+    dirname = None  #: Plugin directory name
 
 
     def __init__(self, dirpath):
         """Class initialization
+
+        :param dirpath: Directory path The name to use.
+        :type dirpath: str.        
         """        
         self.__dirPath = dirpath
         self.__isLoaded = False

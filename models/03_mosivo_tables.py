@@ -3,7 +3,7 @@
 Mirror tables from DGF database
 """
 if 0:
-    import static
+    from static import *
 
 
 def integer_input_HTML5_widget(field, value):
@@ -415,3 +415,35 @@ db.cbindustria.bindustria.requires=IS_NOT_IN_DB(
     ),
     'cbindustria.bindustria'
 )
+
+
+## Almacenamiento de los resultados del modelo en el escenario B
+# Anio de corte
+db.define_table("anio",
+    Field("anio", type='integer', notnull=True, unique=True),
+)
+# Volumen de corte por anio y rodal (declarado)
+db.define_table("corted",
+    Field("anio", db.anio),
+    Field("rodald", db.rodald),
+    Field("volumen", type="float", notnull=True)
+)
+# Volumen de raleo por anio y rodal (declarado) 
+db.define_table("raleod",
+    Field("anio", db.anio),
+    Field("rodald", db.rodald),
+    Field("volumen", type="float", notnull=True)
+)
+# Volumen de corte por anio y rodal (proyectado) 
+db.define_table("cortep",
+    Field("anio", db.anio),
+    Field("rodald", db.rodald),
+    Field("volumen", type="float", notnull=True)
+)
+# Volumen de raleo por anio y rodal (proyectado) 
+db.define_table("raleop",
+    Field("anio", db.anio),
+    Field("rodald", db.rodald),
+    Field("volumen", type="float", notnull=True)
+)
+

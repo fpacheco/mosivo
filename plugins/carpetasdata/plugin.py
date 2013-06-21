@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""This module update relevant data from remote database (DGF) database to local database (mosivo)
+"""This module update relevant data from DGF remote database to local database (MoSiVo)
 """
 
 from daplugin.iplugin import IPlugin

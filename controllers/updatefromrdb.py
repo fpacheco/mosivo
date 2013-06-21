@@ -7,7 +7,7 @@ if 0:
 def index():
     """Default
     """
-    from remotedata import RemoteData
+    from daplugin.remotedata import RemoteData
     rd = RemoteData( request.folder + "plugins" )
     rd.loadPlugin('dgfdata')        
     rd.planes()    

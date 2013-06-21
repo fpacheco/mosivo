@@ -66,8 +66,8 @@ class PluginManager(object):
     def setPluginsDir(self, pluginsdir):
         """Set plugins directory
 
-        Args:
-            pluginsdir: String with the path of the plugins directory        
+        :param pluginsdir: String with the path of the plugins directory
+        :type pluginsdir: str        
         """        
         from os.path import isdir
         if isdir( pluginsdir ):
@@ -77,9 +77,21 @@ class PluginManager(object):
     
     def pluginsDir(self):
         """Get plugins directory
+
+        :returns: The path of the plugins directories.
+        :rtype: str 
         
-        Returns:
-            String with the path of the plugins directories        
+        :Example:        
+        
+        >>> import template
+        >>> a = MainClass()
+        >>> a.function2(1,1,1)
+        2
+        
+        .. note:: can be useful to emphasize important feature
+        .. seealso:: :class:`MainClass2`
+        .. warning:: arg2 must be non-zero.
+        .. todo:: check that arg2 is non zero.        
         """        
         return self.__pluginsDir
 
@@ -87,9 +99,9 @@ class PluginManager(object):
     def pluginMetadata(self, plugid):
         """Get metadata for plugid plugin
         
-        Args:
-            plugid: Id of this plugin
-        
+        :param plugid: id string for the plugin
+        :type plugid: str
+                
         Returns:
             Metadata for this plugin.        
         """                
@@ -98,10 +110,10 @@ class PluginManager(object):
 
 
     def loadPlugin(self, plugid):
-        """Load a plugin from his id
+        """Load a plugin by his id
 
-        Args:
-            plugid: Id of this plugin        
+        :param plugid: id string for the plugin
+        :type plugid: str        
         """        
         from os.path import abspath, join 
         import sys
@@ -126,11 +138,11 @@ class PluginManager(object):
     def loadedPlugin(self,plugid):
         """Get a plugin from his id
 
-        Args:
-            plugid: Id of this plugin
+        :param plugid: id string for the plugin
+        :type plugid: str
 
-        Returns:
-            Dynamic loadad plugin 
+        :returns: The plugin
+        :rtype: IPlugin
         """        
         for p in self.__loadedPlugins:
             if p.id == plugid:
@@ -161,11 +173,12 @@ class PluginManager(object):
     def isLoaded(self,plugid):
         """List of key of loaded plugins
         
-        Args:
-            plugid: Id of this plugin         
+        :param plugid: id string for the plugin
+        :type plugid: str
+
+        :returns: True if plugin is loaded.
+        :rtype: bool
         
-        Returns:
-            True if is loaded
         """
         for p in self.__loadedPlugins:
             if p.id == plugid:
@@ -182,7 +195,11 @@ class PluginManager(object):
 
 
     def unloadPlugin(self, plugid):
-        """Unload a plugin b his id 
+        """Unload a plugin by his id
+        
+        :param plugid: id string for the plugin
+        :type plugid: str
+                  
         """        
         for p in self.__loadedPlugins:
             if p.id == plugid:
