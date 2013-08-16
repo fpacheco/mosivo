@@ -54,10 +54,6 @@ response.menu = [[T('design'), False, URL('admin', 'default', 'design',
 # ## auxiliary functions
 # ###########################################################
 
-if False and request.tickets_db:
-    from gluon.restricted import TicketStorage
-    ts = TicketStorage()
-    ts._get_table(request.tickets_db, ts.tablename, request.application)
 
 def get_databases(request):
     dbs = {}
@@ -279,15 +275,14 @@ def update():
     (db, table) = get_table(request)
     keyed = hasattr(db[table], '_primarykey')
     record = None
-    db[table]._common_filter = None
     if keyed:
         key = [f for f in request.vars if f in db[table]._primarykey]
         if key:
             record = db(db[table][key[0]] == request.vars[key[
-                        0]]).select().first()
+                        0]], ignore_common_filters=True).select().first()
     else:
         record = db(db[table].id == request.args(
-            2)).select().first()
+            2), ignore_common_filters=True).select().first()
 
     if not record:
         qry = query_by_table_type(table, db)
@@ -324,9 +319,6 @@ def state():
 
 
 def ccache():
-    cache.ram.initialize()
-    cache.disk.initialize()
-
     form = FORM(
         P(TAG.BUTTON(
             T("Clear CACHE?"), _type="submit", _name="yes", _value="yes")),
@@ -393,7 +385,7 @@ def ccache():
 
         return (hours, minutes, seconds)
 
-    for key, value in cache.ram.storage.iteritems():
+    for key, value in cache.ram.storage.items():
         if isinstance(value, dict):
             ram['hits'] = value['hit_total'] - value['misses']
             ram['misses'] = value['misses']
@@ -477,10 +469,10 @@ def ccache():
 
 def table_template(table):
     from gluon.html import TR, TD, TABLE, TAG
-
+    
     def FONT(*args, **kwargs):
         return TAG.font(*args, **kwargs)
-
+    
     def types(field):
         f_type = field.type
         if not isinstance(f_type,str):
@@ -488,7 +480,7 @@ def table_template(table):
         elif f_type == 'string':
             return field.length
         elif f_type == 'id':
-            return B('pk')
+            return B('pk')            
         elif f_type.startswith('reference') or \
                 f_type.startswith('list:reference'):
             return B('fk')
@@ -503,7 +495,7 @@ def table_template(table):
     face = "Helvetica"
     face_bold = "Helvetica Bold"
     border = 0
-
+    
     rows.append(TR(TD(FONT(table, _face=face_bold, _color=bgcolor),
                            _colspan=3, _cellpadding=cellpadding,
                            _align="center", _bgcolor=color)))
@@ -523,31 +515,10 @@ def table_template(table):
 
 
 def bg_graph_model():
-    graph = pgv.AGraph(layout='dot',  directed=True,  strict=False,  rankdir='LR')
-    
-    subgraphs = dict()    
+    graph = pgv.AGraph(layout='dot', directed=True, strict=False, rankdir='LR')
     for tablename in db.tables:
-        if hasattr(db[tablename],'_meta_graphmodel'):
-            meta_graphmodel = db[tablename]._meta_graphmodel
-        else:
-            meta_graphmodel = dict(group='Undefined', color='#ECECEC')
-        
-        group = meta_graphmodel['group'].replace(' ', '') 
-        if not subgraphs.has_key(group):
-            subgraphs[group] = dict(meta=meta_graphmodel, tables=[])
-            subgraphs[group]['tables'].append(tablename)
-        else:
-            subgraphs[group]['tables'].append(tablename)        
-      
-        graph.add_node(tablename, name=tablename, shape='plaintext',
+        graph.add_node(tablename, name=tablename, shape='plaintext', 
                        label=table_template(tablename))
-    
-    for n, key in enumerate(subgraphs.iterkeys()):        
-        graph.subgraph(nbunch=subgraphs[key]['tables'],
-                    name='cluster%d' % n,
-                    style='filled',
-                    color=subgraphs[key]['meta']['color'],
-                    label=subgraphs[key]['meta']['group'])   
 
     for tablename in db.tables:
         for field in db[tablename]:
@@ -561,15 +532,7 @@ def bg_graph_model():
                 graph.add_edge(n1, n2, color="#4C4C4C", label='')
 
     graph.layout()
-    #return graph.draw(format='png', prog='dot')
-    if not request.args:
-        return graph.draw(format='png', prog='dot')
-    else:       
-        response.headers['Content-Disposition']='attachment;filename=graph.%s'%request.args(0)
-        if request.args(0) == 'dot':        
-            return graph.string()
-        else:
-            return graph.draw(format=request.args(0), prog='dot')
+    return graph.draw(format='png', prog='dot')
 
-def graph_model():    
+def graph_model():
     return dict(databases=databases, pgv=pgv)

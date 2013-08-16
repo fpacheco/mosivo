@@ -5,10 +5,10 @@ Plugin de acceso a datos remotos
 El módulo de acceso a datos permite que la información requerida por el
 modelo sea obtenida desde fuentes externas a la aplicación.
 Estas fuentes pueden ser de cualquier tipo:
- * base de datos remotas;
- * Web Services;
- * planilla de cálculo;
- * etc.
+* base de datos remotas;
+* Web Services;
+* planilla de cálculo;
+* etc.
 
 En cada caso, se deberán crear nuevos módulos que obtengan esa información
 y los devuelvan en el formato requerido para que puedan ser insertados en

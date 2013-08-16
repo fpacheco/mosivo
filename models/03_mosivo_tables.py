@@ -274,7 +274,12 @@ db.define_table("cturno",
 # Una especie con un destino = 1 solo valor de corta
 db.cturno.turno.requires = IS_NOT_IN_DB(
     db((db.cturno.especie == request.vars.especie) & (db.cturno.destino==request.vars.destino)), 'cturno.turno')
-db.cturno.turno.requires = IS_FLOAT_IN_RANGE(0, 50, dot='.', error_message=T('Too small o to large'))
+db.cturno.turno.requires = IS_FLOAT_IN_RANGE(0.0, 50.0, dot='.', error_message=T('Too small o to large'))
+
+from cascadingselect import CascadingSelect
+cSelEsp = CascadingSelect(db.genero,db.especie)
+cSelEsp.prompt = lambda table: T("Select %s") % str(table).capitalize()
+db.cturno.especie.widget=cSelEsp.widget  
 
 ## Cuanto crece por ano (ima=indice medio anual)
 db.define_table("cima",
@@ -419,31 +424,33 @@ db.cbindustria.bindustria.requires=IS_NOT_IN_DB(
 
 ## Almacenamiento de los resultados del modelo en el escenario B
 # Anio de corte
-db.define_table("anio",
-    Field("anio", type='integer', notnull=True, unique=True),
-)
-# Volumen de corte por anio y rodal (declarado)
-db.define_table("corted",
-    Field("anio", db.anio),
-    Field("rodald", db.rodald),
-    Field("volumen", type="float", notnull=True)
-)
-# Volumen de raleo por anio y rodal (declarado) 
-db.define_table("raleod",
-    Field("anio", db.anio),
-    Field("rodald", db.rodald),
-    Field("volumen", type="float", notnull=True)
-)
-# Volumen de corte por anio y rodal (proyectado) 
-db.define_table("cortep",
-    Field("anio", db.anio),
-    Field("rodald", db.rodald),
-    Field("volumen", type="float", notnull=True)
-)
-# Volumen de raleo por anio y rodal (proyectado) 
-db.define_table("raleop",
-    Field("anio", db.anio),
-    Field("rodald", db.rodald),
-    Field("volumen", type="float", notnull=True)
-)
+# db.define_table("anio",
+#     Field("anio", type='integer', notnull=True, unique=True),
+# )
+# # Volumen de corte por anio y rodal (declarado)
+# db.define_table("corted",
+#     Field("anio", db.anio),
+#     Field("rodald", db.rodald),
+#     Field("volumen", type="float", notnull=True)
+# )
+# # Volumen de raleo por anio y rodal (declarado) 
+# db.define_table("raleod",
+#     Field("anio", db.anio),
+#     Field("rodald", db.rodald),
+#     Field("volumen", type="float", notnull=True)
+# )
+
+## Lo proyectado no se modela en el escenario B
+# # Volumen de corte por anio y rodal (proyectado) 
+# db.define_table("cortep",
+#     Field("anio", db.anio),
+#     Field("rodald", db.rodald),
+#     Field("volumen", type="float", notnull=True)
+# )
+# # Volumen de raleo por anio y rodal (proyectado) 
+# db.define_table("raleop",
+#     Field("anio", db.anio),
+#     Field("rodald", db.rodald),
+#     Field("volumen", type="float", notnull=True)
+# )
 

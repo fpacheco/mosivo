@@ -148,20 +148,56 @@ menu = [
 
 menuAdmin = [
     ( T('Home'), URL('default','index')==URL, URL('default','index'),[] ),
-    ( T('Administration'), URL('admin','index')==URL(), URL('admin','index'),
+    ( T('View'), URL('view','index')==URL, URL('view','index'),
         [
-            ( T('Users'), URL('admin','users')==URL(), URL('admin','users'), [] ),
-            ( T('Memberships'), URL('admin','memberships')==URL(), URL('admin','memberships'), [] )
-            
+            ( T('Model data'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'), 
+                [
+                    ( T('Raleo'), URL('modelconf','craleo')==URL(), URL('modelconf','craleo'), [] ),
+                    ( T('Turno'), URL('modelconf','cturno')==URL(), URL('modelconf','cturno'), [] ),
+                    ( T('Turno'), URL('modelconf','cturno')==URL(), URL('modelconf','cturno'), [] ),
+                    ( T('Turno'), URL('modelconf','cturno')==URL(), URL('modelconf','cturno'), [] ),
+                    ( T('Turno'), URL('modelconf','cturno')==URL(), URL('modelconf','cturno'), [] ),               
+                ] 
+            ),
+            ( T('Data'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'), 
+                [
+                    ( T('Años raleo'), URL('modelconf','cfdestino')==URL(), URL('modelconf','cfdestino'), [] ),
+                    ( T('Destino'), URL('modelconf','cfdestino')==URL(), URL('modelconf','cfdestino'), [] ),
+                    ( T('Effective area'), URL('modelconf','caefectiva')==URL(), URL('modelconf','caefectiva'), [] ),
+                    ( T('IMA'), URL('modelconf','cima')==URL(), URL('modelconf','cima'), [] ),
+                    ( T('Raleo'), URL('modelconf','craleo')==URL(), URL('modelconf','craleo'), [] ),
+                    ( T('Turno'), URL('modelconf','cturno')==URL(), URL('modelconf','cturno'), [] ),
+                ] 
+            ),
+        ]
+    ),    
+    ( T('Model Configuration'), URL('config','index')==URL, URL('config','index'),
+        [
+            ( T('Data updates'), URL('modelconf','dataupdate')==URL(), URL('modelconf','dataupdate'), [] ),
+            ( T('Model updates'), URL('modelconf','modelupdate')==URL(), URL('modelconf','modelupdate'), [] ),
+            ( T('Coefficients'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'), 
+                [
+                    ( T('Raleo años'), URL('modelconf','caraleo')==URL(), URL('modelconf','caraleo'), [] ),
+                    ( T('Raleo fracción'), URL('modelconf','cfraleo')==URL(), URL('modelconf','cfraleo'), [] ),
+                    ( T('Destino'), URL('modelconf','cfdestino')==URL(), URL('modelconf','cfdestino'), [] ),
+                    ( T('Effective area'), URL('modelconf','caefectiva')==URL(), URL('modelconf','caefectiva'), [] ),
+                    ( T('IMA'), URL('modelconf','cima')==URL(), URL('modelconf','cima'), [] ),
+                    ( T('Raleo'), URL('modelconf','craleo')==URL(), URL('modelconf','craleo'), [] ),
+                    ( T('Turno'), URL('modelconf','cturno')==URL(), URL('modelconf','cturno'), [] ),               
+                ] 
+            ),            
         ]
     ),
-    ( T('Model Configuration'), URL('config','index')==URL, URL('config','index'),[] ),
-    ( T('About'),URL('about','index')==URL(), URL('about','index'),
+    ( T('System administration'), URL('admin','index')==URL(), URL('admin','index'),
         [
+            ( T('Users'), URL('sysadmin','users')==URL(), URL('sysadmin','users'), [] ),
+            ( T('Memberships'), URL('sysadmin','memberships')==URL(), URL('sysadmin','memberships'), [] )
+            
         ]
     ),
     ( T('Help'), URL('help','index')==URL(), URL('help','index'),
         [
+            ( T('About'),URL('about','index')==URL(), URL('about','index'),[]),
             ( T('Basic help'), URL('help','appbasic')==URL(), URL('help','appbasic'),[] ),
             ( T('App manual'), URL('help','appmanual')==URL(), URL('help','appmanual'),[] ),
             ( T('System documentation'),URL('help','sysmanual')==URL(), URL('help','sysmanual'),[] ),

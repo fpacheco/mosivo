@@ -1,0 +1,74 @@
+{{extend 'layout.html'}}
+{{
+if not request.args:
+	 w2p_grid_tbl = grid.element('table')
+	 if w2p_grid_tbl:
+	 	original_export_menu = grid.element('div.w2p_export_menu')
+	 	export_menu_links = original_export_menu.elements('a')
+	 	export_menu_items = []
+	 	for link in export_menu_links:
+	 		item = LI(link)
+	 		export_menu_items.append(item)
+	 		pass
+	 	new_export_menu = DIV(
+	                      A( T('Exports'),
+	                         SPAN(_class='caret'),
+	                         _href='#',
+	                         _class='btn btn-inverse dropdown-toggle',
+	                         **{'_data-toggle':"dropdown"}
+	                        ),
+	                      UL(*export_menu_items,
+	                         _class='dropdown-menu'
+	                        ),
+	                    _class='w2p_export_menu btn-group'
+	                    )
+	 	export_menu = grid.element('div.w2p_export_menu',replace=new_export_menu)
+	 	pass
+	pass
+}}
+
+<div id="windowTitleDialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="windowTitleLabel" aria-hidden="true" style="display: none;">
+	<div class="modal-header">
+		<a href="#" class="close" data-dismiss="modal">×</a>
+		<h3>Please enter a new title for this window.</h3>
+	</div>
+	<div class="modal-body">
+		<div class="divDialogElements">
+			<form id="cturno">
+		  		<input name="your_message" id="your_message" />
+		  		<input type="submit" />
+			</form>
+		</div>
+	
+	<script>
+		jQuery('#myform').submit(function() {
+			ajax('{{=URL("new_post")}}',
+				['your_message'], 'target');
+			return false;
+		});
+	</script>	
+	</div>
+	
+	<div class="modal-footer">
+		<a href="#" class="btn" onclick="closeDialog ();">Cancel</a>
+		<a href="#" class="btn btn-primary" onclick="okClicked ();">OK</a>
+	</div>
+</div>
+
+<h1> {{ = T('Turno coeffcients') }}</h1>
+ACA VA LA FORM?<br />
+{{ =form }}
+ACA VA LA GRID<br />
+
+<!-- 
+<div class="panel panel-primary">
+	<div class="panel-heading">
+    	<h3 class="panel-title">Panel primary</h3>
+    </div>
+    Este es el panel primario
+</div>
+-->
+{{ =grid }}
+
+
+
