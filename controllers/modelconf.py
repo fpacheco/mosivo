@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 
+@auth.requires_login()
 def dataupdate():
     pass
 
+@auth.requires_login()
 def modelupdate():
     pass
 
+@auth.requires_login()
 def mcraleo():
     return dict()
 
+@auth.requires_login()
 def mcturno():
     form = 1    
     db.cturno.id.readable=False
@@ -26,25 +30,28 @@ def mcturno():
         #'links':  T('Acciones'), 
     }    
     default_sort_order=[db.genero.nombre]
+    ## RFPV - Todo si es usaurio comun no hay links      
     links = [
         lambda row: SPAN(
                     A(I(_class='icon-pencil icon-white'),
-                      SPAN(' ',T('Edit')),
+                      # SPAN(' ',T('Edit')),
                       _class='btn btn-inverse btn-mini',
                       _title=T('Edit this record'),
-                      _href=URL(request.controller, 'nedcturno', args=["e", row.cturno.id])
+                      #_href=URL(request.controller, 'nedcturno', args=["e", row.cturno.id]),
+                      _onclick="return editDialogShow('%s/%s/%s/%s',%d);" % (request.controller, 'nedcturno', 'e', row.cturno.id,row.cturno.id)                      
                     ),
                     A(I(_class='icon-remove icon-white'),
-                      SPAN(' ',T('Delete')),
+                      # SPAN(' ',T('Delete')),
                       _class='btn btn-warning btn-mini',
                       _title=T('Delete this record'),
-                      _href=URL(request.controller, 'nedcturno', args=["d", row.cturno.id])
+                      #_href=URL(request.controller, 'nedcturno', args=["d", row.cturno.id]),
+                      _onclick="return deleteDialogShow('%s/%s/%s/%s',%d);" % (request.controller, 'nedcturno', 'd', row.cturno.id,row.cturno.id)
                     )
                 )             
     ]
-    grid = SQLFORM.grid(query=query, fields=fields, headers=headers, orderby=default_sort_order,
-        details=False, create=False, deletable=False, editable=False, maxtextlength=64, paginate=25,
-        showbuttontext=True, ui='web2py', formstyle='table3cols', _class="web2py_grid", links=links
+    grid = SQLFORM.grid(query=query, fields=fields, headers=headers, links=links, orderby=default_sort_order, 
+        details=False, create=False, deletable=False, editable=False, maxtextlength=64, paginate=20,
+        showbuttontext=False, ui='web2py', formstyle='table3cols', _class="web2py_grid",
     )        
     return dict(grid=grid, form=form)
 

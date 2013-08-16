@@ -1,16 +1,26 @@
+# -*- coding: utf-8 -*-
 from gluon.html import TABLE, OPTION, SELECT, SCRIPT, TR
 from gluon.sqlhtml import SQLFORM
 
 class CascadingSelect(object):
+    """Widget que permite hacer combos en cascada
+    """
+    
     def __init__(self, *tables):
+        """Inicializacion de la clase
+        """
         self.tables = tables 
-        self.prompt = lambda table:str(table)   
+        self.prompt = lambda table:str(table)
+           
     def widget(self,f,v):
+        """El widget
+        """
         import uuid
         uid = str(uuid.uuid4())[:8]
         d_id = "cascade-" + uid
         wrapper = TABLE(_id=d_id,_class='cascade-widget')
-        parent = None; parent_format = None; 
+        parent = None
+        parent_format = None
         fn =  '' 
         vr = 'var dd%s = [];var oi%s = [];\n' % (uid,uid)
         prompt = [self.prompt(table) for table in self.tables]

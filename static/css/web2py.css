@@ -314,8 +314,6 @@ li.w2p_grid_breadcrumb_elem {
 .ie9 #w2p_query_panel {padding-bottom:2px}
 
 /*RFPV*/
-th a {color: white }
-
 table .cascade-widget {
 	width:100%;
 	padding:0px;
@@ -332,69 +330,39 @@ td.w2p_fl {
 	margin-bottom:12px;
 }
 
-.web2py_grid table {
-	width: 95%;
-	margin:10px;
-	padding:10px;
-	border:1px solid #034482;
-	
-	-moz-border-radius-bottomleft:10px;
-	-webkit-border-bottom-left-radius:10px;
-	border-bottom-left-radius:10px;
-	
-	-moz-border-radius-bottomright:10px;
-	-webkit-border-bottom-right-radius:10px;
-	border-bottom-right-radius:10px;
-	
-	-moz-border-radius-topright:10px;
-	-webkit-border-top-right-radius:10px;
-	border-top-right-radius:10px;
-	
-	-moz-border-radius-topleft:10px;
-	-webkit-border-top-left-radius:10px;
-	border-top-left-radius:10px;	
-	
-	/* box-shadow: 10px 10px 5px #888888;*/
+/* El link en el header de la SQLFORM.grid*/
+div.web2py_grid div.web2py_htmltable table th a {
+	color: white; 
 }
 
-.web2py_grid tr {
-	border:1px solid #034482;
+/* --- Comienzan estilos de la SQLFORM.grid --- */
+div.web2py_grid div.web2py_htmltable table {
+	width: 100%;
+	margin-top:10px;
+	padding-top:10px;
+	margin-bottom:10px;
+	padding-bottom:10px;
 }
 
-.web2py_grid th, td {
+div.web2py_grid div.web2py_htmltable table tr th {
 	text-align:center;
-	border:1px solid #034482;
+	vertical-align:middle;	
+	/* border-bottom: 1px solid #034482; */
 }
 
-.web2py_grid tbody td {
+div.web2py_grid div.web2py_htmltable table tr td {
+	text-align:center;
+	vertical-align:middle;
+	border-bottom: 1px solid #034482;
 	padding: 1px;
 	margin: 1px;
-	vertical-align: middle;
 }
 
-
-.web2py_grid tr:last-child td:last-child {
-	-moz-border-radius-bottomright:10px;
-	-webkit-border-bottom-right-radius:10px;
-	border-bottom-right-radius:10px;
+div.web2py_grid div.web2py_htmltable table td.row_buttons {
+	background-color:#e3e3e3; 
 }
 
-.web2py_grid table tr:first-child td:first-child {
-	-moz-border-radius-topleft:10px;
-	-webkit-border-top-left-radius:10px;
-	border-top-left-radius:10px;
+div.web2py_grid div.web2py_htmltable table .btn-mini {
+	height: 18px;
 }
-
-.web2py_grid table tr:first-child td:last-child {
-	-moz-border-radius-topright:10px;
-	-webkit-border-top-right-radius:10px;
-	border-top-right-radius:10px;
-}
-
-.web2py_grid tr:last-child td:first-child{
-	-moz-border-radius-bottomleft:10px;
-	-webkit-border-bottom-left-radius:10px;
-	border-bottom-left-radius:10px;
-}
-
-
+/* --- Fin estilos de la SQLFORM.grid --- */

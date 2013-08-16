@@ -177,13 +177,13 @@ menuAdmin = [
             ( T('Model updates'), URL('modelconf','modelupdate')==URL(), URL('modelconf','modelupdate'), [] ),
             ( T('Coefficients'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'), 
                 [
-                    ( T('Raleo años'), URL('modelconf','caraleo')==URL(), URL('modelconf','caraleo'), [] ),
-                    ( T('Raleo fracción'), URL('modelconf','cfraleo')==URL(), URL('modelconf','cfraleo'), [] ),
-                    ( T('Destino'), URL('modelconf','cfdestino')==URL(), URL('modelconf','cfdestino'), [] ),
-                    ( T('Effective area'), URL('modelconf','caefectiva')==URL(), URL('modelconf','caefectiva'), [] ),
-                    ( T('IMA'), URL('modelconf','cima')==URL(), URL('modelconf','cima'), [] ),
-                    ( T('Raleo'), URL('modelconf','craleo')==URL(), URL('modelconf','craleo'), [] ),
-                    ( T('Turno'), URL('modelconf','cturno')==URL(), URL('modelconf','cturno'), [] ),               
+                    ( T('Raleo años'), URL('modelconf','mcaraleo')==URL(), URL('modelconf','mcaraleo'), [] ),
+                    ( T('Raleo fracción'), URL('modelconf','mcfraleo')==URL(), URL('modelconf','mcfraleo'), [] ),
+                    ( T('Destino'), URL('modelconf','mcfdestino')==URL(), URL('modelconf','mcfdestino'), [] ),
+                    ( T('Effective area'), URL('modelconf','mcaefectiva')==URL(), URL('modelconf','mcaefectiva'), [] ),
+                    ( T('IMA'), URL('modelconf','mcima')==URL(), URL('modelconf','mcima'), [] ),
+                    ( T('Raleo'), URL('modelconf','mcraleo')==URL(), URL('modelconf','mcraleo'), [] ),
+                    ( T('Turno'), URL('modelconf','mcturno')==URL(), URL('modelconf','mcturno'), [] ),               
                 ] 
             ),            
         ]

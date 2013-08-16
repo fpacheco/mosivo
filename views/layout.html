@@ -50,6 +50,7 @@
 
   {{
   # using sidebars need to know what sidebar you want to use
+  page_header_enabled = globals().get('page_header_enabled',True)
   left_sidebar_enabled = globals().get('left_sidebar_enabled',False)
   right_sidebar_enabled = globals().get('right_sidebar_enabled',False)
   middle_columns = {0:'span12',1:'span9',2:'span6'}[
@@ -90,16 +91,20 @@
 
   <div class="container">
     <!-- Masthead ================================================== -->
+    {{ if page_header_enabled:}}
     <header class="mastheader row" id="header">
-        <div class="span12">
+    	<div class="span12">
             <div class="page-header">
+                <!-- 
                 <h1>
                     {{=response.title or request.application}}
                     <small>{{=response.subtitle or ''}}</small>
                 </h1>
+                -->
             </div>
-        </div>
+        </div>        
     </header>
+    {{ pass }}
 
     <section id="main" class="main row">
         {{if left_sidebar_enabled:}}

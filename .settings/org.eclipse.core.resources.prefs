@@ -17,6 +17,7 @@ encoding//models/02_dgf_tables.py=utf-8
 encoding//models/03_mosivo_tables.py=utf-8
 encoding//models/04_populate_mosivo_tables.py=utf-8
 encoding//models/10_menu.py=utf-8
+encoding//modules/cascadingselect.py=utf-8
 encoding//modules/daplugin/__init__.py=UTF-8
 encoding//modules/daplugin/iplugin.py=utf-8
 encoding//modules/daplugin/ipluginbase.py=utf-8
