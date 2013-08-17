@@ -38,14 +38,14 @@ def mcturno():
                       _class='btn btn-inverse btn-mini',
                       _title=T('Edit this record'),
                       #_href=URL(request.controller, 'nedcturno', args=["e", row.cturno.id]),
-                      _onclick="return editDialogShow('%s/%s/%s/%s',%d);" % (request.controller, 'nedcturno', 'e', row.cturno.id,row.cturno.id)                      
+                      _onclick="return editDialogShow('/%s/%s/%s/%s/%s',%d);" % (request.application, request.controller, 'nedcturno.load', 'e', row.cturno.id,row.cturno.id)                      
                     ),
                     A(I(_class='icon-remove icon-white'),
                       # SPAN(' ',T('Delete')),
                       _class='btn btn-warning btn-mini',
                       _title=T('Delete this record'),
                       #_href=URL(request.controller, 'nedcturno', args=["d", row.cturno.id]),
-                      _onclick="return deleteDialogShow('%s/%s/%s/%s',%d);" % (request.controller, 'nedcturno', 'd', row.cturno.id,row.cturno.id)
+                      _onclick="return deleteDialogShow('/%s/%s/%s/%s/%s',%d);" % (request.application, request.controller, 'nedcturno.load', 'd', row.cturno.id,row.cturno.id)
                     )
                 )             
     ]
@@ -73,6 +73,7 @@ def nedcturno():
         id=int(request.args(1))
         record=db.cturno(id) or redirect(URL('index'))
         form = SQLFORM(db.cturno, record)
+        # form=crud.update(db.cturno,id)
     elif caction=='n':
         print "nedcturno: New"
         form = SQLFORM(db.cturno)
@@ -82,7 +83,11 @@ def nedcturno():
         record=db.cturno(id) or redirect(URL('index'))
         db(db.cturno.id==id).delete()
     else:
-        pass    
+        pass
+    # RFPV - TODO: If .load
+    submit = form.element('input',_type='submit')
+    submit['_style'] = 'display:none;'     
+    
     if form.process().accepted:
        response.flash = 'form accepted'
     elif form.errors:

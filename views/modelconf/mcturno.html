@@ -28,36 +28,48 @@ if not request.args:
 }}
 
 <h1> {{ = T('Turno coeffcients') }}</h1>
-ACA VA LA FORM?<br />
-{{ =form }}
-ACA VA LA GRID<br />
-
-<!-- 
-<div class="panel panel-primary">
-	<div class="panel-heading">
-    	<h3 class="panel-title">Panel primary</h3>
-    </div>
-    Este es el panel primario
+<b>{{ =T('Actions:') }}</b>
+<div class="btn-group">
+	<a data-toggle="modal" onclick="return newDialogShow('/mosivo/modelconf/nedcturno.load/n')" class="btn btn-inverse btn-small" title="{{=T('Add new record to this table')}}">	
+	<i class="icon-plus-sign icon-white"></i> {{ =T('Add record') }}</a>
 </div>
--->
+<div class="btn-group">
+	<button class="btn btn-inverse btn-small">Export</button>
+	<button class="btn btn-inverse btn-small dropdown-toggle" data-toggle="dropdown">
+	<span class="caret"></span>
+	</button>
+    <ul class="dropdown-menu">
+	    <li><a href="#">EAction1</a></li>
+	    <li><a href="#">EAction2</a></li>
+	    <li><a href="#">EAction3</a></li>
+	    <li class="divider"></li>
+	    <li><a href="#">EAction4</a></li>
+    </ul>  
+</div>
+<div class="btn-group">    
+	<button class="btn btn-inverse btn-small">Import</button>
+	<button class="btn btn-inverse btn-small dropdown-toggle" data-toggle="dropdown">
+	<span class="caret"></span>
+	</button>
+    <ul class="dropdown-menu">
+	    <li><a href="#">IAction1</a></li>
+	    <li><a href="#">IAction2</a></li>
+	    <li><a href="#">IAction3</a></li>
+	    <li class="divider"></li>
+	    <li><a href="#">IAction4</a></li>
+    </ul>    
+</div>
 {{ =grid }}
 
-<div class="divButtons">
-	<a data-toggle="modal" href="#newDialog" class="btn btn-primary">Show new dialog</a>
-</div>
-
+<!-- Edit Dialog -->
 <div id="editDialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editLabel" aria-hidden="true" style="display: none;">
 	<div class="modal-header">
 		<a href="#" class="close" data-dismiss="modal">×</a>
 		<h3>{{ =T('Edit record') }}</h3>
 	</div>
 	<div class="modal-body">
-		<div class="divDialogElements">
-			<form id="cturno">
-		  		<input name="your_message" id="your_message" />
-		  		<input type="submit" />
-			</form>
-		</div>	
+		<div id="editResult" class="center">		
+		</div>
 	</div>
 	
 	<div class="modal-footer">		
@@ -66,6 +78,7 @@ ACA VA LA GRID<br />
 	</div>
 </div>
 
+<!-- Delete Dialog -->
 <div id="deleteDialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true" style="display: none;">
 	<div class="modal-header">
 		<a href="#" class="close" data-dismiss="modal">×</a>
@@ -80,20 +93,15 @@ ACA VA LA GRID<br />
 	</div>
 </div>
 
+<!-- New Dialog -->
 <div id="newDialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editLabel" aria-hidden="true" style="display: none;">
 	<div class="modal-header">
 		<a href="#" class="close" data-dismiss="modal">×</a>
-		<h3>{{ =T('Edit record') }}</h3>
+		<h3>{{ =T('New record') }}</h3>
 	</div>
 	<div class="modal-body">
-		<div class="divDialogElements">
-			<form id="cturno">
-		  		<input name="your_message" id="your_message" />
-		  		<input type="submit" />
-			</form>
-		</div>	
-	</div>
-	
+		<div id="newResult" class="center">		
+		</div>
 	<div class="modal-footer">		
 		<a href="#" class="btn btn-primary" onclick="newDialogSave();"> {{ =T('Save') }} </a>
 		<a href="#" class="btn" onclick="newDialogClose();"> {{ =T('Close') }} </a>
@@ -108,9 +116,10 @@ ACA VA LA GRID<br />
 			return false;
 		});
 </script>	
- -->
+-->
  
 <script>
+	/*RFPV - Dialog code*/
 	//variables globales para la acción
 	var currentRecordId=-1; /* El id del record actual */
 	var currentURLAction=''; /* La URL de la acción */
@@ -120,8 +129,7 @@ ACA VA LA GRID<br />
 			document.getElementById ("xlInput").value = document.title;
 		});
 		*/
-	});
-	
+	});	
 	
 	function deleteDialogShow(actionURL,recordId) {
 		$("#deleteDialog").modal();
@@ -146,6 +154,9 @@ ACA VA LA GRID<br />
 		$("#editDialog").modal();
 		currentRecordId=recordId;
 		currentURLAction=actionURL;		
+		$('#editResult').load(actionURL, function() {
+			
+		});
 		//return false dont process href on a
 		return false;
 	};
@@ -165,7 +176,10 @@ ACA VA LA GRID<br />
 		$("#newDialog").modal();
 		currentRecordId=-1;
 		currentURLAction=actionURL;		
-		//return false dont process href on a
+		$('#newResult').load(actionURL, function() {
+			
+		});		
+		//return false dont process href on a		
 		return false;
 	};
 	

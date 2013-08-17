@@ -21,9 +21,10 @@
   <meta name="application-name" content="{{=request.application}}" />
 
   <!-- Speaking of Google, don't forget to set your site up:
-       http://google.com/webmasters -->
+       http://google.com/webmasters 
   <meta name="google-site-verification" content="" />
-
+  -->
+  
   <!--  Mobile Viewport Fix
         j.mp/mobileviewport & davidbcalhoun.com/2010/viewport-metatag
         device-width: Occupy full width of the screen in its current orientation
@@ -159,11 +160,14 @@
       <![endif]-->
   
   {{if response.google_analytics_id:}}
+  <!-- 
   <script src="{{=URL('static','js/analytics.min.js')}}"></script>
   <script type="text/javascript">
   analytics.initialize({
     'Google Analytics':{trackingId:'{{=response.google_analytics_id}}'} 
-  });</script>
+  });
+  </script>
+   -->
   {{pass}}
   <script src="{{=URL('static','js/share.js',vars=dict(static=URL('static','images')))}}"></script>
 </body>
