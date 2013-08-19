@@ -7,6 +7,13 @@ def call(): return service()
 
 def index():
     return dict()
-  
 
-
+@auth.requires_membership('admin')  
+def arreglaBase():    
+    db.commit()
+    try:
+        db.executesql('ALTER TABLE caefectiva ADD CONSTRAINT caefectiva_especie_departamento_ukey UNIQUE (especie,departamento)')
+        db.executesql('ALTER TABLE cturno ADD CONSTRAINT cturno_especie_destino_ukey UNIQUE (especie,destino)')
+    except:
+        db.rollback()
+    return dict()

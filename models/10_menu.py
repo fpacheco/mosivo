@@ -196,11 +196,10 @@ menuAdmin = [
         ]
     ),
     ( T('Help'), URL('help','index')==URL(), URL('help','index'),
-        [
-            ( T('About'),URL('about','index')==URL(), URL('about','index'),[]),
-            ( T('Basic help'), URL('help','appbasic')==URL(), URL('help','appbasic'),[] ),
+        [            
             ( T('App manual'), URL('help','appmanual')==URL(), URL('help','appmanual'),[] ),
             ( T('System documentation'),URL('help','sysmanual')==URL(), URL('help','sysmanual'),[] ),
+            ( T('About'),URL('about','index')==URL(), URL('about','index'),[]),
         ]
     ),
 ]

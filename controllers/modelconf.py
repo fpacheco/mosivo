@@ -16,7 +16,7 @@ def mcraleo():
 
 @auth.requires_login()
 def mcturno():
-    db.cturno.id.readable=False
+    db.cturno.id.readable=True
     query=(
         (db.cturno.id > 0) &
         (db.especie.id==db.cturno.especie) &
@@ -54,7 +54,7 @@ def mcturno():
                 )             
     ]
     grid = SQLFORM.grid(query=query, fields=fields, headers=headers, links=links, field_id=field_id, orderby=default_sort_order, 
-        details=False, create=False, deletable=False, editable=False, maxtextlength=64, paginate=10,
+        details=False, create=False, deletable=False, editable=False, maxtextlength=64, paginate=20,
         showbuttontext=False, ui='web2py', formstyle='table3cols', _class="web2py_grid",
     )        
     return dict(grid=grid, actionURL=actionURL)
@@ -69,6 +69,7 @@ def nada():
     """
     # request.get_vars.id --> HTTP GET
     # request.post_vars.id --> HTTP POST    
+    #record=db['cturno'](1)
     pass
 
 @auth.requires_membership('admin')
@@ -76,23 +77,24 @@ def nedcturno():
     """
     new, edit, delete cturno. All variables come from POST 
     """
-    print "request.post_vars=%s" % request.post_vars    
     dataAction=request.post_vars.dataAction
     if dataAction=='new':
         print "nedcturno: new"
-        form = SQLFORM(db.cturno)    
+        form = SQLFORM(db.cturno, _id="cturno-new")
+        dai = INPUT(_name='dataAction',id='cturno_dataAction', value='new', _type='hidden')
+        form.insert(-1,dai)
     elif dataAction=='edit':        
         id=request.post_vars.dataId
         print "nedcturno: edit - %s" % id
-        #record=db['cturno'](1)
         record=db.cturno(id) or redirect(URL('default','index'))
-        form = SQLFORM(db.cturno, record)
-        # form=crud.update(db.cturno,id)
+        form = SQLFORM(db.cturno, record, showid=False, _id="cturno-edit")
+        dai = INPUT(_name='dataAction',id='cturno_dataAction', value='edit', _type='hidden')
+        form.insert(-1,dai)
+        did = INPUT(_name='dataId',id='cturno_dataId', value=id, _type='hidden')
+        form.insert(-1,did)        
     elif dataAction=='delete':        
         # Just delete, dont show form
-        print "nedcturno: delete"
         id=request.post_vars.dataId
-        print "nedcturno: id=%s" % id
         if db(db.cturno.id==id).isempty():
             response.flash = T('No record deleted')
             if request.ajax:
@@ -103,21 +105,25 @@ def nedcturno():
             if request.ajax:
                 return response.json( {'result': True } )
     elif dataAction=='deleteAll':
-        print "nedcturno: deleteAll"
         if db(db.cturno.id>0).isempty():
             response.flash = T('No record deleted')
             if request.ajax:
                 return response.json( {'result': False, 'msg':T('No records found') }  )        
         else:
             # WARNING: Delete all record in the table!!!
-            db(db.cturno.id>0).delete()
-            response.flash = T('Records deleted')
-            if request.ajax:
-                return response.json( {'result': True } )            
+            db.commit()
+            try:
+                db(db.cturno.id>0).delete()
+                db.executesql("SELECT setval('cturno_id_seq', 1, true)")
+                response.flash = T('Records deleted')
+                if request.ajax:
+                    return response.json( {'result': True } )
+            except:
+                db.rollback()
     else:
-        redirect(URL('default','index'))    
+        redirect(URL('default','index'))
     
-    #Remove submit button it's a component
+    #Remove submit button it's ajax
     if request.ajax:        
         submit = form.element('input',_type='submit')
         submit['_style'] = 'display:none;'     
@@ -132,5 +138,7 @@ def nedcturno():
         response.flash = T('Form has errors')
         if request.ajax:
             return response.json( {'result': False, 'msg':form.errors} )        
+    else:
+        response.flash = T('Please fill the form')
     return dict(form=form)
     

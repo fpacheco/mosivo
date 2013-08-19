@@ -1,0 +1,109 @@
+<!-- grid toolbar -->
+<!--
+<b>{{ =T('Actions:') }}</b>
+-->
+<div class="btn-group">
+    <a data-toggle="modal" onclick="return newDialogShow('{{ =actionURL }}')" class="btn btn-inverse btn-small" title="{{=T('Add new record to this table')}}"> 
+    <i class="icon-plus-sign icon-white"></i> {{ =T('Add record') }}</a>
+</div>
+<div class="btn-group">
+    <button class="btn btn-inverse btn-small" title="{{ =T('Export data of this table')}}"><i class="icon-hand-right icon-white"></i>{{ =T('Export') }}</button>
+    <button class="btn btn-inverse btn-small dropdown-toggle" data-toggle="dropdown">
+    <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="#">EAction1</a></li>
+        <li><a href="#">EAction2</a></li>
+        <li><a href="#">EAction3</a></li>
+        <li class="divider"></li>
+        <li><a href="#">EAction4</a></li>
+    </ul>  
+</div>
+<div class="btn-group">    
+    <button class="btn btn-inverse btn-small" title="{{ =T('Import data from file')}}"><i class="icon-hand-left icon-white"></i>{{ =T('Import') }}</button>
+    <button class="btn btn-inverse btn-small dropdown-toggle" data-toggle="dropdown">
+    <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="#">IAction1</a></li>
+        <li><a href="#">IAction2</a></li>
+        <li><a href="#">IAction3</a></li>
+        <li class="divider"></li>
+        <li><a href="#">IAction4</a></li>
+    </ul>    
+</div>
+<div class="btn-group">
+    <a data-toggle="modal" onclick="return deleteAllDialogShow('{{ =actionURL }}')" class="btn btn-warning btn-small" title="{{=T('Delete all records in this table')}}">   
+    <i class="icon-remove icon-white"></i> {{ =T('Delete all') }}</a>
+</div>
+<!-- grid toolbar -->
+
+<!-- New Dialog -->
+<div id="newDialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">×</a>
+        <h3>{{ =T('New record') }}</h3>
+    </div>
+    <div class="modal-body">
+        <div id="newResult" class="center">     
+        </div>
+    </div>    
+    <div class="modal-footer">      
+        <a href="#" id="save" class="btn btn-primary" onclick="newDialogSave();"> {{ =T('Save') }} </a>
+        <a href="#" id="close" class="btn" onclick="newDialogClose();"> {{ =T('Close') }} </a>
+    </div>
+</div>
+
+<!-- Edit Dialog -->
+<div id="editDialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">×</a>
+        <h3>{{ =T('Edit record') }}</h3>
+    </div>
+    <div class="modal-body">
+        <div id="editResult" class="center">        
+        </div>
+    </div>    
+    <div class="modal-footer">      
+        <a href="#" id="save"  class="btn btn-primary" onclick="editDialogSave();"> {{ =T('Save') }} </a>
+        <a href="#" id="close" class="btn" onclick="editDialogClose();"> {{ =T('Close') }} </a>
+    </div>
+</div>
+
+<!-- Delete Dialog -->
+<div id="deleteDialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">×</a>
+        <h3> {{=T('Delete confirmation')}}</h3>
+    </div>
+    <div class="modal-body">
+        {{=T('Are you sure?. Delete this record?')}}
+        <div id="deleteResult" class="center">     
+        </div>
+    </div>  
+    <div class="modal-footer">
+        <a href="#" id="delete" class="btn btn-warning" onclick="deleteDialogDelete();">{{ =T('Delete') }}</a>
+        <a href="#" id="close" class="btn" onclick="deleteDialogClose();">{{ =T('Cancel') }}</a>        
+    </div>
+</div>
+
+<!-- DeleteAll Dialog -->
+<div id="deleteAllDialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="deleteAllLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">×</a>
+        <h3> {{=T('Delete all confirmation')}}</h3>
+    </div>
+    <div class="modal-body">
+        {{=T('Are you sure?. Delete all records in this table?')}}
+        <div id="deleteAllResult" class="center">     
+        </div>
+    </div>  
+    <div class="modal-footer">
+        <a href="#" id="deleteAll" class="btn btn-warning" onclick="deleteAllDialogDelete();">{{ =T('Delete') }}</a>
+        <a href="#" id="close" class="btn" onclick="deleteAllDialogClose();">{{ =T('Cancel') }}</a>        
+    </div>
+</div>
+
+
+<script src="{{=URL('static','js/datamanager.js')}}"></script>
+
