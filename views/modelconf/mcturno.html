@@ -1,40 +1,15 @@
 {{extend 'layout.html'}}
-{{
-if not request.args:
-	 w2p_grid_tbl = grid.element('table')
-	 if w2p_grid_tbl:
-	 	original_export_menu = grid.element('div.w2p_export_menu')
-	 	export_menu_links = original_export_menu.elements('a')
-	 	export_menu_items = []
-	 	for link in export_menu_links:
-	 		item = LI(link)
-	 		export_menu_items.append(item)
-	 		pass
-	 	new_export_menu = DIV(
-	                      A( T('Exports'),
-	                         SPAN(_class='caret'),
-	                         _href='#',
-	                         _class='btn btn-inverse dropdown-toggle',
-	                         **{'_data-toggle':"dropdown"}
-	                        ),
-	                      UL(*export_menu_items,
-	                         _class='dropdown-menu'
-	                        ),
-	                    _class='w2p_export_menu btn-group'
-	                    )
-	 	export_menu = grid.element('div.w2p_export_menu',replace=new_export_menu)
-	 	pass
-	pass
-}}
-
 <h1> {{ = T('Turno coeffcients') }}</h1>
+
 <b>{{ =T('Actions:') }}</b>
+
+<!-- grid toolbar -->
 <div class="btn-group">
-	<a data-toggle="modal" onclick="return newDialogShow('/mosivo/modelconf/nedcturno.load/n')" class="btn btn-inverse btn-small" title="{{=T('Add new record to this table')}}">	
+	<a data-toggle="modal" onclick="return newDialogShow('{{ =actionURL }}')" class="btn btn-inverse btn-small" title="{{=T('Add new record to this table')}}">	
 	<i class="icon-plus-sign icon-white"></i> {{ =T('Add record') }}</a>
 </div>
 <div class="btn-group">
-	<button class="btn btn-inverse btn-small">Export</button>
+	<button class="btn btn-inverse btn-small" title="{{ =T('Export data of this table')}}"><i class="icon-hand-right icon-white"></i>{{ =T('Export') }}</button>
 	<button class="btn btn-inverse btn-small dropdown-toggle" data-toggle="dropdown">
 	<span class="caret"></span>
 	</button>
@@ -47,7 +22,7 @@ if not request.args:
     </ul>  
 </div>
 <div class="btn-group">    
-	<button class="btn btn-inverse btn-small">Import</button>
+	<button class="btn btn-inverse btn-small" title="{{ =T('Import data from file')}}"><i class="icon-hand-left icon-white"></i>{{ =T('Import') }}</button>
 	<button class="btn btn-inverse btn-small dropdown-toggle" data-toggle="dropdown">
 	<span class="caret"></span>
 	</button>
@@ -59,6 +34,11 @@ if not request.args:
 	    <li><a href="#">IAction4</a></li>
     </ul>    
 </div>
+<div class="btn-group">
+    <a data-toggle="modal" onclick="return deleteAllDialogShow('{{ =actionURL }}')" class="btn btn-warning btn-small" title="{{=T('Delete all records in this table')}}">   
+    <i class="icon-remove icon-white"></i> {{ =T('Delete all') }}</a>
+</div>
+<!-- grid toolbar -->
 {{ =grid }}
 
 <!-- Edit Dialog -->
@@ -73,8 +53,8 @@ if not request.args:
 	</div>
 	
 	<div class="modal-footer">		
-		<a href="#" class="btn btn-primary" onclick="editDialogSave();"> {{ =T('Save') }} </a>
-		<a href="#" class="btn" onclick="editDialogClose();"> {{ =T('Close') }} </a>
+		<a href="#" id="save"  class="btn btn-primary" onclick="editDialogSave();"> {{ =T('Save') }} </a>
+		<a href="#" id="close" class="btn" onclick="editDialogClose();"> {{ =T('Close') }} </a>
 	</div>
 </div>
 
@@ -86,10 +66,12 @@ if not request.args:
 	</div>
 	<div class="modal-body">
 		{{=T('Are you sure?. Delete this record?')}}
+        <div id="deleteResult" class="center">     
+        </div>
 	</div>	
 	<div class="modal-footer">
-		<a href="#" class="btn btn-warning" onclick="deleteDialogDelete();">{{ =T('Delete') }}</a>
-		<a href="#" class="btn" onclick="deleteDialogClose();">{{ =T('Cancel') }}</a>		
+		<a href="#" id="delete" class="btn btn-warning" onclick="deleteDialogDelete();">{{ =T('Delete') }}</a>
+		<a href="#" id="close" class="btn" onclick="deleteDialogClose();">{{ =T('Cancel') }}</a>		
 	</div>
 </div>
 
@@ -103,26 +85,17 @@ if not request.args:
 		<div id="newResult" class="center">		
 		</div>
 	<div class="modal-footer">		
-		<a href="#" class="btn btn-primary" onclick="newDialogSave();"> {{ =T('Save') }} </a>
-		<a href="#" class="btn" onclick="newDialogClose();"> {{ =T('Close') }} </a>
+		<a href="#" id="save" class="btn btn-primary" onclick="newDialogSave();"> {{ =T('Save') }} </a>
+		<a href="#" id="close" class="btn" onclick="newDialogClose();"> {{ =T('Close') }} </a>
 	</div>
 </div>
 
-<!-- 
-<script>
-		jQuery('#myform').submit(function() {
-			ajax('{{=URL("new_post")}}',
-				['your_message'], 'target');
-			return false;
-		});
-</script>	
--->
- 
 <script>
 	/*RFPV - Dialog code*/
 	//variables globales para la acción
-	var currentRecordId=-1; /* El id del record actual */
-	var currentURLAction=''; /* La URL de la acción */
+	var currentRecordId=-1; /* Current record Id */
+	var currentURLAction=''; /* Current URL action */
+	
 	$(document).ready(function() {
 		/*
 		$('#windowTitleDialog').bind('show', function () {
@@ -131,32 +104,60 @@ if not request.args:
 		*/
 	});	
 	
-	function deleteDialogShow(actionURL,recordId) {
-		$("#deleteDialog").modal();
-		currentRecordId=recordId;
-		currentURLAction=actionURL;
-		//return false dont process href on a
-		return false;
-	};
+    function newDialogShow(url) {
+        $("#newDialog").modal();
+        currentRecordId=-1;
+        currentURLAction=url;
+        // POST via ajax
+        $.post(
+            url,
+            {dataAction:'new'},            
+            function(data) {
+                $('#newResult').html(data);
+            }
+        );
+        //return false dont process href on a       
+        return false;
+    };
+    
+    function newDialogClose() {
+        $('#newDialog').modal('hide'); 
+    };
+    
+    function newDialogSave() {
+        // POST form via ajax
+        $.post(
+            currentURLAction,
+            {dataAction:'new'},            
+            function(data) {
+                //Parse string as JSON
+                // var jsonData = jQuery.parseJSON(data);
+                if (data.result==true) {
+                    // Data added, reload current page
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            },
+            'json' //data returned is json            
+        );
+        newDialogClose();
+        currentRecordId=-1;
+        currentURLAction='';
+    };
 	
-	function deleteDialogClose() {
-		$('#deleteDialog').modal('hide'); 
-	};
-	
-	function deleteDialogDelete() {
-		//Do something
-		deleteDialogClose();
-		currentRecordId=-1;
-		currentURLAction='';
-	};
-
-	function editDialogShow (actionURL,recordId) {
+	function editDialogShow (url,recordId) {
 		$("#editDialog").modal();
 		currentRecordId=recordId;
-		currentURLAction=actionURL;		
-		$('#editResult').load(actionURL, function() {
-			
-		});
+		currentURLAction=url;
+        // POST via ajax
+        $.post(
+            url,
+            {dataAction:'new', dataId:recordId},            
+            function(data) {
+                $('#editResult').html(data);
+            }
+        );        
 		//return false dont process href on a
 		return false;
 	};
@@ -171,26 +172,118 @@ if not request.args:
 		currentRecordId=-1;
 		currentURLAction='';
 	};	
+
+    function deleteDialogShow(url,recordId) {
+        $("#deleteDialog").modal();
+        currentRecordId=recordId;
+        currentURLAction=url;
+        //Write HTML table of record to modal dialog data area
+        var title=tableGetHeaders();
+        var data=tableGetRowById(currentRecordId);
+        tableWrite(title, data, "deleteResult");
+        //return false dont process href on a
+        return false;
+    };
+    
+    function deleteDialogClose() {
+        $('#deleteDialog').modal('hide'); 
+    };
+    
+    function deleteDialogDelete() {
+        $.post(
+            currentURLAction,
+            {dataAction:'delete', dataId:currentRecordId},            
+            function(data) {
+                //Parse string as JSON
+                // var jsonData = jQuery.parseJSON(data);
+                if (data.result==true) {
+                    // Delete row?
+                    //tableDeleteRowById(currentRecordId);
+                    // Reload current page
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            },
+            'json' //data returned is json            
+        );        
+        deleteDialogClose();
+        currentRecordId=-1;
+        currentURLAction='';
+    };	
 	
-	function newDialogShow(actionURL) {
-		$("#newDialog").modal();
-		currentRecordId=-1;
-		currentURLAction=actionURL;		
-		$('#newResult').load(actionURL, function() {
-			
-		});		
-		//return false dont process href on a		
-		return false;
+	function tableWrite(tit, dat, target) {
+        /** Write html table with tit, dat
+        in this target
+        */
+        var html = '<table class="show-data">\n';
+        len = dat.length;
+        for (var i = 0; i < len; i++)
+        {
+            html += '<tr><td class="cell-title">' + tit[i] + '</td><td class="cell-data">' + dat[i] + '</td></tr>';
+        }
+        html += '</table>\n';
+        $('#' + target).html(html);
+	}
+	
+	function tableGetRowById(rowId, initCol, endCol) {
+        /** Get row (total o partoally) by his id (<tr id=1>) and return
+        an array 
+        */
+        cellArr = new Array();
+        // Get text of each cell in this table row
+        $('table tr#' + rowId + ' td').each(function(){
+            cellArr.push($(this).text());
+        });
+        
+        if (typeof(initCol)==='undefined') {
+            initCol=0;
+        }
+        
+        // Dont get last col 
+        if (typeof(endCol)==='undefined') {
+            if (cellArr.length==1) {
+                endCol=0;
+            } else {
+              endCol=cellArr.length-1;  
+            }
+        }
+        
+        return cellArr.slice( initCol, endCol);
 	};
+
+    function tableGetHeaders(initCol, endCol) {
+        /** Get heders (total o partoally) of a table
+        */    
+        cellArr = new Array();
+        // Get text of each cell in this table row
+        $('table tr th').each(function(){
+            cellArr.push($(this).text());
+        });
+        
+        if (typeof(initCol)==='undefined') {
+            initCol=0;
+        } else {
+            if ( (initCol<0) || (initCol>(cellArr.length-1)) ) {
+                initCol=0;
+            }
+        } 
+        
+        // Dont get last col 
+        if (typeof(endCol)==='undefined') {
+            endCol=cellArr.length-1;
+        } else {
+            if ( (endCol<0) || (endCol>(cellArr.length-1)) ) {
+                endCol=initCol+1;
+            }
+        }
+        
+        return cellArr.slice(initCol, endCol);
+    };
 	
-	function newDialogClose() {
-		$('#newDialog').modal('hide'); 
-	};
-	
-	function newDialogSave() {
-		//Do something
-		newDialogClose();
-		currentRecordId=-1;
-		currentURLAction='';
-	};	
+    function tableDeleteRowById(rowId) {
+        /** Delete arow in a table by his id 
+        */
+        $('table tr#' + rowId).remove();
+    };    
 </script> 
