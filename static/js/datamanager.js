@@ -35,7 +35,7 @@
         // POST form via ajax
         $.post(
             currentURLAction,
-            $('form#cturno-new').serialize(),
+            $('form#datamanager-new').serialize(),
             function(data) {
                 if (data.result==true) {
                     // Data added, reload current page
@@ -75,7 +75,7 @@
         // POST form via ajax
         $.post(
             currentURLAction,
-            $('form#cturno-edit').serialize(),
+            $('form#datamanager-edit').serialize(),
             function(data) {
                 if (data.result==true) {
                     // Data added, reload current page

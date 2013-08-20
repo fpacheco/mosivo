@@ -9,11 +9,13 @@ def index():
     return dict()
 
 @auth.requires_membership('admin')  
-def arreglaBase():    
+def estableceConstraints():    
     db.commit()
     try:
         db.executesql('ALTER TABLE caefectiva ADD CONSTRAINT caefectiva_especie_departamento_ukey UNIQUE (especie,departamento)')
+        db.executesql('ALTER TABLE cima ADD CONSTRAINT cima_especie_departamento_ukey UNIQUE (especie,departamento)')
         db.executesql('ALTER TABLE cturno ADD CONSTRAINT cturno_especie_destino_ukey UNIQUE (especie,destino)')
+        db.executesql('ALTER TABLE cbcampo ADD CONSTRAINT cbcampo_egdc_ukey UNIQUE (especie,gruposuelo,destino,cosecha)')
     except:
         db.rollback()
     return dict()

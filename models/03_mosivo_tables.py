@@ -98,6 +98,10 @@ db.gruposuelo.codigo.requires=IS_NOT_IN_DB(
 )
 """
 
+from cascadingselect import CascadingSelect
+cSelEsp = CascadingSelect(db.genero,db.especie)
+cSelEsp.prompt = lambda table: T("Select %s") % str(table).capitalize()
+
 # Destinos de los rodales
 db.define_table("destino",
     Field("nombre", type="string", length=50, unique=True, notnull=True, label=T("Destino")),
@@ -276,9 +280,6 @@ db.cturno.turno.requires = IS_NOT_IN_DB(
     db((db.cturno.especie == request.vars.especie) & (db.cturno.destino==request.vars.destino)), 'cturno.turno')
 db.cturno.turno.requires = IS_FLOAT_IN_RANGE(0.0, 50.0, dot='.', error_message=T('Too small o to large'))
 
-from cascadingselect import CascadingSelect
-cSelEsp = CascadingSelect(db.genero,db.especie)
-cSelEsp.prompt = lambda table: T("Select %s") % str(table).capitalize()
 db.cturno.especie.widget=cSelEsp.widget  
 
 ## Cuanto crece por ano (ima=indice medio anual)
@@ -291,7 +292,7 @@ db.define_table("cima",
       required=True, requires=IS_IN_DB(db, 'departamento.id', '%(nombre)s'),
       represent=lambda id, r: db.departamento(id).nombre
     ),
-    Field("ima", type="float", notnull=True, label=T(u"Indice de crecimiento medio anual (m3/ha/año)"))
+    Field("ima", type="float", notnull=True, label=T(u"IMA (m3/ha/año)"))
 )
 # Una especie con un destino = 1 solo valor de corta
 db.cima.ima.requires=IS_NOT_IN_DB(
@@ -299,6 +300,8 @@ db.cima.ima.requires=IS_NOT_IN_DB(
     'cima.ima'
 )
 db.cima.ima.requires = IS_FLOAT_IN_RANGE(0, 50, dot='.', error_message=T('Too small or to large'))
+db.cima.especie.widget=cSelEsp.widget
+
 
 ## Que porcentaje del bosque es area efectiva de plantacion
 db.define_table("caefectiva",
@@ -318,6 +321,9 @@ db.caefectiva.aefectiva.requires = IS_NOT_IN_DB(
     'caefectiva.aefectiva'
 )
 db.caefectiva.aefectiva.requires = IS_FLOAT_IN_RANGE(0, 1000000, dot='.', error_message=T('Too small or to large'))
+
+db.caefectiva.especie.widget=cSelEsp.widget
+
 
 ## Que fraccion del destino tienen los bosques en teoría vale solo para grandis
 db.define_table("cfdestino",
