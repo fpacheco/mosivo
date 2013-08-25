@@ -30,10 +30,6 @@ def float_input_HTML5_widget(field, value):
                  _onkeyup="this.value = this.value.replace(/[^0-9\.]/g,'');"
                  )
 
-
-### RFPV: Borrar
-# from model import *
-
 # Departamentos de UY
 db.define_table("departamento",
     Field("nombre", type="string", length=25, unique=True, notnull=True),
@@ -43,17 +39,17 @@ db.define_table("departamento",
 # Seccion judicial por departamento
 db.define_table("seccionjudicial",
     Field("departamento", db.departamento),
-    Field("seccion", type="integer", notnull=True),
+    Field("nombre", type="integer", notnull=True),
 )
 # seccion and departamento must be uniques
-db.seccionjudicial.seccion.requires=IS_NOT_IN_DB(
-    db((db.seccionjudicial.departamento == request.vars.departamento)), 'seccionjudicial.seccion'
+db.seccionjudicial.nombre.requires=IS_NOT_IN_DB(
+    db((db.seccionjudicial.departamento == request.vars.departamento)), 'seccionjudicial.nombre'
 )
 
 # Generos de arboles
 db.define_table("genero",
     Field("nombre", type="string", length=50, unique=True, notnull=True),
-    Field("codigo", type="string", length=1,notnull=True),
+    Field("codigo", type="string", length=1, notnull=True),
     format='%(nombre)s'
 )
 # Nombre and codigo uniques
@@ -76,7 +72,6 @@ db.especie.codigo.requires=IS_NOT_IN_DB(
     db((db.especie.genero==request.vars.genero)), 'especie.codigo'
 )
 
-
 # Grupo del suelo (cada tipo de suelo pertenece a un grupo de suelo)
 db.define_table("gruposuelo",
     Field("nombre", type='string', length= 10, notnull=True, unique=True, label=T("Código del grupo suelo")),
@@ -84,23 +79,26 @@ db.define_table("gruposuelo",
     format='%(nombre)s'
 )
 
-"""
-# Tipo de suelo
-db.define_table("gruposuelo",
-    Field("nombre", type='string', notnull=True, unique=True, label=T("Nombre del suelo")),
-    Field("gruposuelo", db.gruposuelo),
-    Field("codigo", type='string', notnull=True, unique=True, label=T("Código de suelo")),
-    Field("descripcion", type='text', label=T("Descripción del suelo"))
+#Tipos de desperdicios en la industria
+db.define_table("tiporesiduoforestal",
+    Field("nombre", type="string", length=25, unique=True, notnull=True),
+    format='%(nombre)s'
 )
-# gruposuelo and codigo uniques
-db.gruposuelo.codigo.requires=IS_NOT_IN_DB(
-    db((db.gruposuelo.gruposuelo == request.vars.gruposuelo)), 'suelo.codigo'
+
+#Tipos de coeficientes es decir se aplican a nivel de Area o de rodal
+db.define_table("tipocoeficiente",
+    Field("nombre", type="string", length=25, unique=True, notnull=True),
+    format='%(nombre)s'
 )
-"""
+
 
 from cascadingselect import CascadingSelect
-cSelEsp = CascadingSelect(db.genero,db.especie)
+# Widget para especie
+cSelEsp = CascadingSelect(db.genero, db.especie)
 cSelEsp.prompt = lambda table: T("Select %s") % str(table).capitalize()
+# Widget para seccion judicial
+cSelSJ = CascadingSelect(db.departamento, db.seccionjudicial)
+cSelSJ.prompt = lambda table: T("Select %s") % str(table).capitalize()
 
 # Destinos de los rodales
 db.define_table("destino",
@@ -110,7 +108,7 @@ db.define_table("destino",
 
 # Tipo de cosechas
 db.define_table("cosecha",
-    Field("nombre", type='string', notnull=True,unique=True),
+    Field("nombre", type='string', notnull=True, unique=True),
     Field("descripcion", type='text'),
     format='%(nombre)s'
 )
@@ -120,7 +118,7 @@ db.define_table("plan",
     # El numero del Plan de manejo
     Field('numerocarpeta', type='integer', unique=True, notnull=True),
     # Seccion judicial para ese departamento
-    Field('seccionjudicial', db.seccionjudicial),
+    Field('sjudicial', db.seccionjudicial),
     # Longitud en grados decimales
     Field('lon', type='double'),
     # Latitud en grados decimales
@@ -130,22 +128,20 @@ db.define_table("plan",
 # Montes declarados
 db.define_table("rodald",
     # Referencia al plan
-    Field('plan', db.plan),
+    Field('plan', db.plan, notnull=True),
     # referencia a la especie
-    Field('especie', db.especie),
+    Field('especie', db.especie, notnull=True),
     # Anio en que se planto el monte
-    Field('anioplantacion', type='integer'),
+    Field('anioplant', notnull=True, type='integer'),
     # Area afectada por el monte
-    Field('areaafectacion', type='float'),
-    # Destino principal del bosque
-    Field('destino', db.destino, notnull=False),
+    Field('areaafect', notnull=True, type='float'),
 )
 
 # Ubicacion montes declarados
 db.define_table("ubicacionrodald",
-    Field('rodal', db.rodald),
+    Field('rodal', db.rodald, unique=True, notnull=True),
     # Seccion judicial para ese departamento
-    Field('seccionjudicial', db.seccionjudicial),
+    Field('sjudicial', db.seccionjudicial, notnull=True),
     # Longitud en grados decimales
     Field('lon', type='double'),
     # Latitud en grados decimales
@@ -154,56 +150,52 @@ db.define_table("ubicacionrodald",
 
 # Tipo suelo montes declarados
 db.define_table("gruposuelorodald",
-    Field('rodal', db.rodald),
+    Field('rodal', db.rodald, notnull=True),
     # Seccion judicial para ese departamento
-    Field('gruposuelo', db.gruposuelo),
+    Field('gsuelo', db.gruposuelo, notnull=True),
     # Superficie
-    Field('superficie', type='double')
+    Field('superficie', notnull=True, type='double')
 )
 # rodal and suelo uniques
-db.gruposuelorodald.gruposuelo.requires=IS_NOT_IN_DB(
-    db((db.gruposuelorodald.rodal == request.vars.rodal)), 'gruposuelorodald.gruposuelo'
+db.gruposuelorodald.gsuelo.requires=IS_NOT_IN_DB(
+    db((db.gruposuelorodald.rodal == request.vars.rodal)), 'gruposuelorodald.gsuelo'
 )
 
-# Turnos de cortes para montes declarados
-db.define_table("turnorodald",
-    Field('rodal', db.rodald),
+# Intervención (raleo, corte, etc.) para montes declarados UNIQUE(raodal, anios)
+db.define_table("intervrodald",
+    Field('rodal', db.rodald, notnull=True),
     # tiempo en anios desde que se planta
-    Field('turno', type='float', label=u'Corte (años)'),
+    Field('aintervencion', type='float', notnull=True, label=u'Corte (años)'),
     # volumen de corta en m3/ha
-    Field('volumen', type='float', label=u'Volumen(m3/Ha)'),
+    # Field('volumen', type='float', notnull=True, label=u'Volumen(m3)'),
 )
 
-# Turnos de raleo para montes declarados
-db.define_table("raleorodald",
-    Field('rodal', db.rodald),
-    # tiempo en anios desde que se planta
-    Field('turno', type='float', label=u'Raleo(años)'),
-    # Destino del raleo
-    Field('destino', db.destino, notnull=False),
-    # volumen de raleo en m3/ha
-    Field('volumen', type='float', label=u'Volumen(m3/Ha)'),
+# Destinos de la intervencion en el rodal declarado
+db.define_table("destinointervrodald",
+    Field('irodal', db.intervrodald, notnull=True),
+    # destino
+    Field('destino', db.destino, notnull=True),
+    # volumen de corta en m3/ha
+    Field('volumen', type='float', notnull=True, label=u'Volumen(m3)'),
 )
 
 # Montes proyectados
 db.define_table("rodalp",
     # Referencia a la carpeta
-    Field('plan', db.plan),
+    Field('plan', db.plan, notnull=True),
     # referencia a la especie
-    Field('especie', db.especie),
+    Field('especie', db.especie, notnull=True),
     # Anio en que se planto el monte
-    Field('anioplantacion', type='integer'),
+    Field('anioplant', notnull=True, type='integer'),
     # Area afectada por el monte
-    Field('areaafectacion', type='float'),
-    # Destino principal del bosque
-    Field('destino', db.destino, notnull=False),
+    Field('areaafect', notnull=True, type='float')
 )
 
 # Ubicacion montes proyectados
 db.define_table("ubicacionrodalp",
-    Field('rodal', db.rodalp),
+    Field('rodal', db.rodalp, unique=True, notnull=True),
     # Seccion judicial para ese departamento
-    Field('seccionjudicial', db.seccionjudicial),
+    Field('sjudicial', db.seccionjudicial, notnull=True),
     # Longitud en grados decimales
     Field('lon', type='double'),
     # Latitud en grados decimales
@@ -212,35 +204,33 @@ db.define_table("ubicacionrodalp",
 
 # Tipo suelo montes proyectados
 db.define_table("gruposuelorodalp",
-    Field('rodal', db.rodalp),
+    Field('rodal', db.rodalp, notnull=True),
     # Seccion judicial para ese departamento
-    Field('gruposuelo', db.gruposuelo),
+    Field('gsuelo', db.gruposuelo, notnull=True),
     # Superficie
-    Field('superficie', type='double')
+    Field('superficie', notnull=True, type='double')
 )
 # rodal and suelo uniques
-db.gruposuelorodalp.gruposuelo.requires = IS_NOT_IN_DB(
-    db((db.gruposuelorodalp.rodal == request.vars.rodal)), 'gruposuelorodalp.gruposuelo'
+db.gruposuelorodalp.gsuelo.requires = IS_NOT_IN_DB(
+    db((db.gruposuelorodalp.rodal == request.vars.rodal)), 'gruposuelorodalp.gsuelo'
 )
 
-# Turnos de cortes para montes proyectados
-db.define_table("turnorodalp",
-    Field('rodal', db.rodalp),
+# Intervención (raleo, corte, etc.) para montes declarados UNIQUE(raodal, anios)
+db.define_table("intervrodalp",
+    Field('rodal', db.rodalp, notnull=True),
     # tiempo en anios desde que se planta
-    Field('turno', type='float'),
+    Field('aintervencion', type='float', notnull=True, label=u'Corte (años)'),
     # volumen de corta en m3/ha
-    Field('volumen', type='float'),
+    # Field('volumen', type='float', notnull=True, label=u'Volumen(m3)'),
 )
 
-# Turnos de raleo para montes proyectados
-db.define_table("raleorodalp",
-    Field('rodal', db.rodalp),
-    # tiempo en anios desde que se planta
-    Field('turno', type='float'),
-    # Destino del raleo
-    Field('destino', db.destino, notnull=False),
-    # volumen de raleo en m3/ha
-    Field('volumen', type='float'),
+# Destinos de la intervencion en el rodal declarado
+db.define_table("destinointervrodalp",
+    Field('irodal', db.intervrodalp, notnull=True),
+    # destino
+    Field('destino', db.destino, notnull=True),
+    # volumen de corta en m3/ha
+    Field('volumen', type='float', notnull=True, label=u'Volumen(m3)'),
 )
 
 ##### Otros aspectos de la configuración
@@ -263,25 +253,6 @@ db.define_table("actualizamodelo",
 )
 
 ##### Coeficiente para estimar datos faltantes
-## Coeficientes para corta o turno (ejemplo: eucalyptus globulus, aserrio = 20 anos)
-db.define_table("cturno",
-    Field("especie", db.especie, label=T("Especie plantada"),
-      required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
-      represent=lambda id, r: db.especie(id).nombre
-    ),
-    Field("destino", db.destino, label=T("Destino del rodal"),
-        required=True, requires=IS_IN_DB(db, 'destino.id', '%(nombre)s'),
-        represent=lambda id, r: db.destino(id).nombre
-    ),
-    Field("turno", type="float", notnull=True, label=T(u"Años hasta el corte"), widget=float_input_HTML5_widget)
-)
-# Una especie con un destino = 1 solo valor de corta
-db.cturno.turno.requires = IS_NOT_IN_DB(
-    db((db.cturno.especie == request.vars.especie) & (db.cturno.destino==request.vars.destino)), 'cturno.turno')
-db.cturno.turno.requires = IS_FLOAT_IN_RANGE(0.0, 50.0, dot='.', error_message=T('Too small o to large'))
-
-db.cturno.especie.widget=cSelEsp.widget  
-
 ## Cuanto crece por ano (ima=indice medio anual)
 db.define_table("cima",
     Field("especie", db.especie, label=T("Especie plantada"),
@@ -301,7 +272,6 @@ db.cima.ima.requires=IS_NOT_IN_DB(
 )
 db.cima.ima.requires = IS_FLOAT_IN_RANGE(0, 50, dot='.', error_message=T('Too small or to large'))
 db.cima.especie.widget=cSelEsp.widget
-
 
 ## Que porcentaje del bosque es area efectiva de plantacion
 db.define_table("caefectiva",
@@ -324,60 +294,61 @@ db.caefectiva.aefectiva.requires = IS_FLOAT_IN_RANGE(0, 1000000, dot='.', error_
 
 db.caefectiva.especie.widget=cSelEsp.widget
 
-
 ## Que fraccion del destino tienen los bosques en teoría vale solo para grandis
-db.define_table("cfdestino",
-    Field("especie", db.especie, label=T("Especie plantada"),
-      required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
-      represent=lambda id, r: db.especie(id).nombre
-    ),
-    Field("departamento", db.departamento,
-      required=True, requires=IS_IN_DB(db, 'departamento.id', '%(nombre)s'),
-      represent=lambda id, r: db.departamento(id).nombre
-    ),
-    Field("destino", db.destino, label=T("Destino del rodal"),
-        required=True, requires=IS_IN_DB(db, 'destino.id', '%(nombre)s'),
-        represent=lambda id, r: db.destino(id).nombre
-    ),
-    Field("fdestino", type="float", notnull=True, label=T(u"Fracción de destino"))
-)
+# db.define_table("cfdestino",
+#    Field("especie", db.especie, label=T("Especie plantada"),
+#      required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
+#      represent=lambda id, r: db.especie(id).nombre
+#    ),
+#    Field("departamento", db.departamento,
+#      required=True, requires=IS_IN_DB(db, 'departamento.id', '%(nombre)s'),
+#      represent=lambda id, r: db.departamento(id).nombre
+#    ),
+#    Field("destino", db.destino, label=T("Destino del rodal"),
+#        required=True, requires=IS_IN_DB(db, 'destino.id', '%(nombre)s'),
+#        represent=lambda id, r: db.destino(id).nombre
+#    ),
+#    Field("fdestino", type="float", notnull=True, label=T(u"Fracción de destino"))
+#)
 # Una especie con un departamento y un destino = 1 solo valor de fraccion de destino
-db.cfdestino.fdestino.requires=IS_NOT_IN_DB(
-    db(
-        (db.cfdestino.especie == request.vars.especie) &
-        (db.cfdestino.departamento == request.vars.departamento) &
-        (db.cfdestino.destino == request.vars.destino)
-    ),
-    'cfdestino.fdestino'
-)
-db.cfdestino.fdestino.requires = IS_FLOAT_IN_RANGE(0, 1, dot='.', error_message=T('Too small or to large'))
-
-
+#db.cfdestino.fdestino.requires=IS_NOT_IN_DB(
+#    db(
+#        (db.cfdestino.especie == request.vars.especie) &
+#        (db.cfdestino.departamento == request.vars.departamento) &
+#        (db.cfdestino.destino == request.vars.destino)
+#    ),
+#    'cfdestino.fdestino'
+#)
+#db.cfdestino.fdestino.requires = IS_FLOAT_IN_RANGE(0, 1, dot='.', error_message=T('Too small or to large'))
 # La suma de destinos para una misma especie en un mismo depto = 1
 # ??????
 
-## Una especie, en un departamento y con un destino se ralea a los tantos años (por ejemplo a los 7, 13 y 15 años)
-db.define_table("caraleo",
+## Una especie, en un departamento se interviene (ralea, corta) a los tantos años (por ejemplo a los 7, 13 y 15 años) y se extrae un porcentaje de lo disponible (0-1)
+db.define_table("cintervencion",
+    Field("tcoeficiente", db.tipocoeficiente, label=T("Tipo de coeficiente"),
+      notnull=True, required=True, requires=IS_IN_DB(db, 'tipocoeficiente.id', '%(nombre)s'),
+      represent=lambda id, r: db.tipocoeficiente(id).nombre
+    ),
     Field("especie", db.especie, label=T("Especie plantada"),
-      required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
+      notnull=True, required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
       represent=lambda id, r: db.especie(id).nombre
     ),
     Field("departamento", db.departamento,
-      required=True, requires=IS_IN_DB(db, 'departamento.id', '%(nombre)s'),
+      notnull=True, required=True, requires=IS_IN_DB(db, 'departamento.id', '%(nombre)s'),
       represent=lambda id, r: db.departamento(id).nombre
     ),
+    Field("aintervencion", type="decimal(5,3)", notnull=True, label=T(u"Tiempo hasta intervención (años)")),
+    Field("fextraccion", type="float", notnull=True, label=T("Factor que se extrae")),
+)
+
+# Cada raleo puede tener una fracion de cada destino. El primer raleo va a pulpa (destino: Pulpa, fdestino:1), el seguno 60% plpa 40% aserrio (destino:Pulpa, fdestino:0.6; destino:Aserrio, fdestino:0.4)
+db.define_table("cdintervencion",
+    Field("cintervencion", db.cintervencion),
     Field("destino", db.destino, label=T("Destino del rodal"),
         required=True, requires=IS_IN_DB(db, 'destino.id', '%(nombre)s'),
         represent=lambda id, r: db.destino(id).nombre
     ),
-    Field("araleo", type="float", notnull=True, label=T(u"Años hasta el raleo")),
-    Field("vraleo", type="float", notnull=True, label=T("Volumen de madera (m3/ha")),
-)
-
-# Cada raleo puede tener una fracion de cada destino (el primer raleo va a pulpa, el seguno 60% a pulpa y 30% a aserrio y así en delante)
-db.define_table("cfdraleo",
-    Field("caraleo", db.caraleo),
-    Field("fdraleo", type="float", notnull=True)
+    Field("fdestino", type="float", notnull=True)
 )
 
 # Coeficientes de campo
@@ -386,7 +357,7 @@ db.define_table("cbcampo",
       required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
       represent=lambda id, r: db.especie(id).nombre
     ),
-    Field("gruposuelo", db.gruposuelo, label=T("Grupo de suelo"),
+    Field("gsuelo", db.gruposuelo, label=T("Grupo de suelo"),
         required=True, requires=IS_IN_DB(db, 'gruposuelo.id', '%(nombre)s'),
         represent=lambda id, r: db.gruposuelo(id).nombre
     ),
@@ -398,13 +369,13 @@ db.define_table("cbcampo",
         required=True, requires=IS_IN_DB(db, 'cosecha.id', '%(nombre)s'),
         represent=lambda id, r: db.cosecha(id).nombre
     ),
-    Field("bcampo", type="float", notnull=True)
+    Field("bcampo", type="float", notnull=True, label=T("Coeficiente de biomasa (m3 de madera sólida)"))
 )
 # No puede haber dos valores para especie, suelo, destino, cosecha
 db.cbcampo.bcampo.requires=IS_NOT_IN_DB(
     db(
         (db.cbcampo.especie == request.vars.especie) &
-        (db.cbcampo.gruposuelo == request.vars.gruposuelo) &
+        (db.cbcampo.gsuelo == request.vars.gsuelo) &
         (db.cbcampo.destino == request.vars.destino) &
         (db.cbcampo.cosecha == request.vars.cosecha)
     ),
@@ -417,46 +388,48 @@ db.define_table("cbindustria",
       required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
       represent=lambda id, r: db.especie(id).nombre
     ),
+    Field("trf", db.tiporesiduoforestal, label=T("Coeficiente del tipo de residuo forestal"),
+      required=True, requires=IS_IN_DB(db, 'tiporesiduoforestal.id', '%(nombre)s'),
+      represent=lambda id, r: db.tiporesiduoforestal(id).nombre
+    ),
     Field("bindustria", type="float", notnull=True)
 )
 # No puede haber dos valores para una misma especie
 db.cbindustria.bindustria.requires=IS_NOT_IN_DB(
     db(
-        (db.cbcampo.especie == request.vars.especie)
+        (db.cbindustria.especie == request.vars.especie) &
+        (db.cbindustria.trf == request.vars.trf)
     ),
     'cbindustria.bindustria'
 )
 
+# No tengo grupo de suelos para cada rodal (si la seccion judicial) por lo caul por ahora le asigno un único grupo
+# por sección judicial. Con esto saco el grupo de suelo de cada rodal.
+db.define_table("cgsuelo",
+    Field("sjudicial", db.seccionjudicial, label=T("Sección judicial"),
+        unique=True, required=True, requires=IS_IN_DB(db, 'seccionjudicial.id', '%(nombre)s'),
+        represent=lambda id, r: db.seccionjudicial(id).nombre
+    ),
+    Field("gsuelo", db.gruposuelo, label=T("Grupo de suelo"),
+        required=True, requires=IS_IN_DB(db, 'gruposuelo.id', '%(nombre)s'),
+        represent=lambda id, r: db.gruposuelo(id).nombre
+    )
+)
+db.cgsuelo.sjudicial.widget=cSelSJ.widget
 
-## Almacenamiento de los resultados del modelo en el escenario B
-# Anio de corte
-# db.define_table("anio",
-#     Field("anio", type='integer', notnull=True, unique=True),
-# )
-# # Volumen de corte por anio y rodal (declarado)
-# db.define_table("corted",
-#     Field("anio", db.anio),
-#     Field("rodald", db.rodald),
-#     Field("volumen", type="float", notnull=True)
-# )
-# # Volumen de raleo por anio y rodal (declarado) 
-# db.define_table("raleod",
-#     Field("anio", db.anio),
-#     Field("rodald", db.rodald),
-#     Field("volumen", type="float", notnull=True)
-# )
-
-## Lo proyectado no se modela en el escenario B
-# # Volumen de corte por anio y rodal (proyectado) 
-# db.define_table("cortep",
-#     Field("anio", db.anio),
-#     Field("rodald", db.rodald),
-#     Field("volumen", type="float", notnull=True)
-# )
-# # Volumen de raleo por anio y rodal (proyectado) 
-# db.define_table("raleop",
-#     Field("anio", db.anio),
-#     Field("rodald", db.rodald),
-#     Field("volumen", type="float", notnull=True)
-# )
-
+# Cada especie y destino tiene un tipo de cosecha
+db.define_table("ccosecha",
+    Field("especie", db.especie, label=T("Especie plantada"),
+      required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
+      represent=lambda id, r: db.especie(id).nombre
+    ),
+    Field("destino", db.destino, label=T("Destino del rodal"),
+        required=True, requires=IS_IN_DB(db, 'destino.id', '%(nombre)s'),
+        represent=lambda id, r: db.destino(id).nombre
+    ),
+    Field("cosecha", db.cosecha, label=T("Tipo de cosecha"),
+        required=True, requires=IS_IN_DB(db, 'cosecha.id', '%(nombre)s'),
+        represent=lambda id, r: db.cosecha(id).nombre
+    ),
+)
+db.ccosecha.especie.widget=cSelEsp.widget

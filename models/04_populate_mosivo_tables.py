@@ -43,19 +43,24 @@ def destino():
         ).select(
             db.destino.ALL
         )
-
     if len(q) == 0:
-        # Set sequence in departamento
-        db.executesql("ALTER SEQUENCE destino_id_seq MINVALUE 0;")
-        db.executesql("SELECT setval('destino_id_seq', 0, true);")
         # Lista de destinos
         destinos = [
             u'Madera sólida',
-            'Pulpa'
+            'Pulpa',
+            u'Energía'
         ]
-        for d in destinos:
-            db.destino.insert(nombre = d)
         db.commit()
+        try:
+            # Set sequence in departamento
+            db.executesql("ALTER SEQUENCE destino_id_seq MINVALUE 0;")
+            db.executesql("SELECT setval('destino_id_seq', 0, true);")
+            for d in destinos:
+                db.destino.insert(nombre = d)
+            db.commit()
+        except:
+            db.rollback()
+
 
 def dia():
     q = db(
@@ -63,11 +68,7 @@ def dia():
         ).select(
             db.dia.ALL
         )
-
     if len(q) == 0:
-        # Set sequence in departamento
-        db.executesql("ALTER SEQUENCE dia_id_seq MINVALUE 0;")
-        db.executesql("SELECT setval('dia_id_seq', 0, true);")
         # Lista de destinos
         dias = [
             'Domingo',
@@ -78,9 +79,17 @@ def dia():
             'Viernes',
             'Sábado'
         ]
-        for d in dias:
-            db.dia.insert(nombre=d)
         db.commit()
+        try:
+            # Set sequence in departamento
+            db.executesql("ALTER SEQUENCE dia_id_seq MINVALUE 0;")
+            db.executesql("SELECT setval('dia_id_seq', 0, true);")
+            for d in dias:
+                db.dia.insert(nombre=d)
+            db.commit()
+        except:
+            db.rollback()
+
 
 def genero():
     q = db(
@@ -88,11 +97,7 @@ def genero():
         ).select(
             db.genero.ALL
         )
-
     if len(q) == 0:
-        # Set sequence in departamento
-        db.executesql("ALTER SEQUENCE genero_id_seq MINVALUE 0;")
-        db.executesql("SELECT setval('genero_id_seq', 0, true);")
         # Lista de generos
         generos = [
             ('O', 'Acacia'),
@@ -107,9 +112,17 @@ def genero():
             ('S', 'Salix'),
             ('O', 'Taxodium'),
         ]
-        for d in generos:
-            db.genero.insert(codigo=d[0], nombre=d[1])
         db.commit()
+        try:
+            # Set sequence in departamento
+            db.executesql("ALTER SEQUENCE genero_id_seq MINVALUE 0;")
+            db.executesql("SELECT setval('genero_id_seq', 0, true);")
+            for d in generos:
+                db.genero.insert(codigo=d[0], nombre=d[1])
+            db.commit()
+        except:
+            db.rollback()
+
 
 def especie():
     q = db(
@@ -122,7 +135,7 @@ def especie():
         # Set sequence in departamento
         db.executesql("ALTER SEQUENCE especie_id_seq MINVALUE 0;")
         db.executesql("SELECT setval('especie_id_seq', 0, true);")
-        # Lista de especies   
+        # Lista de especies
         especies = [
             # O = 1 Acacia
             (1, 0, 'Sp.'),
@@ -194,7 +207,7 @@ def especie():
             (10, 5, 'Alba var. coerulea'),
             (10, 6, 'Otros'),
             (10, 8, 'Babylonica x alba cv. 131/25 y 131/27'),
-            # O = 11 Taxodium 
+            # O = 11 Taxodium
             (11, 20, 'Distinchum'),
         ]
         for d in especies:
@@ -216,29 +229,29 @@ def seccionjudicial():
         # RFPV: Revisar
         secciones = [
             # (departamento, de, hasta)
-            (1, 0, 20),
-            (2, 0, 20),
-            (3, 0, 20),
-            (4, 0, 20),
-            (5, 0, 20),
-            (6, 0, 20),
-            (7, 0, 20),
-            (8, 0, 20),
-            (9, 0, 20),
-            (10, 0, 20),
-            (11, 0, 20),
-            (12, 0, 20),
-            (13, 0, 20),
-            (14, 0, 20),
-            (15, 0, 20),
-            (16, 0, 20),
-            (17, 0, 20),
-            (18, 0, 20),
-            (19, 0, 20)
+            (1, 1, 20),
+            (2, 1, 20),
+            (3, 1, 20),
+            (4, 1, 20),
+            (5, 1, 20),
+            (6, 1, 20),
+            (7, 1, 20),
+            (8, 1, 20),
+            (9, 1, 20),
+            (10, 1, 20),
+            (11, 1, 20),
+            (12, 1, 20),
+            (13, 1, 20),
+            (14, 1, 20),
+            (15, 1, 20),
+            (16, 1, 20),
+            (17, 1, 20),
+            (18, 1, 20),
+            (19, 1, 20)
         ]
         for d in secciones:
             for s in xrange(d[1], d[2]):
-                db.seccionjudicial.insert(departamento=d[0], seccion=s)
+                db.seccionjudicial.insert(departamento=d[0], nombre=s)
         db.commit()
 
 def cosecha():
@@ -259,9 +272,64 @@ def cosecha():
             ('Semimecanizada', 'Intermedio'),
             ('Manual', 'Motosierra')
         ]
-        for d in cosechas:            
+        for d in cosechas:
             db.cosecha.insert(nombre=d[0], descripcion=d[1])
         db.commit()
+
+def tiporesiduoforestal():
+    q = db(
+           db.tiporesiduoforestal
+        ).select(
+            db.tiporesiduoforestal.ALL
+        )
+
+    if len(q) == 0:
+        # Set sequence in departamento
+        db.executesql("ALTER SEQUENCE tiporesiduoforestal_id_seq MINVALUE 0;")
+        db.executesql("SELECT setval('tiporesiduoforestal_id_seq', 0, true);")
+        # Lista de tipos
+        tipo = [
+            ('Aserrío'),
+            ('Biruta'),
+            ('Corteza'),
+            ('Costaneros'),
+            ('Despuntes'),
+            ('Otros'),
+            ('Polvos')
+        ]
+        db.commit()
+        try:
+            for d in tipo:
+                db.tiporesiduoforestal.insert(nombre=d[0])
+            db.commit()
+        except:
+            db.rollback()
+
+
+def tipocoeficiente():
+    q = db(
+            db.tipocoeficiente
+        ).select(
+            db.tipocoeficiente.ALL
+        )
+
+    if len(q) == 0:
+        # Set sequence in departamento
+        db.executesql("ALTER SEQUENCE tipocoeficiente_id_seq MINVALUE 0;")
+        db.executesql("SELECT setval('tipocoeficiente_id_seq', 0, true);")
+        # Lista de coef
+        tipo = [
+            #(nombre)
+            ('Área'),
+            ('Rodal'),
+        ]
+        db.commit()
+        try:
+            for d in tipo:
+                db.tipocoeficiente.insert(nombre=d[0])
+            db.commit()
+        except:
+            db.rollback()
 
 
 # Populate mosivo database
@@ -272,3 +340,6 @@ genero()
 especie()
 seccionjudicial()
 cosecha()
+tipocoeficiente()
+tiporesiduoforestal()
+
