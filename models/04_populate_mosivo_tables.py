@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+if 0:
+    import static
+
 def departamento():
     q = db(
            db.departamento

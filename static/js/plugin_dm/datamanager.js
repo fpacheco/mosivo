@@ -2,6 +2,8 @@
 //variables globales para la acción
 var currentRecordId=-1; /* Current record Id */
 var currentURLAction=''; /* Current URL action */
+var currentTableName=''; /* Current URL action */
+
 
 $(document).ready(function() {
     /*
@@ -9,26 +11,28 @@ $(document).ready(function() {
         document.getElementById ("xlInput").value = document.title;
     });
     */
-}); 
+});
 
-function newDialogShow(url) {
+/* New begin */
+function newDialogShow(url,tablename) {
     $("#newDialog").modal();
     currentRecordId=-1;
     currentURLAction=url;
+    currentTableName=tablename;
     // POST via ajax
     $.post(
         url,
-        {dataAction:'new'},            
+        {dataAction:'new', tableName:tablename},
         function(data) {
             $('#newResult').html(data);
         }
     );
-    //return false dont process href on a       
+    //return false dont process href on a
     return false;
 };
 
 function newDialogClose() {
-    $('#newDialog').modal('hide'); 
+    $('#newDialog').modal('hide');
 };
 
 function newDialogSave() {
@@ -44,31 +48,35 @@ function newDialogSave() {
                 alert(data.message);
             }
         },
-        'json' //data returned is json            
+        'json' //data returned is json
     );
     newDialogClose();
     currentRecordId=-1;
     currentURLAction='';
+    currentTableName='';
 };
+/* New end */
 
-function editDialogShow (url,recordId) {
+/* Edit begin */
+function editDialogShow (url,tablename,recordId) {
     $("#editDialog").modal();
     currentRecordId=recordId;
     currentURLAction=url;
+    currentTableName=tablename;
     // POST via ajax
     $.post(
         url,
-        {dataAction:'edit', dataId:recordId},            
+        {dataAction:'edit', tableName:tablename, dataId:recordId},
         function(data) {
             $('#editResult').html(data);
         }
-    );        
+    );
     //return false dont process href on a
     return false;
 };
 
 function editDialogClose() {
-    $('#editDialog').modal('hide'); 
+    $('#editDialog').modal('hide');
 };
 
 function editDialogSave() {
@@ -84,17 +92,21 @@ function editDialogSave() {
                 alert(data.message);
             }
         },
-        'json' //data returned is json            
+        'json' //data returned is json
     );
     editDialogClose();
     currentRecordId=-1;
     currentURLAction='';
-};  
+    currentTableName='';
+};
+/* Edit end */
 
-function deleteDialogShow(url,recordId) {
+/* Delete begin */
+function deleteDialogShow(url,tablename,recordId) {
     $("#deleteDialog").modal();
     currentRecordId=recordId;
     currentURLAction=url;
+    currentTableName=tablename;
     //Write HTML table of record to modal dialog data area
     var title=tableGetHeaders();
     var data=tableGetRowById(currentRecordId);
@@ -104,48 +116,50 @@ function deleteDialogShow(url,recordId) {
 };
 
 function deleteDialogClose() {
-    $('#deleteDialog').modal('hide'); 
+    $('#deleteDialog').modal('hide');
 };
 
 function deleteDialogDelete() {
     $.post(
         currentURLAction,
-        {dataAction:'delete', dataId:currentRecordId},            
+        {dataAction:'delete', tableName:currentTableName, dataId:currentRecordId},
         function(data) {
             //Parse string as JSON
             // var jsonData = jQuery.parseJSON(data);
             if (data.result==true) {
-                // Delete row?
-                //tableDeleteRowById(currentRecordId);
                 // Reload current page
                 location.reload();
             } else {
                 alert(data.message);
             }
         },
-        'json' //data returned is json            
-    );        
+        'json' //data returned is json
+    );
     deleteDialogClose();
     currentRecordId=-1;
     currentURLAction='';
-};  
+    currentTableName='';
+};
+/* Delete end */
 
-function deleteAllDialogShow(url) {
+/* Deleteall begin */
+function deleteAllDialogShow(url,tablename) {
     $("#deleteAllDialog").modal();
     currentRecordId=-1;
     currentURLAction=url;
+    currentTableName=tablename;
     //return false dont process href on a
     return false;
 };
 
 function deleteAllDialogClose() {
-    $('#deleteAllDialog').modal('hide'); 
+    $('#deleteAllDialog').modal('hide');
 };
 
 function deleteAllDialogDelete() {
     $.post(
         currentURLAction,
-        {dataAction:'deleteAll'},            
+        {dataAction:'deleteAll', tableName:currentTableName},
         function(data) {
             //Parse string as JSON
             // var jsonData = jQuery.parseJSON(data);
@@ -158,13 +172,16 @@ function deleteAllDialogDelete() {
                 alert(data.message);
             }
         },
-        'json' //data returned is json            
-    );        
+        'json' //data returned is json
+    );
     deleteDialogClose();
     currentRecordId=-1;
     currentURLAction='';
+    currentTableName='';
 };
+/* Deleteall end */
 
+/* Utils begin */
 function tableWrite(tit, dat, target) {
     /** Write html table with tit, dat
     in this target
@@ -181,48 +198,48 @@ function tableWrite(tit, dat, target) {
 
 function tableGetRowById(rowId, initCol, endCol) {
     /** Get row (total o partoally) by his id (<tr id=1>) and return
-    an array 
+    an array
     */
     cellArr = new Array();
     // Get text of each cell in this table row
     $('table tr#' + rowId + ' td').each(function(){
         cellArr.push($(this).text());
     });
-    
+
     if (typeof(initCol)==='undefined') {
         initCol=0;
     }
-    
-    // Dont get last col 
+
+    // Dont get last col
     if (typeof(endCol)==='undefined') {
         if (cellArr.length==1) {
             endCol=0;
         } else {
-          endCol=cellArr.length-1;  
+          endCol=cellArr.length-1;
         }
     }
-    
+
     return cellArr.slice( initCol, endCol);
 };
 
 function tableGetHeaders(initCol, endCol) {
     /** Get heders (total o partoally) of a table
-    */    
+    */
     cellArr = new Array();
     // Get text of each cell in this table row
     $('table tr th').each(function(){
         cellArr.push($(this).text());
     });
-    
+
     if (typeof(initCol)==='undefined') {
         initCol=0;
     } else {
         if ( (initCol<0) || (initCol>(cellArr.length-1)) ) {
             initCol=0;
         }
-    } 
-    
-    // Dont get last col 
+    }
+
+    // Dont get last col
     if (typeof(endCol)==='undefined') {
         endCol=cellArr.length-1;
     } else {
@@ -230,12 +247,13 @@ function tableGetHeaders(initCol, endCol) {
             endCol=initCol+1;
         }
     }
-    
+
     return cellArr.slice(initCol, endCol);
 };
 
 function tableDeleteRowById(rowId) {
-    /** Delete arow in a table by his id 
+    /** Delete arow in a table by his id
     */
     $('table tr#' + rowId).remove();
-};    
+};
+/* Utils end */
