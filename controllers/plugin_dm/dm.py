@@ -2,9 +2,6 @@
 # Data acction for the data
 dataActions=['new','edit','delete','deleteAll']
 
-def testDM():
-    from plugin_dm.datamanager import *
-    return dict()
 
 @auth.requires_login()
 def dataupdate():
