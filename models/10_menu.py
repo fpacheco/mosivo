@@ -102,7 +102,7 @@ def createMenu(menuList):
     else:
         return menuPublic
 
-# Menu format: ( type,name,controller,function,[submenus] ) 
+# Menu format: ( type,name,controller,function,[submenus] )
 menu = [
     ( M_PUBLIC,'Home','default','index',
         [
@@ -150,16 +150,16 @@ menuAdmin = [
     ( T('Home'), URL('default','index')==URL, URL('default','index'),[] ),
     ( T('View'), URL('view','index')==URL, URL('view','index'),
         [
-            ( T('Model data'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'), 
+            ( T('Model data'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'),
                 [
                     ( T('Raleo'), URL('modelconf','craleo')==URL(), URL('modelconf','craleo'), [] ),
                     ( T('Turno'), URL('modelconf','cturno')==URL(), URL('modelconf','cturno'), [] ),
                     ( T('Turno'), URL('modelconf','cturno')==URL(), URL('modelconf','cturno'), [] ),
                     ( T('Turno'), URL('modelconf','cturno')==URL(), URL('modelconf','cturno'), [] ),
-                    ( T('Turno'), URL('modelconf','cturno')==URL(), URL('modelconf','cturno'), [] ),               
-                ] 
+                    ( T('Turno'), URL('modelconf','cturno')==URL(), URL('modelconf','cturno'), [] ),
+                ]
             ),
-            ( T('Data'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'), 
+            ( T('Data'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'),
                 [
                     ( T('Años raleo'), URL('modelconf','cfdestino')==URL(), URL('modelconf','cfdestino'), [] ),
                     ( T('Destino'), URL('modelconf','cfdestino')==URL(), URL('modelconf','cfdestino'), [] ),
@@ -167,38 +167,44 @@ menuAdmin = [
                     ( T('IMA'), URL('modelconf','cima')==URL(), URL('modelconf','cima'), [] ),
                     ( T('Raleo'), URL('modelconf','craleo')==URL(), URL('modelconf','craleo'), [] ),
                     ( T('Turno'), URL('modelconf','cturno')==URL(), URL('modelconf','cturno'), [] ),
-                ] 
+                ]
             ),
         ]
-    ),    
+    ),
     ( T('Model Configuration'), URL('config','index')==URL, URL('config','index'),
         [
             ( T('Data updates'), URL('modelconf','dataupdate')==URL(), URL('modelconf','dataupdate'), [] ),
             ( T('Model updates'), URL('modelconf','modelupdate')==URL(), URL('modelconf','modelupdate'), [] ),
-            ( T('Coefficients'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'), 
+            LI(_class="divider"),
+            ( T('Coefficients'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'),
                 [
-                    ( T('Raleo años'), URL('modelconf','mcaraleo')==URL(), URL('modelconf','mcaraleo'), [] ),
-                    ( T('Raleo fracción'), URL('modelconf','mcfraleo')==URL(), URL('modelconf','mcfraleo'), [] ),
-                    ( T('Destino'), URL('modelconf','mcfdestino')==URL(), URL('modelconf','mcfdestino'), [] ),
-                    ( T('Effective area'), URL('modelconf','mcaefectiva')==URL(), URL('modelconf','mcaefectiva'), [] ),
-                    ( T('IMA'), URL('modelconf','mcima')==URL(), URL('modelconf','mcima'), [] ),
-                    ( T('Raleo'), URL('modelconf','mcraleo')==URL(), URL('modelconf','mcraleo'), [] ),
-                    ( T('Turno'), URL('modelconf','mcturno')==URL(), URL('modelconf','mcturno'), [] ),               
-                ] 
-            ),            
+                    ( T('Área efectiva por especie y departamento'), URL('modelconf','mcaefectiva')==URL(), URL('modelconf','mcaefectiva'), [] ),
+                    ( T('IMA por especie y departamento'), URL('modelconf','mcima')==URL(), URL('modelconf','mcima'), [] ),
+                    ( T('Intervención por especie y departamento'), URL('modelconf','mcintervencion')==URL(), URL('modelconf','mcintervencion'), [] ),
+                    LI(_class="divider"),
+                    ( T('Cosecha por especie y destino'), URL('modelconf','mccosecha')==URL(), URL('modelconf','mccosecha'), [] ),
+                    ( T('Suelo por sección judicial'), URL('modelconf','mcgsuelo')==URL(), URL('modelconf','mcgsuelo'), [] ),
+                    LI(_class="divider"),
+                    ( T('Biomasa en campo'), URL('modelconf','mcbcampo')==URL(), URL('modelconf','mcbcampo'), [] ),
+                    ( T('Biomasa en la industria'), URL('modelconf','mcbindustria')==URL(), URL('modelconf','mcbindustria'), [] ),
+                ]
+            ),
+            LI(_class="divider"),
+            ( T('Verificar cumplimiento'), URL('modelconf','mcbcampo')==URL(), URL('modelconf','mcbcampo'), [] ),
         ]
     ),
     ( T('System administration'), URL('admin','index')==URL(), URL('admin','index'),
         [
             ( T('Users'), URL('sysadmin','users')==URL(), URL('sysadmin','users'), [] ),
             ( T('Memberships'), URL('sysadmin','memberships')==URL(), URL('sysadmin','memberships'), [] )
-            
+
         ]
     ),
     ( T('Help'), URL('help','index')==URL(), URL('help','index'),
-        [            
+        [
             ( T('App manual'), URL('help','appmanual')==URL(), URL('help','appmanual'),[] ),
             ( T('System documentation'),URL('help','sysmanual')==URL(), URL('help','sysmanual'),[] ),
+            LI(_class="divider"),
             ( T('About'),URL('about','index')==URL(), URL('about','index'),[]),
         ]
     ),

@@ -30,7 +30,7 @@ def neddaction():
                 dai = INPUT(_name='dataAction',id='%s_dataAction' % tableName, value='edit', _type='hidden')
                 tn = INPUT(_name='tableName',id='%s_tableName' % tableName, value='%s' % tableName, _type='hidden')
                 did = INPUT(_name='dataId',id='%s_dataId' % tableName, value=id, _type='hidden')
-                form.insert(-1,dai)                
+                form.insert(-1,dai)
                 form.insert(-1,did)
                 form.insert(-1,tn)
             elif dataAction=='delete':
