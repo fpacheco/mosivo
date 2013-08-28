@@ -15,6 +15,7 @@ class DataManager(object):
     _isTable=False
     _actionTableName=None
     _rActionURL=None
+    _rDetailsURL=None
     _gFieldId=None
     _gDefaultOrder=None
     _gFields=[]
@@ -139,12 +140,26 @@ class DataManager(object):
         else:
             pass
 
+
     def rActionURL(self, url):
         #new, edit, delete and deleteall actions
-        self.url=url
+        self._rActionURL=url
 
 
-    def gShowSerach(self, val):
+    def showMActions(self, val):
+        self._showMActions=val
+
+
+    def rDetailsURL(self, url):
+        #details
+        self._rDetailsURL=url
+
+
+    def showDActions(self, val):
+        self._showDActions=val
+
+
+    def gShowSearch(self, val):
         #Grid have serach box
         self._showSearch=val
 
@@ -167,7 +182,7 @@ class DataManager(object):
         """
         return SPAN(
             SPAN(self.rEditButton(rid), self.rDeleteButton(rid)) if self._showMActions else '',
-            self.detailButton(rid) if self._showDActions else ''
+            self.rDetailsButton(rid) if self._showDActions else ''
         )
 
 
@@ -218,8 +233,8 @@ class DataManager(object):
             I(_class='icon-th-large icon-white'),
             _class='btn btn-inverse btn-mini',
             _title=current.T('Edit details records'),
-            _onclick="return detailsDialogEShow('%s', %d);" % (self._rActionURL, rid),
-            _onmouseover="return detailsDialogSShow('%s', %d);" % (self._rActionURL, rid)
+            _onclick="return detailsDialogEShow('%s', %d);" % (self._rDetailsURL, rid),
+            #_onmouseover="return detailsDialogSShow('%s', %d);" % (self._rActionURL, rid)
         )
 
 

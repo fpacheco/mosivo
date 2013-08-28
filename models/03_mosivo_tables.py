@@ -81,13 +81,13 @@ db.define_table("gruposuelo",
 
 #Tipos de desperdicios en la industria
 db.define_table("tiporesiduoforestal",
-    Field("nombre", type="string", length=25, unique=True, notnull=True),
+                Field("nombre", type="string", length=25, unique=True, notnull=True, label=T("Residuo forestal")),
     format='%(nombre)s'
 )
 
 #Tipos de coeficientes es decir se aplican a nivel de Area o de rodal
 db.define_table("tipocoeficiente",
-    Field("nombre", type="string", length=25, unique=True, notnull=True),
+                Field("nombre", type="string", length=25, unique=True, notnull=True, label=T("Tipo coeficiente")),
     format='%(nombre)s'
 )
 
@@ -105,7 +105,7 @@ db.define_table("destino",
 
 # Tipo de cosechas
 db.define_table("cosecha",
-    Field("nombre", type='string', notnull=True, unique=True),
+                Field("nombre", type='string', notnull=True, unique=True, label=T("Destino")),
     Field("descripcion", type='text'),
     format='%(nombre)s'
 )
@@ -318,7 +318,7 @@ db.define_table("cdintervencion",
         required=True, requires=IS_IN_DB(db, 'destino.id', '%(nombre)s'),
         represent=lambda id, r: db.destino(id).nombre
     ),
-    Field("fdestino", type="float", notnull=True)
+    Field("fdestino", type="float", notnull=True, label=T("Factor de destino"))
 )
 
 # Coeficientes de campo

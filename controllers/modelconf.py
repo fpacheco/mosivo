@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+## Begin manage coefficients
 @auth.requires_login()
 def mcima():
     from plugin_dm.datamanager import DataManager
@@ -69,6 +70,8 @@ def mcintervencion():
         ('cintervencion','fextraccion')
         ] )
     dm.gShowId(False)
+    dm.showDActions(True)
+    dm.rDetailsURL( "/%s/%s/%s.load" % (request.application, request.controller ,'mcdintervencion') )
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 @auth.requires_login()
@@ -168,3 +171,34 @@ def mccosecha():
         ] )
     dm.gShowId(False)
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
+
+def mcdintervencion():
+    #Vendra por ajax, recibe un post con el id de intervencio
+    #Se fija si tiene registros y arma tantas forms como destinos existan en al base de datos
+    tableName='destino'
+    idF='id'
+    try:
+        #Que registro
+        idIntervencion=request.post_vars.idIntervencion
+        destinos=db(db[tableName][idF]>0).select(db[tableName][idF])
+        # destinos[0]['idF']
+        forms=[]
+        for c in range(0,ndest):
+            record=db[tableName](id)
+            if record:
+                form = SQLFORM(db['cdintervencion'], record, showid=False, _id="cdintervencion-%s" % c)
+            else:
+                form = SQLFORM(db['cdintervencion'], showid=False, _id="cdintervencion-%s" % c)
+            # Ocultar submit
+            submit = form.element('input',_type='submit')
+            submit['_style'] = 'display:none;'
+            # Ocultar idIntervencion
+
+            # Agregar a la lista
+            forms.append(form)
+    except:
+        print "idIntervencion error"
+        pass
+    dict(forms=forms)
+
+## End manage coefficients
