@@ -81,13 +81,13 @@ db.define_table("gruposuelo",
 
 #Tipos de desperdicios en la industria
 db.define_table("tiporesiduoforestal",
-                Field("nombre", type="string", length=25, unique=True, notnull=True, label=T("Residuo forestal")),
+    Field("nombre", type="string", length=25, unique=True, notnull=True, label=T("Residuo forestal")),
     format='%(nombre)s'
 )
 
 #Tipos de coeficientes es decir se aplican a nivel de Area o de rodal
 db.define_table("tipocoeficiente",
-                Field("nombre", type="string", length=25, unique=True, notnull=True, label=T("Tipo coeficiente")),
+    Field("nombre", type="string", length=25, unique=True, notnull=True, label=T("Tipo coeficiente")),
     format='%(nombre)s'
 )
 
@@ -105,7 +105,7 @@ db.define_table("destino",
 
 # Tipo de cosechas
 db.define_table("cosecha",
-                Field("nombre", type='string', notnull=True, unique=True, label=T("Destino")),
+    Field("nombre", type='string', notnull=True, unique=True, label=T("Cosecha")),
     Field("descripcion", type='text'),
     format='%(nombre)s'
 )
@@ -321,7 +321,7 @@ db.define_table("cdintervencion",
     Field("fdestino", type="float", notnull=True, label=T("Factor de destino"))
 )
 
-# Coeficientes de campo
+# Coeficientes de campo bcampo en m3 de madera solida
 db.define_table("cbcampo",
     Field("especie", db.especie, label=T("Especie plantada"),
       required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
@@ -411,3 +411,14 @@ db.define_table("ccosecha",
     ),
 )
 db.ccosecha.especie.widget=cSelEsp.widget
+
+# Conversion del coeficiente de biomasa por especie bcampo en toneladas de biomasa
+db.define_table("cbcampoe",
+    Field("especie", db.especie, label=T("Especie plantada"),
+        required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
+        represent=lambda id, r: db.especie(id).nombre),
+    Field("bcampo", type="float", notnull=True, label=T("Fv (T biomasa)"))
+)
+db.cbcampoe.especie.widget=cSelEsp.widget
+
+

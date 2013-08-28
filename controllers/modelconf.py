@@ -1,4 +1,13 @@
 # -*- coding: utf-8 -*-
+@auth.requires_login()
+def verifymodel():
+    ncaefectiva=db(db['caefectiva']['id']>0).count()
+    ncima=db(db['cima']['id']>0).count()
+    ncintervencion=db(db['cintervencion']['id']>0).count()
+    nccosecha=db(db['caefectiva']['id']>0).count()
+    ncbcampo=db(db['cbcampo']['id']>0).count()
+    ncbindustria=db(db['cbindustria']['id']>0).count()
+    return locals()
 
 ## Begin manage coefficients
 @auth.requires_login()
@@ -102,6 +111,29 @@ def mcbcampo():
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 @auth.requires_login()
+def mcbcampoe():
+    from plugin_dm.datamanager import DataManager
+    dm=DataManager(database=db)
+    query=(
+        (db.cbcampoe.id > 0) &
+        (db.especie.id==db.cbcampoe.especie) &
+        (db.genero.id==db.especie.genero)
+        )
+    dm.gQuery( query )
+    dm.actionTableName('cbcampoe')
+    dm.gFieldId('id')
+    dm.gFields( [
+        ('cbcampoe','id'),
+        ('genero','nombre'),
+        ('cbcampoe','especie'),
+        ('cbcampoe','bcampo'),
+        ] )
+    dm.gShowId(False)
+    return dict(toolbar=dm.toolBar(), grid=dm.grid())
+
+
+
+@auth.requires_login()
 def mcbindustria():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
@@ -200,5 +232,7 @@ def mcdintervencion():
         print "idIntervencion error"
         pass
     dict(forms=forms)
+
+
 
 ## End manage coefficients

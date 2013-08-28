@@ -184,13 +184,14 @@ menuAdmin = [
                     LI(_class="divider"),
                     ( T('Cosecha por especie y destino'), URL('modelconf','mccosecha')==URL(), URL('modelconf','mccosecha'), [] ),
                     ( T('Suelo por sección judicial'), URL('modelconf','mcgsuelo')==URL(), URL('modelconf','mcgsuelo'), [] ),
+                    ( T('Biomasa por especie'), URL('modelconf','mcbcampoe')==URL(), URL('modelconf','mcbcampoe'), [] ),
                     LI(_class="divider"),
                     ( T('Biomasa en campo'), URL('modelconf','mcbcampo')==URL(), URL('modelconf','mcbcampo'), [] ),
                     ( T('Biomasa en la industria'), URL('modelconf','mcbindustria')==URL(), URL('modelconf','mcbindustria'), [] ),
                 ]
             ),
             LI(_class="divider"),
-            ( T('Verificar cumplimiento'), URL('modelconf','mcbcampo')==URL(), URL('modelconf','mcbcampo'), [] ),
+            ( T('Verificar cumplimiento'), URL('modelconf','verifymodel')==URL(), URL('modelconf','verifymodel'), [] ),
         ]
     ),
     ( T('System administration'), URL('admin','index')==URL(), URL('admin','index'),
