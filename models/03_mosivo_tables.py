@@ -252,7 +252,7 @@ db.define_table("actualizamodelo",
 ##### Coeficiente para estimar datos faltantes
 ## Cuanto crece por ano (ima=indice medio anual)
 db.define_table("cima",
-    Field("especie", db.especie, label=T("Especie plantada"),
+    Field("especie", db.especie, label=T("Especie"),
       required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
       represent=lambda id, r: db.especie(id).nombre
     ),
@@ -272,7 +272,7 @@ db.cima.especie.widget=cSelEsp.widget
 
 ## Que porcentaje del bosque es area efectiva de plantacion
 db.define_table("caefectiva",
-    Field("especie", db.especie, label=T("Especie plantada"),
+    Field("especie", db.especie, label=T("Especie"),
       required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
       represent=lambda id, r: db.especie(id).nombre
     ),
@@ -296,7 +296,7 @@ db.define_table("cintervencion",
       notnull=True, required=True, requires=IS_IN_DB(db, 'tipocoeficiente.id', '%(nombre)s'),
       represent=lambda id, r: db.tipocoeficiente(id).nombre
     ),
-    Field("especie", db.especie, label=T("Especie plantada"),
+    Field("especie", db.especie, label=T("Especie"),
       notnull=True, required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
       represent=lambda id, r: db.especie(id).nombre
     ),
@@ -323,7 +323,7 @@ db.define_table("cdintervencion",
 
 # Coeficientes de campo bcampo en m3 de madera solida
 db.define_table("cbcampo",
-    Field("especie", db.especie, label=T("Especie plantada"),
+    Field("especie", db.especie, label=T("Especie"),
       required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
       represent=lambda id, r: db.especie(id).nombre
     ),
@@ -357,7 +357,7 @@ db.cbcampo.especie.widget=cSelEsp.widget
 
 # Coeficiente general en la industria
 db.define_table("cbindustria",
-    Field("especie", db.especie, label=T("Especie plantada"),
+    Field("especie", db.especie, label=T("Especie"),
       required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
       represent=lambda id, r: db.especie(id).nombre
     ),
@@ -397,7 +397,7 @@ db.define_table("cgsuelo",
 
 # Cada especie y destino tiene un tipo de cosecha
 db.define_table("ccosecha",
-    Field("especie", db.especie, label=T("Especie plantada"),
+    Field("especie", db.especie, label=T("Especie"),
       required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
       represent=lambda id, r: db.especie(id).nombre
     ),
@@ -414,7 +414,7 @@ db.ccosecha.especie.widget=cSelEsp.widget
 
 # Conversion del coeficiente de biomasa por especie bcampo en toneladas de biomasa
 db.define_table("cbcampoe",
-    Field("especie", db.especie, label=T("Especie plantada"),
+    Field("especie", db.especie, label=T("Especie"),
         required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
         represent=lambda id, r: db.especie(id).nombre),
     Field("bcampo", type="float", notnull=True, label=T("Fv (T biomasa)"))

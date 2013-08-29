@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 @auth.requires_login()
 def verifymodel():
+    import json
     ncaefectiva=db(db['caefectiva']['id']>0).count()
     ncima=db(db['cima']['id']>0).count()
     ncintervencion=db(db['cintervencion']['id']>0).count()
@@ -9,7 +10,91 @@ def verifymodel():
     ncbcampoe=db(db['cbcampoe']['id']>0).count()
     ncbcampo=db(db['cbcampo']['id']>0).count()
     ncbindustria=db(db['cbindustria']['id']>0).count()
-    return locals()
+    cstr=[
+        T('effective area'),
+        T('annual average growth rate'),
+        T('intervention'),
+        T('harvest'),
+        T('soil group'),
+        T('biomass conversion'),
+        T('field biomass'),
+        T('biomass in the industry'),
+    ]
+    coef=[
+        'caefectiva',
+        'cima',
+        'cintervencion',
+        'ccosecha',
+        'cgsuelo',
+        'cbcampoe',
+        'cbcampo',
+        'cbindustria'
+    ]
+    trs= [
+        TR(
+            TD( T('Verify %s coefficients') % cstr[cont] ),
+            TD( SPAN( B( db( db[ coef[cont] ]['id']>0 ).count() ), T(' records') ) ),
+            TD(
+                DIV(
+                    SPAN(
+                        #Button
+                        A(
+                            SPAN(I(_class='icon-check icon-black'), T('Verify now')),
+                            _class='btn btn-small',
+                            _onclick="return aVerifyCoef('%s');" % coef[cont],
+                            _id="v%sbutton" % coef[cont]
+                        ),
+                        IMG(
+                            _src="/%s/static/images/pbar_loader.gif" % request.application,
+                            _id="pb%s" % coef[cont],
+                            _style="display:none;height:10px;"
+                        ),
+                        #Return labels
+                        SPAN(
+                            T('Success'),
+                            _class="label label-success",
+                            _id="s%sspan" % coef[cont],
+                            _style="display:none",
+                        ),
+                        SPAN(
+                            T('Fail'),
+                            _class="label label-warning",
+                            _id="f%sspan" % coef[cont],
+                            _style="display:none",
+                        ),
+                        SPAN(
+                            T('Error'),
+                            _class="label label-important",
+                            _id="e%sspan" % coef[cont],
+                            _style="display:none",
+                        )
+                    ),
+                    _id="rv%s" % coef[cont],
+                    _class="div div-btn div-info",
+                    _style="width:240px;"
+                    )
+                )
+            ) for cont in range(0,len(coef))
+    ]
+    trs.append(
+        TR(
+            TD( B( T('Verify all') ), _colspan="2", _style="text-align:right"),
+            TD(
+                A(
+                    SPAN(I(_class='icon-check icon-black'), T('Verify now')),
+                    _class='btn btn-small',
+                    _onclick="return aVerifyAllCoef(%s);" % json.dumps(coef)
+                )
+            )
+        )
+    )
+
+    table=TABLE (
+        TBODY( trs ),
+        _class="table table-striped",
+        _id="modelverify"
+    )
+    return dict(table=table)
 
 ## Begin manage coefficients
 @auth.requires_login()
