@@ -180,7 +180,8 @@ menuAdmin = [
                 [
                     ( T('Área efectiva por especie y departamento'), URL('modelconf','mcaefectiva')==URL(), URL('modelconf','mcaefectiva'), [] ),
                     ( T('IMA por especie y departamento'), URL('modelconf','mcima')==URL(), URL('modelconf','mcima'), [] ),
-                    ( T('Intervención por especie y departamento'), URL('modelconf','mcintervencion')==URL(), URL('modelconf','mcintervencion'), [] ),
+                    ( T('Intervención (rodal)'), URL('modelconf','mcintervencionr')==URL(), URL('modelconf','mcintervencionr'), [] ),
+                    ( T('Intervención (por departamento)'), URL('modelconf','mcintervenciona')==URL(), URL('modelconf','mcintervenciona'), [] ),
                     LI(_class="divider"),
                     ( T('Cosecha por especie y destino'), URL('modelconf','mccosecha')==URL(), URL('modelconf','mccosecha'), [] ),
                     ( T('Suelo por sección judicial'), URL('modelconf','mcgsuelo')==URL(), URL('modelconf','mcgsuelo'), [] ),

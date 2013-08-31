@@ -2,18 +2,11 @@
 @auth.requires_login()
 def verifymodel():
     import json
-    ncaefectiva=db(db['caefectiva']['id']>0).count()
-    ncima=db(db['cima']['id']>0).count()
-    ncintervencion=db(db['cintervencion']['id']>0).count()
-    nccosecha=db(db['ccosecha']['id']>0).count()
-    ncgsuelo=db(db['cgsuelo']['id']>0).count()
-    ncbcampoe=db(db['cbcampoe']['id']>0).count()
-    ncbcampo=db(db['cbcampo']['id']>0).count()
-    ncbindustria=db(db['cbindustria']['id']>0).count()
     cstr=[
         T('effective area'),
         T('annual average growth rate'),
-        T('intervention'),
+        T('intervention by stands'),
+        T('intervention by area'),
         T('harvest'),
         T('soil group'),
         T('biomass conversion'),
@@ -23,7 +16,8 @@ def verifymodel():
     coef=[
         'caefectiva',
         'cima',
-        'cintervencion',
+        'cintervencionr',
+        'cintervenciona',
         'ccosecha',
         'cgsuelo',
         'cbcampoe',
@@ -76,6 +70,7 @@ def verifymodel():
                 )
             ) for cont in range(0,len(coef))
     ]
+
     trs.append(
         TR(
             TD( B( T('Verify all') ), _colspan="2", _style="text-align:right"),
@@ -95,6 +90,13 @@ def verifymodel():
         _id="modelverify"
     )
     return dict(table=table)
+
+def averifycoefs():
+    import json
+    tableName=request.post_vars.tableName
+    data={ 'result': result }
+    return json.dump(data)
+
 
 ## Begin manage coefficients
 @auth.requires_login()
@@ -143,32 +145,59 @@ def mcaefectiva():
 
 
 @auth.requires_login()
-def mcintervencion():
+def mcintervencionr():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
     query=(
-        (db.cintervencion.id > 0) &
-        (db.especie.id==db.cintervencion.especie) &
+        (db.cintervencionr.id > 0) &
+        (db.especie.id==db.cintervencionr.especie) &
         (db.genero.id==db.especie.genero) &
-        (db.tipocoeficiente.id==db.cintervencion.tcoeficiente) &
-        (db.departamento.id==db.cintervencion.departamento)
+        (db.departamento.id==db.cintervencionr.departamento)
         )
     dm.gQuery( query )
-    dm.actionTableName('cintervencion')
+    dm.actionTableName('cintervencionr')
     dm.gFieldId('id')
     dm.gFields( [
-        ('cintervencion','id'),
-        ('cintervencion','tcoeficiente'),
+        ('cintervencionr','id'),
         ('genero','nombre'),
-        ('cintervencion','especie'),
-        ('cintervencion','departamento'),
-        ('cintervencion','aintervencion'),
-        ('cintervencion','fextraccion')
+        ('cintervencionr','especie'),
+        ('cintervencionr','departamento'),
+        ('cintervencionr','aintervencion'),
+        ('cintervencionr','fextraccion')
         ] )
     dm.gShowId(False)
     dm.showDActions(True)
     dm.rDetailsURL( "/%s/%s/%s.load" % (request.application, request.controller ,'mcdintervencion') )
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
+
+
+@auth.requires_login()
+def mcintervenciona():
+    from plugin_dm.datamanager import DataManager
+    dm=DataManager(database=db)
+    query=(
+        (db.cintervenciona.id > 0) &
+        (db.especie.id==db.cintervenciona.especie) &
+        (db.genero.id==db.especie.genero) &
+        (db.departamento.id==db.cintervenciona.departamento)
+        )
+    dm.gQuery( query )
+    dm.actionTableName('cintervenciona')
+    dm.gFieldId('id')
+    dm.gFields( [
+        ('cintervenciona','id'),
+        ('genero','nombre'),
+        ('cintervenciona','especie'),
+        ('cintervenciona','departamento'),
+        ('cintervenciona','farea'),
+        ('cintervenciona','aintervencion'),
+        ('cintervenciona','fextraccion')
+        ] )
+    dm.gShowId(False)
+    dm.showDActions(True)
+    dm.rDetailsURL( "/%s/%s/%s.load" % (request.application, request.controller ,'mcdintervencion') )
+    return dict(toolbar=dm.toolBar(), grid=dm.grid())
+
 
 @auth.requires_login()
 def mcbcampo():
@@ -291,7 +320,7 @@ def mccosecha():
     dm.gShowId(False)
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
-def mcdintervencion():
+def mcdintervencionr():
     #Vendra por ajax, recibe un post con el id de intervencio
     #Se fija si tiene registros y arma tantas forms como destinos existan en al base de datos
     tableName='destino'
@@ -305,9 +334,38 @@ def mcdintervencion():
         for c in range(0,ndest):
             record=db[tableName](id)
             if record:
-                form = SQLFORM(db['cdintervencion'], record, showid=False, _id="cdintervencion-%s" % c)
+                form = SQLFORM(db['cdintervencionr'], record, showid=False, _id="cdintervencionr-%s" % c)
             else:
-                form = SQLFORM(db['cdintervencion'], showid=False, _id="cdintervencion-%s" % c)
+                form = SQLFORM(db['cdintervencionr'], showid=False, _id="cdintervencionr-%s" % c)
+            # Ocultar submit
+            submit = form.element('input',_type='submit')
+            submit['_style'] = 'display:none;'
+            # Ocultar idIntervencion
+
+            # Agregar a la lista
+            forms.append(form)
+    except:
+        print "idIntervencionr error"
+        pass
+    dict(forms=forms)
+
+def mcdintervenciona():
+    #Vendra por ajax, recibe un post con el id de intervencio
+    #Se fija si tiene registros y arma tantas forms como destinos existan en al base de datos
+    tableName='destino'
+    idF='id'
+    try:
+        #Que registro
+        idIntervencion=request.post_vars.idIntervencion
+        destinos=db(db[tableName][idF]>0).select(db[tableName][idF])
+        # destinos[0]['idF']
+        forms=[]
+        for c in range(0,ndest):
+            record=db[tableName](id)
+            if record:
+                form = SQLFORM(db['cdintervenciona'], record, showid=False, _id="cdintervenciona-%s" % c)
+            else:
+                form = SQLFORM(db['cdintervenciona'], showid=False, _id="cdintervenciona-%s" % c)
             # Ocultar submit
             submit = form.element('input',_type='submit')
             submit['_style'] = 'display:none;'

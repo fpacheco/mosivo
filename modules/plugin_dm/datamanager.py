@@ -24,6 +24,7 @@ class DataManager(object):
     _showId=False
     _showSearch=True
     _query=None
+    _rSelectables=False
 
     # Data export
     exportClasses = dict(
@@ -145,6 +146,9 @@ class DataManager(object):
         #new, edit, delete and deleteall actions
         self._rActionURL=url
 
+    def rSelectables(self, val):
+        self._rSelectables=val
+
 
     def showMActions(self, val):
         self._showMActions=val
@@ -216,18 +220,6 @@ class DataManager(object):
         )
 
 
-    def tDeleteAllButton(self):
-        return A(
-            SPAN(
-                I(_class='icon-trash icon-white'),
-                current.T('Delete all')
-            ),
-            _class='btn btn-warning btn-mini',
-            _title=current.T('Delete all records in this table'),
-            _onclick="return deleteAllDialogShow('%s','%s');" % (self._rActionURL, self._actionTableName)
-        )
-
-
     def rDetailsButton(self,rid):
         return A(
             I(_class='icon-th-large icon-white'),
@@ -257,10 +249,10 @@ class DataManager(object):
         return DIV(
             BUTTON(
                 SPAN(
-                    I(_class='icon-download icon-white'),
+                    I(_class='icon-download icon-black'),
                     current.T('Export')
                 ),
-                _class="btn btn-inverse btn-mini",
+                _class="btn btn-mini",
                 _title=current.T('Export data to file'),
             ),
             BUTTON(
@@ -268,7 +260,7 @@ class DataManager(object):
                     _class="caret"
                 ),
                 **{
-                    '_class':'btn btn-inverse btn-mini dropdown-toggle',
+                    '_class':'btn btn-mini dropdown-toggle',
                     '_data-toggle':'dropdown'
                 }
             ),
@@ -296,10 +288,10 @@ class DataManager(object):
         return DIV(
             BUTTON(
                 SPAN(
-                    I(_class='icon-upload icon-white'),
+                    I(_class='icon-upload icon-black'),
                     current.T('Import')
                 ),
-                _class="btn btn-inverse btn-mini",
+                _class="btn btn-mini",
                 _title=current.T('Import data from file'),
             ),
             BUTTON(
@@ -307,13 +299,95 @@ class DataManager(object):
                     _class="caret"
                 ),
                 **{
-                    '_class':'btn btn-inverse btn-mini dropdown-toggle',
+                    '_class':'btn btn-mini dropdown-toggle',
                     '_data-toggle':'dropdown'
                 }
             ),
             UL(
                 _class="dropdown-menu",
                 *[LI(x) for x in import_links]
+            ),
+            _class="btn-group"
+        )
+
+    def tUtilButton(self):
+        #If rows are selectables then utils button
+        util_links=[]
+        util_links.append( A(current.T('Select all'), _onclick='selectAll',_id='selectAll') )
+        if self._rSelectables:
+            util_links.append( A(current.T('Clone selected'), _onclick='cloneSelected', _id='cloneSelected') )
+        else:
+            pass
+
+        return DIV(
+            BUTTON(
+                SPAN(
+                    I(_class='icon-upload icon-black'),
+                    current.T('Utils')
+                ),
+                _class="btn btn-mini",
+                _title=current.T('Utilities for selected rows'),
+            ),
+            BUTTON(
+                SPAN(
+                    _class="caret"
+                ),
+                **{
+                    '_class':'btn btn-mini dropdown-toggle',
+                    '_data-toggle':'dropdown'
+                }
+            ),
+            UL(
+                _class="dropdown-menu",
+                *[LI(x) for x in util_links]
+            ),
+            _class="btn-group"
+        )
+
+
+    def tDeleteButton(self):
+        delete_links=[]
+        delete_links.append(
+            A(
+                current.T('Delete all'),
+                _id='deleteAll',
+                _title=current.T('Delete all records in this table'),
+                _onclick="return deleteAllDialogShow('%s','%s');" % (self._rActionURL, self._actionTableName)
+            )
+        )
+        if self._rSelectables:
+            delete_links.append(
+                A(
+                    current.T('Delete selected'),
+                    _id='deleteSelected',
+                    _title=current.T('Delete selected records in this table'),
+                    _onclick='deleteSelected'
+                )
+            )
+        else:
+            pass
+
+        return DIV(
+            BUTTON(
+                SPAN(
+                    I(_class='icon-trash icon-white'),
+                    current.T('Delete')
+                ),
+                _class="btn btn-warning btn-mini",
+                _title=current.T('Delete records'),
+            ),
+            BUTTON(
+                SPAN(
+                    _class="caret"
+                ),
+                **{
+                    '_class':'btn btn-warning btn-mini dropdown-toggle',
+                    '_data-toggle':'dropdown'
+                }
+            ),
+            UL(
+                _class="dropdown-menu",
+                *[LI(x) for x in delete_links]
             ),
             _class="btn-group"
         )
@@ -353,5 +427,6 @@ class DataManager(object):
             self.tNewButton() if self._showMActions else '',
             self.tExportButton(),
             self.tImportButton(),
-            self.tDeleteAllButton() if self._showMActions else '',
+            self.tUtilButton(),
+            self.tDeleteButton() if self._showMActions else '',
         )

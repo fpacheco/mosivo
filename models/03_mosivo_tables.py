@@ -291,11 +291,7 @@ db.caefectiva.aefectiva.requires = IS_FLOAT_IN_RANGE(0, 1, dot='.', error_messag
 db.caefectiva.especie.widget=cSelEsp.widget
 
 ## Una especie, en un departamento se interviene (ralea, corta) a los tantos años (por ejemplo a los 7, 13 y 15 años) y se extrae un porcentaje de lo disponible (0-1)
-db.define_table("cintervencion",
-    Field("tcoeficiente", db.tipocoeficiente, label=T("Tipo de coeficiente"),
-      notnull=True, required=True, requires=IS_IN_DB(db, 'tipocoeficiente.id', '%(nombre)s'),
-      represent=lambda id, r: db.tipocoeficiente(id).nombre
-    ),
+db.define_table("cintervencionr",
     Field("especie", db.especie, label=T("Especie"),
       notnull=True, required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
       represent=lambda id, r: db.especie(id).nombre
@@ -307,19 +303,49 @@ db.define_table("cintervencion",
     Field("aintervencion", type="decimal(5,3)", notnull=True, label=T(u"Tiempo (años)")),
     Field("fextraccion", type="float", notnull=True, label=T("Factor extracción")),
 )
-db.cintervencion.aintervencion.requires = IS_FLOAT_IN_RANGE(0, 50, dot='.', error_message=T('Too small or to large'))
-db.cintervencion.fextraccion.requires = IS_FLOAT_IN_RANGE(0, 1, dot='.', error_message=T('Too small or to large'))
-db.cintervencion.especie.widget=cSelEsp.widget
+db.cintervencionr.aintervencion.requires = IS_FLOAT_IN_RANGE(0, 50, dot='.', error_message=T('Too small or to large'))
+db.cintervencionr.fextraccion.requires = IS_FLOAT_IN_RANGE(0, 1, dot='.', error_message=T('Too small or to large'))
+db.cintervencionr.especie.widget=cSelEsp.widget
 
 # Cada raleo puede tener una fracion de cada destino. El primer raleo va a pulpa (destino: Pulpa, fdestino:1), el seguno 60% plpa 40% aserrio (destino:Pulpa, fdestino:0.6; destino:Aserrio, fdestino:0.4)
-db.define_table("cdintervencion",
-    Field("cintervencion", db.cintervencion),
+db.define_table("cdintervencionr",
+    Field("cintervencionr", db.cintervencionr),
     Field("destino", db.destino, label=T("Destino del rodal"),
         required=True, requires=IS_IN_DB(db, 'destino.id', '%(nombre)s'),
         represent=lambda id, r: db.destino(id).nombre
     ),
     Field("fdestino", type="float", notnull=True, label=T("Factor de destino"))
 )
+
+## Una especie, en un departamento se interviene (ralea, corta) a los tantos años (por ejemplo a los 7, 13 y 15 años) y se extrae un porcentaje de lo disponible (0-1)
+db.define_table("cintervenciona",
+    Field("especie", db.especie, label=T("Especie"),
+        notnull=True, required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),
+        represent=lambda id, r: db.especie(id).nombre
+    ),
+    Field("departamento", db.departamento,
+        notnull=True, required=True, requires=IS_IN_DB(db, 'departamento.id', '%(nombre)s'),
+        represent=lambda id, r: db.departamento(id).nombre
+    ),
+    Field("farea", type="float", notnull=True, label=T("Factor de área")),
+    Field("aintervencion", type="decimal(5,3)", notnull=True, label=T(u"Tiempo (años)")),
+    Field("fextraccion", type="float", notnull=True, label=T("Factor extracción")),
+)
+db.cintervenciona.aintervencion.requires = IS_FLOAT_IN_RANGE(0, 50, dot='.', error_message=T('Too small or to large'))
+db.cintervenciona.fextraccion.requires = IS_FLOAT_IN_RANGE(0, 1, dot='.', error_message=T('Too small or to large'))
+db.cintervenciona.farea.requires = IS_FLOAT_IN_RANGE(0, 1, dot='.', error_message=T('Too small or to large'))
+db.cintervenciona.especie.widget=cSelEsp.widget
+
+# Cada raleo puede tener una fracion de cada destino. El primer raleo va a pulpa (destino: Pulpa, fdestino:1), el seguno 60% plpa 40% aserrio (destino:Pulpa, fdestino:0.6; destino:Aserrio, fdestino:0.4)
+db.define_table("cdintervenciona",
+    Field("cintervenciona", db.cintervenciona),
+    Field("destino", db.destino, label=T("Destino del rodal"),
+        required=True, requires=IS_IN_DB(db, 'destino.id', '%(nombre)s'),
+        represent=lambda id, r: db.destino(id).nombre
+    ),
+    Field("fdestino", type="float", notnull=True, label=T("Factor de destino"))
+)
+
 
 # Coeficientes de campo bcampo en m3 de madera solida
 db.define_table("cbcampo",
