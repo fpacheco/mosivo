@@ -24,7 +24,7 @@ class DataManager(object):
     _showId=False
     _showSearch=True
     _query=None
-    _rSelectables=False
+    _rCheckInRows=True
 
     # Data export
     exportClasses = dict(
@@ -84,12 +84,27 @@ class DataManager(object):
         # b['user_signature'] = user_signature
         return URL(**b)
 
+
+    def showMActions(self, val):
+        self._showMActions=val
+
+
+    def showDActions(self, val):
+        self._showDActions=val
+
+
+    def showCheckInRows(self, val):
+        self._rCheckInRows=val
+
+
     def actionTableName(self, tablename):
         if tablename in self._db.tables:
             self._actionTableName=tablename
         else:
             pass
 
+
+    ## Begin grid elements
     def gFieldId(self, id='id'):
         if self._actionTableName:
             self._id=id
@@ -142,30 +157,13 @@ class DataManager(object):
             pass
 
 
-    def rActionURL(self, url):
-        #new, edit, delete and deleteall actions
-        self._rActionURL=url
-
-    def rSelectables(self, val):
-        self._rSelectables=val
-
-
-    def showMActions(self, val):
-        self._showMActions=val
-
-
-    def rDetailsURL(self, url):
-        #details
-        self._rDetailsURL=url
-
-
-    def showDActions(self, val):
-        self._showDActions=val
-
-
     def gShowSearch(self, val):
         #Grid have serach box
         self._showSearch=val
+
+
+    def gPaginate(self,nrows):
+        self._gPaginate=nrows
 
 
     def gRowsLinks(self,rid):
@@ -186,20 +184,20 @@ class DataManager(object):
         """
         return SPAN(
             SPAN(self.rEditButton(rid), self.rDeleteButton(rid)) if self._showMActions else '',
-            self.rDetailsButton(rid) if self._showDActions else ''
+            self.rDetailsButton(rid) if self._showDActions else '',
+            self.rCheckControl(rid) if self._rCheckInRows else ''
         )
+    ## End grid elements
+
+    ## Begin row elements
+    def rActionURL(self, url):
+        #new, edit, delete and deleteall actions
+        self._rActionURL=url
 
 
-    def tNewButton(self):
-        return A(
-            SPAN(
-                I(_class='icon-pencil icon-white'),
-                current.T('Add record')
-            ),
-            _class='btn btn-inverse btn-mini',
-            _title=current.T('Add new record to this table'),
-            _onclick="return newDialogShow('%s','%s');" % (self._rActionURL, self._actionTableName),
-        )
+    def rDetailsURL(self, url):
+        #details
+        self._rDetailsURL=url
 
 
     def rEditButton(self, rid):
@@ -225,8 +223,32 @@ class DataManager(object):
             I(_class='icon-th-large icon-white'),
             _class='btn btn-inverse btn-mini',
             _title=current.T('Edit details records'),
-            _onclick="return detailsDialogEShow('%s', %d);" % (self._rDetailsURL, rid),
-            #_onmouseover="return detailsDialogSShow('%s', %d);" % (self._rActionURL, rid)
+            _onclick="return detailsEDialogShow('%s', %d);" % (self._rDetailsURL, rid),
+            #_onmouseover="return detailsSDialogShow('%s', %d);" % (self._rActionURL, rid)
+        )
+
+
+    def rCheckControl(self, rid):
+        return INPUT(
+            _type="checkbox",
+            _class='row-checkbox',
+            _title=current.T('Select this record'),
+            _id="rowcheck_%s" % rid,
+            _onclick="checkControlOthers();"
+        )
+    ## End row elements
+
+
+    ## Begin toolbar elements
+    def tNewButton(self):
+        return A(
+            SPAN(
+                I(_class='icon-pencil icon-white'),
+                current.T('Add record')
+            ),
+            _class='btn btn-inverse btn-mini',
+            _title=current.T('Add new record to this table'),
+            _onclick="return newDialogShow('%s','%s');" % (self._rActionURL, self._actionTableName),
         )
 
 
@@ -249,10 +271,10 @@ class DataManager(object):
         return DIV(
             BUTTON(
                 SPAN(
-                    I(_class='icon-download icon-black'),
+                    I(_class='icon-download icon-white'),
                     current.T('Export')
                 ),
-                _class="btn btn-mini",
+                _class="btn btn-mini btn-inverse",
                 _title=current.T('Export data to file'),
             ),
             BUTTON(
@@ -260,7 +282,7 @@ class DataManager(object):
                     _class="caret"
                 ),
                 **{
-                    '_class':'btn btn-mini dropdown-toggle',
+                    '_class':'btn btn-mini btn-inverse dropdown-toggle',
                     '_data-toggle':'dropdown'
                 }
             ),
@@ -288,10 +310,10 @@ class DataManager(object):
         return DIV(
             BUTTON(
                 SPAN(
-                    I(_class='icon-upload icon-black'),
+                    I(_class='icon-upload icon-white'),
                     current.T('Import')
                 ),
-                _class="btn btn-mini",
+                _class="btn btn-mini btn-inverse",
                 _title=current.T('Import data from file'),
             ),
             BUTTON(
@@ -299,7 +321,7 @@ class DataManager(object):
                     _class="caret"
                 ),
                 **{
-                    '_class':'btn btn-mini dropdown-toggle',
+                    '_class':'btn btn-mini btn-inverse dropdown-toggle',
                     '_data-toggle':'dropdown'
                 }
             ),
@@ -313,19 +335,20 @@ class DataManager(object):
     def tUtilButton(self):
         #If rows are selectables then utils button
         util_links=[]
-        util_links.append( A(current.T('Select all'), _onclick='selectAll',_id='selectAll') )
-        if self._rSelectables:
-            util_links.append( A(current.T('Clone selected'), _onclick='cloneSelected', _id='cloneSelected') )
+        util_links.append( A(current.T('Select all'), _onclick='selectAllRows(true)',_id='selectAllRows') )
+        util_links.append( A(current.T('Unselect selected'), _onclick='selectAllRows(false)',_id='unselectRows', _style="display:none") )
+        if self._rCheckInRows:
+            util_links.append( A(current.T('Clone selected'), _onclick='cloneSelectedRows', _id='cloneSelectedRows', _style="display:none") )
         else:
             pass
 
         return DIV(
             BUTTON(
                 SPAN(
-                    I(_class='icon-upload icon-black'),
+                    I(_class='icon-check icon-white'),
                     current.T('Utils')
                 ),
-                _class="btn btn-mini",
+                _class="btn btn-mini btn-inverse",
                 _title=current.T('Utilities for selected rows'),
             ),
             BUTTON(
@@ -333,7 +356,7 @@ class DataManager(object):
                     _class="caret"
                 ),
                 **{
-                    '_class':'btn btn-mini dropdown-toggle',
+                    '_class':'btn btn-mini btn-inverse dropdown-toggle',
                     '_data-toggle':'dropdown'
                 }
             ),
@@ -347,6 +370,19 @@ class DataManager(object):
 
     def tDeleteButton(self):
         delete_links=[]
+        if self._rCheckInRows:
+            delete_links.append(
+                A(
+                    current.T('Delete selected'),
+                    _id='gMenu_DeleteSelected',
+                    _title=current.T('Delete selected records in this table'),
+                    _onclick='deleteSelected',
+                    _class='disabled'
+                )
+            )
+        else:
+            pass
+        delete_links.append( SPAN(_class="divider") )
         delete_links.append(
             A(
                 current.T('Delete all'),
@@ -355,18 +391,6 @@ class DataManager(object):
                 _onclick="return deleteAllDialogShow('%s','%s');" % (self._rActionURL, self._actionTableName)
             )
         )
-        if self._rSelectables:
-            delete_links.append(
-                A(
-                    current.T('Delete selected'),
-                    _id='deleteSelected',
-                    _title=current.T('Delete selected records in this table'),
-                    _onclick='deleteSelected'
-                )
-            )
-        else:
-            pass
-
         return DIV(
             BUTTON(
                 SPAN(
@@ -391,10 +415,7 @@ class DataManager(object):
             ),
             _class="btn-group"
         )
-
-
-    def gPaginate(self,nrows):
-        self._gPaginate=nrows
+    ## Begin toolbar elements
 
 
     def grid(self):

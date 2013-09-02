@@ -1094,6 +1094,7 @@ input[type="color"],
 .uneditable-input {
   display: inline-block;
   height: 20px;
+  width:200px;
   padding: 4px 6px;
   margin-bottom: 10px;
   font-size: 14px;
@@ -1132,7 +1133,7 @@ input[type="tel"],
 input[type="color"],
 .uneditable-input {
   background-color: #ffffff;
-  border: 1px solid #cccccc;
+  border: 2px solid #bbbbbb;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
           box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -1200,7 +1201,7 @@ input[type="file"] {
 select {
   width: 220px;
   background-color: #ffffff;
-  border: 1px solid #cccccc;
+  border: 2px solid #bbbbbb;
 }
 
 select[multiple],
@@ -1222,7 +1223,7 @@ input[type="checkbox"]:focus {
   color: #999999;
   cursor: not-allowed;
   background-color: #fcfcfc;
-  border-color: #cccccc;
+  border-color: #bbbbbb;
   -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.025);
      -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.025);
           box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.025);
@@ -2023,6 +2024,8 @@ table {
 
 .table thead th {
   vertical-align: bottom;
+  text-align: center;
+  background-color:#034482;
 }
 
 .table caption + thead tr:first-child th,
@@ -2048,10 +2051,10 @@ table {
 }
 
 .table-bordered {
-  border: 1px solid #dddddd;
+  # border: 1px solid #034482;
   border-collapse: separate;
   *border-collapse: collapse;
-  border-left: 0;
+  border-left: 0px;
   -webkit-border-radius: 4px;
      -moz-border-radius: 4px;
           border-radius: 4px;
@@ -2059,7 +2062,7 @@ table {
 
 .table-bordered th,
 .table-bordered td {
-  border-left: 1px solid #dddddd;
+  border-bottom: 1px solid #034482;
 }
 
 .table-bordered caption + thead tr:first-child th,
@@ -3075,7 +3078,7 @@ table th[class*="span"],
   margin-top: 5px;
   margin-right: -10px;
   border-color: transparent;
-  border-left-color: #cccccc;
+  border-left-color: #bbbbbb;
   border-style: solid;
   border-width: 5px 0 5px 5px;
   content: " ";
@@ -3218,7 +3221,7 @@ button.close {
   background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
   background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
   background-repeat: repeat-x;
-  border: 1px solid #cccccc;
+  border: 2px solid #bbbbbb;
   *border: 0;
   border-color: #e6e6e6 #e6e6e6 #bfbfbf;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
@@ -3247,7 +3250,7 @@ button.close {
 
 .btn:active,
 .btn.active {
-  background-color: #cccccc \9;
+  background-color: #bbbbbb \9;
 }
 
 .btn:first-child {

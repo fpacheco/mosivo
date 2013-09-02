@@ -1,9 +1,9 @@
 /*RFPV - Dialog code*/
+// WARNING: jQuery serialize() dont serialize hidden or disabled elements
 //variables globales para la acción
 var currentRecordId=-1; /* Current record Id */
 var currentURLAction=''; /* Current URL action */
 var currentTableName=''; /* Current URL action */
-
 
 $(document).ready(function() {
     /*
@@ -13,13 +13,16 @@ $(document).ready(function() {
     */
 });
 
-/* New begin */
+/* New Dialog begin */
 function newDialogShow(url,tablename) {
+    /**
+     * New dialog show
+     */
     $("#newDialog").modal();
     currentRecordId=-1;
     currentURLAction=url;
     currentTableName=tablename;
-    // POST via ajax
+    // Get form by ajax POST and fill newResult div
     $.post(
         url,
         {dataAction:'new', tableName:tablename},
@@ -36,7 +39,10 @@ function newDialogClose() {
 };
 
 function newDialogSave() {
-    // POST form via ajax
+    /**
+     * New dialog show
+     */
+    // Send (POST) form by ajax and close the modal dialog
     $.post(
         currentURLAction,
         $('form#datamanager-new').serialize(),
@@ -55,9 +61,9 @@ function newDialogSave() {
     currentURLAction='';
     currentTableName='';
 };
-/* New end */
+/* New Dialog end */
 
-/* Edit begin */
+/* Edit Dialog begin */
 function editDialogShow (url,tablename,recordId) {
     $("#editDialog").modal();
     currentRecordId=recordId;
@@ -99,9 +105,9 @@ function editDialogSave() {
     currentURLAction='';
     currentTableName='';
 };
-/* Edit end */
+/* Edit Dialog end */
 
-/* Delete begin */
+/* Delete Dialog begin */
 function deleteDialogShow(url,tablename,recordId) {
     $("#deleteDialog").modal();
     currentRecordId=recordId;
@@ -142,8 +148,49 @@ function deleteDialogDelete() {
 };
 /* Delete end */
 
-/* Deleteall begin */
+/* Details dialog begin */
+function detailsEDialogShow (url, recordId) {
+    $("#detailsEDialog").modal();
+    currentRecordId=recordId;
+    currentURLAction=url;
+    currentTableName='';
+    // POST via ajax
+    $.post(
+        url,
+        {dataId:recordId},
+        function(data) {
+            $('#detailsEResult').html(data);
+        }
+    );
+    //return false dont process href on a
+    return false;
+};
+
+function detailsEDialogClose() {
+    $('#detailsEDialog #save').attr('disabled',true);
+    $('#detailsEDialog').modal('hide');
+    rid=[];
+    rcint=[];
+    rdest=[];
+    rfdest=[];
+};
+
+function detailsEDialogSave() {
+    // POST form via ajax
+    formCustomPost();
+    detailsEDialogClose();
+    currentRecordId=-1;
+    currentURLAction='';
+    currentTableName='';
+};
+/* Details dialog end */
+
+
+/* Deleteall Dialog begin */
 function deleteAllDialogShow(url,tablename) {
+    /**
+     * Show the deleteAll Dialog
+     */
     $("#deleteAllDialog").modal();
     currentRecordId=-1;
     currentURLAction=url;
@@ -153,6 +200,9 @@ function deleteAllDialogShow(url,tablename) {
 };
 
 function deleteAllDialogClose() {
+    /**
+     * Close the deleteAll Dialog
+     */
     $('#deleteAllDialog').modal('hide');
 };
 
@@ -164,8 +214,6 @@ function deleteAllDialogDelete() {
             //Parse string as JSON
             // var jsonData = jQuery.parseJSON(data);
             if (data.result==true) {
-                // Delete row?
-                //tableDeleteRowById(currentRecordId);
                 // Reload current page
                 location.reload();
             } else {
@@ -179,12 +227,11 @@ function deleteAllDialogDelete() {
     currentURLAction='';
     currentTableName='';
 };
-/* Deleteall end */
+/* Deleteall Dialog end */
 
 /* Utils begin */
 function tableWrite(tit, dat, target) {
-    /** Write html table with tit, dat
-    in this target
+    /** Write html table with tit, dat in this target
     */
     var html = '<table class="show-data">\n';
     len = dat.length;
@@ -197,8 +244,9 @@ function tableWrite(tit, dat, target) {
 }
 
 function tableGetRowById(rowId, initCol, endCol) {
-    /** Get row (total o partoally) by his id (<tr id=1>) and return
-    an array
+    /**
+     * Get row (total o partoally) by his id (<tr id=1>) and return
+     * an array
     */
     cellArr = new Array();
     // Get text of each cell in this table row
@@ -223,7 +271,8 @@ function tableGetRowById(rowId, initCol, endCol) {
 };
 
 function tableGetHeaders(initCol, endCol) {
-    /** Get heders (total o partoally) of a table
+    /**
+     * Get heders (total o partially) of a table
     */
     cellArr = new Array();
     // Get text of each cell in this table row
@@ -252,8 +301,39 @@ function tableGetHeaders(initCol, endCol) {
 };
 
 function tableDeleteRowById(rowId) {
-    /** Delete arow in a table by his id
+    /**
+     * Delete a row in a table by his id
     */
     $('table tr#' + rowId).remove();
 };
+
+function selectAllRows(val) {
+    /**
+     * Selecciona todos los registros en la tabla
+     */
+    $('div.web2py_htmltable input[type=checkbox]').attr('checked', val);
+    checkControlOthers();
+};
+
+function checkControlOthers() {
+    /**
+     * Utilidades y cambios en el menu util segun la accion
+     */
+    var tcb=$('div.web2py_htmltable input[type=checkbox]').length;
+    var ccb=$('div.web2py_htmltable input:checked').length;
+    if (ccb>0) {
+        $('a#unselectRows').show();
+        $('a#cloneSelectedRows').show();
+        if (ccb==tcb) {
+            $('a#selectAllRows').hide();
+        } else {
+            $('a#selectAllRows').show();
+        }
+    } else {
+        $('a#selectAllRows').show();
+        $('a#unselectRows').hide();
+        $('a#cloneSelectedRows').hide();
+    }
+};
+
 /* Utils end */

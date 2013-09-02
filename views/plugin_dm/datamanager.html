@@ -66,5 +66,21 @@
     </div>
 </div>
 
+<!-- DetailsE Dialog -->
+<div id="detailsEDialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="detailsEDialog" aria-hidden="true" style="display: none;">
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">×</a>
+        <h3> {{=T('Details')}}</h3>
+    </div>
+    <div class="modal-body">
+        <div id="detailsEResult" class="center">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#" id="save" class="btn btn-primary" onclick="detailsEDialogSave();" disabled="disabled">{{ =T('Save') }}</a>
+        <a href="#" id="close" class="btn" onclick="detailsEDialogClose();">{{ =T('Cancel') }}</a>
+    </div>
+</div>
+
 <script src="{{=URL('static','js/plugin_dm/datamanager.js')}}"></script>
 <!-- End datamanager -->

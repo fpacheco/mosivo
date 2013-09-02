@@ -93,9 +93,32 @@ def verifymodel():
 
 def averifycoefs():
     import json
+    result=False
     tableName=request.post_vars.tableName
     data={ 'result': result }
-    return json.dump(data)
+    return json.dumps(data)
+
+###
+@auth.requires_login()
+def mdestino():
+    from plugin_dm.datamanager import DataManager
+    dm=DataManager(database=db,tablename='destino')
+    dm.gShowId(False)
+    return dict(toolbar=dm.toolBar(), grid=dm.grid())
+
+def mtiporesiduoforestal():
+    from plugin_dm.datamanager import DataManager
+    dm=DataManager(database=db,tablename='tiporesiduoforestal')
+    dm.gShowId(False)
+    return dict(toolbar=dm.toolBar(), grid=dm.grid())
+
+
+def mcosecha():
+    from plugin_dm.datamanager import DataManager
+    dm=DataManager(database=db,tablename='cosecha')
+    dm.gShowId(False)
+    return dict(toolbar=dm.toolBar(), grid=dm.grid())
+###
 
 
 ## Begin manage coefficients
@@ -167,7 +190,7 @@ def mcintervencionr():
         ] )
     dm.gShowId(False)
     dm.showDActions(True)
-    dm.rDetailsURL( "/%s/%s/%s.load" % (request.application, request.controller ,'mcdintervencion') )
+    dm.rDetailsURL( "/%s/%s/%s.load" % (request.application, request.controller ,'mcdintervencionr') )
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
@@ -195,7 +218,7 @@ def mcintervenciona():
         ] )
     dm.gShowId(False)
     dm.showDActions(True)
-    dm.rDetailsURL( "/%s/%s/%s.load" % (request.application, request.controller ,'mcdintervencion') )
+    dm.rDetailsURL( "/%s/%s/%s.load" % (request.application, request.controller ,'mcdintervenciona') )
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
@@ -321,63 +344,184 @@ def mccosecha():
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 def mcdintervencionr():
-    #Vendra por ajax, recibe un post con el id de intervencio
-    #Se fija si tiene registros y arma tantas forms como destinos existan en al base de datos
-    tableName='destino'
-    idF='id'
+    # Vendra por ajax, recibe un post con el id de intervencion
+    # Se fija si tiene registros y arma tantas forms como destinos existan en al base de datos
     try:
         #Que registro
-        idIntervencion=request.post_vars.idIntervencion
-        destinos=db(db[tableName][idF]>0).select(db[tableName][idF])
-        # destinos[0]['idF']
+        idIntervencion=int(request.post_vars.dataId)
+        #Que destinos hay
+        destinos=db(
+            db['destino']['id']>0
+        ).select(
+            db['destino']['id'],
+            db['destino']['nombre'],
+            orderby=db['destino']['nombre']
+        )
+        ndest=len(destinos)
+        did=[ destinos[i]['id'] for i in range(0,ndest) ]
+        dnombres=[ destinos[i]['nombre'] for i in range(0,ndest) ]
         forms=[]
         for c in range(0,ndest):
-            record=db[tableName](id)
-            if record:
-                form = SQLFORM(db['cdintervencionr'], record, showid=False, _id="cdintervencionr-%s" % c)
+            q=db(
+                ( db['cdintervencionr']['cintervencionr']==idIntervencion ) &
+                ( db['cdintervencionr']['destino']==did[c] )
+            )
+            if q.isempty():
+                form = SQLFORM(db['cdintervencionr'], showid=True, _id="cdintervencionr_%s" % c)
             else:
-                form = SQLFORM(db['cdintervencionr'], showid=False, _id="cdintervencionr-%s" % c)
+                s=q.select()
+                record=db['cdintervencionr']( s[0]['id'] )
+                form = SQLFORM(db['cdintervencionr'], record, showid=True, _id="cdintervencionr_%s" % c)
+                # Ocultar id
+                fid = form.element('span',_id='cdintervencionr_id')
+                fid['_style'] = 'display:none;'
+
             # Ocultar submit
             submit = form.element('input',_type='submit')
             submit['_style'] = 'display:none;'
             # Ocultar idIntervencion
-
+            fcintervencionr = form.element('input',_id='cdintervencionr_cintervencionr')
+            fcintervencionr['_value'] = idIntervencion
+            fcintervencionr['_style'] = 'display:none;'
+            fcintervencionr['_disabled'] = 'disabled'
+            # Valor del destino
+            fdestino = form.element('select',_id='cdintervencionr_destino')
+            fdestino['_disabled'] = 'disabled'
+            fdestino['_style'] = 'display:none;'
+            val = fdestino.element('option',_value="%s" % did[c])
+            val['_selected'] = 'selected'
+            # Valor del fdestino
+            ffdestino = form.element('input',_id='cdintervencionr_fdestino')
+            ffdestino['_onblur'] = "checkFDestino(%d);" % c
             # Agregar a la lista
             forms.append(form)
-    except:
-        print "idIntervencionr error"
-        pass
-    dict(forms=forms)
+        return dict(dnombres=dnombres, forms=forms)
+    except Exception as e:
+        print "%s" % e
+        try:
+            print "request.post_vars: %s" % request.post_vars
+            print "request.post_vars.cdir_fdestino: %s" % request.post_vars['cdir_fdestino[]']
+            if 'cdir_id[]' in request.post_vars.keys():
+                ids=[ int(e) if len(e)>0 else None for e in request.post_vars['cdir_id[]'] ]
+            else:
+                ids=[ None for i in range( 0, len(request.post_vars['cdir_fdestino[]']) ) ]
+            cintervencionrs=[ int(e) if len(e)>0 else None for e in request.post_vars['cdir_cintervencionr[]'] ]
+            destinos=[ int(e) if len(e)>0 else None for e in request.post_vars['cdir_destino[]'] ]
+            fdestinos=[ float(e) if len(e)>0 else None for e in request.post_vars['cdir_fdestino[]'] ]
+            cont=0
+            for f in fdestinos:
+                if f==None:
+                    if ids[cont]!=None:
+                        print "deleting"
+                        db( db['cdintervencionr']['id']==ids[cont] ).delete()
+                    else:
+                        pass
+                else:
+                    if ids[cont]!=None:
+                        print "updating"
+                        db( db['cdintervencionr']['id']==ids[cont] ).update(
+                            fdestino=fdestinos[cont]
+                        )
+                    else:
+                        print "inserting"
+                        db['cdintervencionr'].insert(
+                            cintervencionr=cintervencionrs[cont],
+                            destino=destinos[cont],
+                            fdestino=fdestinos[cont]
+                        )
+                cont=cont+1
+        except Exception as e:
+            print "%s" % e
+
 
 def mcdintervenciona():
-    #Vendra por ajax, recibe un post con el id de intervencio
-    #Se fija si tiene registros y arma tantas forms como destinos existan en al base de datos
-    tableName='destino'
-    idF='id'
+    # Vendra por ajax, recibe un post con el id de intervencion
+    # Se fija si tiene registros y arma tantas forms como destinos existan en al base de datos
     try:
         #Que registro
-        idIntervencion=request.post_vars.idIntervencion
-        destinos=db(db[tableName][idF]>0).select(db[tableName][idF])
-        # destinos[0]['idF']
+        idIntervencion=int(request.post_vars.dataId)
+        #Que destinos hay
+        destinos=db(
+            db['destino']['id']>0
+        ).select(
+            db['destino']['id'],
+            db['destino']['nombre'],
+            orderby=db['destino']['nombre']
+        )
+        ndest=len(destinos)
+        did=[ destinos[i]['id'] for i in range(0,ndest) ]
+        dnombres=[ destinos[i]['nombre'] for i in range(0,ndest) ]
         forms=[]
         for c in range(0,ndest):
-            record=db[tableName](id)
-            if record:
-                form = SQLFORM(db['cdintervenciona'], record, showid=False, _id="cdintervenciona-%s" % c)
+            q=db(
+                ( db['cdintervenciona']['cintervenciona']==idIntervencion ) &
+                ( db['cdintervenciona']['destino']==did[c] )
+            )
+            if q.isempty():
+                form = SQLFORM(db['cdintervenciona'], showid=True, _id="cdintervenciona_%s" % c)
             else:
-                form = SQLFORM(db['cdintervenciona'], showid=False, _id="cdintervenciona-%s" % c)
+                s=q.select()
+                record=db['cdintervenciona']( s[0]['id'] )
+                form = SQLFORM(db['cdintervenciona'], record, showid=True, _id="cdintervenciona_%s" % c)
+                # Ocultar id
+                fid = form.element('span',_id='cdintervenciona_id')
+                fid['_style'] = 'display:none;'
+
             # Ocultar submit
             submit = form.element('input',_type='submit')
             submit['_style'] = 'display:none;'
             # Ocultar idIntervencion
-
+            fcintervenciona = form.element('input',_id='cdintervenciona_cintervenciona')
+            fcintervenciona['_value'] = idIntervencion
+            fcintervenciona['_style'] = 'display:none;'
+            fcintervenciona['_disabled'] = 'disabled'
+            # Valor del destino
+            fdestino = form.element('select',_id='cdintervenciona_destino')
+            fdestino['_disabled'] = 'disabled'
+            fdestino['_style'] = 'display:none;'
+            val = fdestino.element('option',_value="%s" % did[c])
+            val['_selected'] = 'selected'
+            # Valor del fdestino
+            ffdestino = form.element('input',_id='cdintervenciona_fdestino')
+            ffdestino['_onblur'] = "checkFDestino(%d);" % c
             # Agregar a la lista
             forms.append(form)
-    except:
-        print "idIntervencion error"
-        pass
-    dict(forms=forms)
-
-
+        return dict(dnombres=dnombres, forms=forms)
+    except Exception as e:
+        print "%s" % e
+        try:
+            print "request.post_vars: %s" % request.post_vars
+            print "request.post_vars.cdia_fdestino: %s" % request.post_vars['cdia_fdestino[]']
+            if 'cdia_id[]' in request.post_vars.keys():
+                ids=[ int(e) if len(e)>0 else None for e in request.post_vars['cdia_id[]'] ]
+            else:
+                ids=[ None for i in range( 0, len(request.post_vars['cdia_fdestino[]']) ) ]
+            cintervencionas=[ int(e) if len(e)>0 else None for e in request.post_vars['cdia_cintervenciona[]'] ]
+            destinos=[ int(e) if len(e)>0 else None for e in request.post_vars['cdia_destino[]'] ]
+            fdestinos=[ float(e) if len(e)>0 else None for e in request.post_vars['cdia_fdestino[]'] ]
+            cont=0
+            for f in fdestinos:
+                if f==None:
+                    if ids[cont]!=None:
+                        print "deleting"
+                        db( db['cdintervenciona']['id']==ids[cont] ).delete()
+                    else:
+                        pass
+                else:
+                    if ids[cont]!=None:
+                        print "updating"
+                        db( db['cdintervenciona']['id']==ids[cont] ).update(
+                            fdestino=fdestinos[cont]
+                        )
+                    else:
+                        print "inserting"
+                        db['cdintervenciona'].insert(
+                            cintervenciona=cintervencionas[cont],
+                            destino=destinos[cont],
+                            fdestino=fdestinos[cont]
+                        )
+                cont=cont+1
+        except Exception as e:
+            print "%s" % e
 
 ## End manage coefficients

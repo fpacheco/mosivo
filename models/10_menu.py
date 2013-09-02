@@ -191,21 +191,14 @@ menuAdmin = [
                     ( T('Biomasa en la industria'), URL('modelconf','mcbindustria')==URL(), URL('modelconf','mcbindustria'), [] ),
                 ]
             ),
-            LI(_class="divider"),
             ( T('Others'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'),
                 [
-                    ( T('Área efectiva por especie y departamento'), URL('modelconf','mcaefectiva')==URL(), URL('modelconf','mcaefectiva'), [] ),
-                    ( T('IMA por especie y departamento'), URL('modelconf','mcima')==URL(), URL('modelconf','mcima'), [] ),
-                    ( T('Intervención por especie y departamento'), URL('modelconf','mcintervencion')==URL(), URL('modelconf','mcintervencion'), [] ),
-                    LI(_class="divider"),
-                    ( T('Cosecha por especie y destino'), URL('modelconf','mccosecha')==URL(), URL('modelconf','mccosecha'), [] ),
-                    ( T('Suelo por sección judicial'), URL('modelconf','mcgsuelo')==URL(), URL('modelconf','mcgsuelo'), [] ),
-                    ( T('Biomasa por especie'), URL('modelconf','mcbcampoe')==URL(), URL('modelconf','mcbcampoe'), [] ),
-                    LI(_class="divider"),
-                    ( T('Biomasa en campo'), URL('modelconf','mcbcampo')==URL(), URL('modelconf','mcbcampo'), [] ),
-                    ( T('Biomasa en la industria'), URL('modelconf','mcbindustria')==URL(), URL('modelconf','mcbindustria'), [] ),
+                    ( T('Destinations'), URL('modelconf','mdestino')==URL(), URL('modelconf','mdestino'), [] ),
+                    ( T('Forest residues'), URL('modelconf','mtiporesiduoforestal')==URL(), URL('modelconf','mtiporesiduoforestal'), [] ),
+                    ( T('Harvest type'), URL('modelconf','mcosecha')==URL(), URL('modelconf','mcosecha'), [] ),
                 ]
             ),
+            LI(_class="divider"),
             ( T('Verificar cumplimiento'), URL('modelconf','verifymodel')==URL(), URL('modelconf','verifymodel'), [] ),
         ]
     ),
