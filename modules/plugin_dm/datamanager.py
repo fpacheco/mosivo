@@ -132,6 +132,25 @@ class DataManager(object):
             else:
                 print "The is no table (%s) in database" % tablename
         self._gFields=flist
+        if len(self._gFields)>0:
+            self._gHideOthersFields()
+
+
+    def _gHideOthersFields(self):
+        from sets import Set
+        # Get tables in query
+        dbset = self._db(self._query)
+        tablenames = self._db._adapter.tables(dbset.query)
+        tables = [self._db[tablename] for tablename in tablenames]
+        fields= []
+        for table in tables:
+            for f in table:
+                fields.append(f)
+        allF = Set( fields )
+        toShow = Set(self._gFields)
+        toHide = allF - toShow
+        for f in toHide:
+            f.readable=False
 
 
     def gHeaders(self, head):

@@ -85,12 +85,11 @@ db.define_table("tiporesiduoforestal",
     format='%(nombre)s'
 )
 
-#Tipos de coeficientes es decir se aplican a nivel de Area o de rodal
-db.define_table("tipocoeficiente",
-    Field("nombre", type="string", length=25, unique=True, notnull=True, label=T("Tipo coeficiente")),
+#Tipos de intervencion raleo, tala rasa, rebrote
+db.define_table("tipointervencion",
+    Field("nombre", type="string", length=25, unique=True, notnull=True, label=T("Tipo intervencion")),
     format='%(nombre)s'
 )
-
 
 from cascadingselect import CascadingSelect
 # Widget para especie
@@ -129,9 +128,9 @@ db.define_table("rodald",
     # referencia a la especie
     Field('especie', db.especie, notnull=True),
     # Anio en que se planto el monte
-    Field('anioplant', notnull=True, type='integer'),
+    Field('anioplant', type='integer', notnull=True),
     # Area afectada por el monte
-    Field('areaafect', notnull=True, type='float'),
+    Field('areaafect', type='float', notnull=True),
 )
 
 # Ubicacion montes declarados
@@ -162,6 +161,8 @@ db.gruposuelorodald.gsuelo.requires=IS_NOT_IN_DB(
 db.define_table("intervrodald",
     Field('rodal', db.rodald, notnull=True),
     # tiempo en anios desde que se planta
+    Field('tintervencion', db.tipointervencion, notnull=True),
+    # tiempo en anios desde que se planta
     Field('aintervencion', type='float', notnull=True, label=u'Corte (años)'),
     # volumen de corta en m3/ha
     # Field('volumen', type='float', notnull=True, label=u'Volumen(m3)'),
@@ -172,8 +173,8 @@ db.define_table("destinointervrodald",
     Field('irodal', db.intervrodald, notnull=True),
     # destino
     Field('destino', db.destino, notnull=True),
-    # volumen de corta en m3/ha
-    Field('volumen', type='float', notnull=True, label=u'Volumen(m3)'),
+    # volumen de corta en m3
+    Field('volumen', type='float', notnull=True, label=u'Volumen(m3 MS)'),
 )
 
 # Montes proyectados
@@ -300,6 +301,10 @@ db.define_table("cintervencionr",
       notnull=True, required=True, requires=IS_IN_DB(db, 'departamento.id', '%(nombre)s'),
       represent=lambda id, r: db.departamento(id).nombre
     ),
+    Field("tintervencion", db.tipointervencion,
+      notnull=True, required=True, requires=IS_IN_DB(db, 'tipointervencion.id', '%(nombre)s'),
+      represent=lambda id, r: db.tipointervencion(id).nombre, label=T("Tipo intervención")
+    ),
     Field("aintervencion", type="decimal(5,3)", notnull=True, label=T(u"Tiempo (años)")),
     Field("fextraccion", type="float", notnull=True, label=T("Factor extracción")),
 )
@@ -326,6 +331,10 @@ db.define_table("cintervenciona",
     Field("departamento", db.departamento,
         notnull=True, required=True, requires=IS_IN_DB(db, 'departamento.id', '%(nombre)s'),
         represent=lambda id, r: db.departamento(id).nombre
+    ),
+    Field("tintervencion", db.tipointervencion,
+      notnull=True, required=True, requires=IS_IN_DB(db, 'tipointervencion.id', '%(nombre)s'),
+      represent=lambda id, r: db.tipointervencion(id).nombre, label=T("Tipo intervención")
     ),
     Field("farea", type="float", notnull=True, label=T("Factor de área")),
     Field("aintervencion", type="decimal(5,3)", notnull=True, label=T(u"Tiempo (años)")),

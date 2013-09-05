@@ -185,6 +185,7 @@ def mcintervencionr():
         ('genero','nombre'),
         ('cintervencionr','especie'),
         ('cintervencionr','departamento'),
+        ('cintervencionr','tintervencion'),
         ('cintervencionr','aintervencion'),
         ('cintervencionr','fextraccion')
         ] )
@@ -213,6 +214,7 @@ def mcintervenciona():
         ('cintervenciona','especie'),
         ('cintervenciona','departamento'),
         ('cintervenciona','farea'),
+        ('cintervenciona','tintervencion'),
         ('cintervenciona','aintervencion'),
         ('cintervenciona','fextraccion')
         ] )

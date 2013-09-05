@@ -311,26 +311,27 @@ def tiporesiduoforestal():
             db.rollback()
 
 
-def tipocoeficiente():
+def tipointervencion():
     q = db(
-            db.tipocoeficiente
+            db.tipointervencion
         ).select(
-            db.tipocoeficiente.ALL
+            db.tipointervencion.ALL
         )
 
     if len(q) == 0:
         # Set sequence in departamento
-        db.executesql("ALTER SEQUENCE tipocoeficiente_id_seq MINVALUE 0;")
-        db.executesql("SELECT setval('tipocoeficiente_id_seq', 0, true);")
+        db.executesql("ALTER SEQUENCE tipointervencion_id_seq MINVALUE 0;")
+        db.executesql("SELECT setval('tipointervencion_id_seq', 0, true);")
         # Lista de coef
         tipo = [
-            u'Área',
-            'Rodal',
+            'Raleo',
+            'Tala rasa',
+            'Rebrote'
         ]
         db.commit()
         try:
             for d in tipo:
-                db.tipocoeficiente.insert(nombre=d)
+                db.tipointervencion.insert(nombre=d)
             db.commit()
         except:
             db.rollback()
@@ -553,6 +554,7 @@ genero()
 especie()
 seccionjudicial()
 cosecha()
-tipocoeficiente()
+tipointervencion()
 tiporesiduoforestal()
 gruposuelo()
+
