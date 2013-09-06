@@ -161,12 +161,8 @@ menuAdmin = [
             ),
             ( T('Data'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'),
                 [
-                    ( T('Años raleo'), URL('modelconf','cfdestino')==URL(), URL('modelconf','cfdestino'), [] ),
-                    ( T('Destino'), URL('modelconf','cfdestino')==URL(), URL('modelconf','cfdestino'), [] ),
-                    ( T('Effective area'), URL('modelconf','caefectiva')==URL(), URL('modelconf','caefectiva'), [] ),
-                    ( T('IMA'), URL('modelconf','cima')==URL(), URL('modelconf','cima'), [] ),
-                    ( T('Raleo'), URL('modelconf','craleo')==URL(), URL('modelconf','craleo'), [] ),
-                    ( T('Turno'), URL('modelconf','cturno')==URL(), URL('modelconf','cturno'), [] ),
+                    ( T('Plans'), URL('data','vplanes')==URL(), URL('data','vplanes'), [] ),
+                    ( T('Declared stands'), URL('data','vrodald')==URL(), URL('data','vrodald'), [] ),
                 ]
             ),
         ]
@@ -186,6 +182,7 @@ menuAdmin = [
                     ( T('Cosecha por especie y destino'), URL('modelconf','mccosecha')==URL(), URL('modelconf','mccosecha'), [] ),
                     ( T('Suelo por sección judicial'), URL('modelconf','mcgsuelo')==URL(), URL('modelconf','mcgsuelo'), [] ),
                     ( T('Biomasa por especie'), URL('modelconf','mcbcampoe')==URL(), URL('modelconf','mcbcampoe'), [] ),
+                    ( T('Intervention type'), URL('modelconf','mtipointervencion')==URL(), URL('modelconf','mtipointervencion'), [] ),
                     LI(_class="divider"),
                     ( T('Biomasa en campo'), URL('modelconf','mcbcampo')==URL(), URL('modelconf','mcbcampo'), [] ),
                     ( T('Biomasa en la industria'), URL('modelconf','mcbindustria')==URL(), URL('modelconf','mcbindustria'), [] ),

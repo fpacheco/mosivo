@@ -112,13 +112,13 @@ db.define_table("cosecha",
 # Planes presentados a al DGF
 db.define_table("plan",
     # El numero del Plan de manejo
-    Field('numerocarpeta', type='integer', unique=True, notnull=True),
+    Field('ncarpeta', type='integer', unique=True, notnull=True, label=T('Número de carpeta')),
     # Seccion judicial para ese departamento
-    Field('sjudicial', db.seccionjudicial),
+    Field('sjudicial', db.seccionjudicial, label=T('Sección judicial')),
     # Longitud en grados decimales
-    Field('lon', type='double'),
+    Field('lon', type='double', label=T('Longitud (º)')),
     # Latitud en grados decimales
-    Field('lat', type='double'),
+    Field('lat', type='double', label=T('Latitud(º)')),
 )
 
 # Montes declarados

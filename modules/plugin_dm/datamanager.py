@@ -20,7 +20,7 @@ class DataManager(object):
     _gDefaultOrder=None
     _gFields=[]
     _gHeaders={}
-    _gPaginate=25
+    _gPaginate=30
     _showId=False
     _showSearch=True
     _query=None
@@ -111,6 +111,7 @@ class DataManager(object):
             self._gFieldId=self._db[self._actionTableName][id]
         else:
             pass
+
 
     def gQuery(self, q):
         # Not a table. It is a query
@@ -434,7 +435,7 @@ class DataManager(object):
             ),
             _class="btn-group"
         )
-    ## Begin toolbar elements
+    ## End toolbar elements
 
 
     def grid(self):

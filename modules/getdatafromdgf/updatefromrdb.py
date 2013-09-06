@@ -1,229 +1,197 @@
 # -*- coding: utf-8 -*-
 """This module update relevant data from remote database (DGF) database to local database (mosivo)
 """
+from gluon.dal import DAL
 
 class UpdateFromRDB():
     """This class update all the tables necesary to the simulation
     """
 
-    def __init__(self,ldb,rdb):
+    def __init__(self, mDatabase, inDGF=True):
         """Class initialization function
 
-        :param ldb: local database.
-        :type ldb: DAL connection.
-        :param rdb: remote database.
-        :type rdb: DAL connection.
+        :param mDatabase: local database (MoSiVo).
+        :type mDatabase: DAL connection.
+        :param inDGF: App is in DGF.
+        :type inDGF: Bool.
         """
-        self.ldb = ldb
-        self.rdb = rdb
+        self._db = mDatabase
+        # DGF connection. Please use read only user
+        user='mosivo'
+        passw=''
+        if inDGF:
+            self.rdb = DAL("mssql://%s:%s@192.168.20.7/DGF" % (user, passw), migrate_enabled=False, migrate=False)
+        else:
+            self.rdb = DAL('sqlite://dgf_database.db', migrate_enabled=False, migrate=False)
 
-    # def uDepartamento(self):
-    #     """Get data DGF.Deptos
-    #     """
-    #     # print "uDepartamento"
-    #     # print self.rdb.tables()
-    #     # print self.rdb.Deptos.fields()
 
-    #     rQ = self.rdb(
-    #         self.rdb.Deptos
-    #     ).select(
-    #         self.rdb.Deptos.Codigo,
-    #         self.rdb.Deptos.Nombre,
-    #         self.rdb.Deptos.Numero,
-    #         orderby = self.rdb.Deptos.Nombre
-    #     )
+    def __dsj2id(self, idDepto, idSj):
+        if idDepto and idSj:
+            r = self._db(
+                ( self._db['seccionjudicial']['id']>0 ) &
+                ( self._db['seccionjudicial']['nombre']==int(idSj) ) &
+                ( self._db['seccionjudicial']['departamento']==int(idDepto) )
+            ).select(
+                self._db['seccionjudicial']['id']
+            )
+            if len(r)==1:
+                return int( r[0]['id'] )
+            else:
+                return None
+        else:
+            return None
 
-    #     if len(rQ) > 0:
-    #         # Set sequence in departamento
-    #         self.ldb.executesql("ALTER SEQUENCE departamento_id_seq MINVALUE 0;")
-    #         self.ldb.executesql("SELECT setval('departamento_id_seq', 0, true);")
-    #         # Delete all data in table departamento
-    #         self.ldb(self.ldb.departamento).delete()
-    #         for row in rQ:
-    #             self.ldb.departamento.insert(
-    #                 codigo = row.Codigo,
-    #                 nombre = row.Nombre,
-    #                 numero = row.Numero
-    #             )
-    #         self.ldb.commit()
-
-    def uGenero(self):
-        """Get genero data from DGF.Plantas    
-        """
-        rQ = self.rdb(
-            (self.rdb.Planes.CodG_Dec == self.rdb.Plantas.CodG)
-        ).select(
-            self.rdb.Planes.CodG_Dec,
-            self.rdb.Plantas.Genero,           
-            orderby=self.rdb.Planes.CodG_Dec,
-            distinct=True
-        )
-
-        if len(rQ) > 0:
-            # Set sequence in genero
-            self.ldb.executesql("ALTER SEQUENCE genero_id_seq MINVALUE 0;")
-            self.ldb.executesql("SELECT setval('genero_id_seq', 0, true);")
-            # Delete all data in table genero
-            self.ldb(self.ldb.genero).delete()
-            for row in rQ:
-                # print "%s | %s" % (row.Plantas.Genero,row.Planes.CodG_Dec)
-                self.ldb.genero.insert(
-                    nombre=row.Plantas.Genero,
-                    codigo=row.Planes.CodG_Dec
-                )
-            self.ldb.commit()
-
-    def uEspecie(self):
-        """Get especie data from DGF.Plantas    
-        """
-        rQ = self.rdb(
-            (self.rdb.Planes.CodG_Dec == self.rdb.Plantas.CodG) &
-            (self.rdb.Planes.CodE_Dec == self.rdb.Plantas.CodE)
-        ).select(
-            self.rdb.Planes.CodG_Dec,
-            self.rdb.Planes.CodE_Dec,
-            self.rdb.Plantas.Especie,            
-            orderby=self.rdb.Planes.CodG_Dec,
-            distinct=True
-        )
-
-        if len(rQ) > 0:
-            # Set sequence in genero
-            self.ldb.executesql("ALTER SEQUENCE especie_id_seq MINVALUE 0;")
-            self.ldb.executesql("SELECT setval('especie_id_seq', 0, true);")
-            # Delete all data in table genero
-            self.ldb(self.ldb.especie).delete()
-            gcti = self.gCodToId()
-            for row in rQ:
-                print "%d,%s,%s" % (gcti[row.Planes.CodG_Dec],row.Plantas.Especie,row.Planes.CodE_Dec) 
-                self.ldb.especie.insert(
-                    genero = gcti[row.Planes.CodG_Dec],
-                    nombre = row.Plantas.Especie,
-                    codigo = row.Planes.CodE_Dec
-                )
-            self.ldb.commit()
-
-    def dCodToId(self):
-        """Util function that return a dictionary with ids of codes of departamento
-        
-        :returns:  dict -- keys = code, values = ids.
-        """
-        codtoid = {} 
-        lQ = self.ldb(
-            self.ldb.departamento
-        ).select(
-            self.ldb.departamento.id,
-            self.ldb.departamento.codigo
-        )
-        for row in lQ:
-            codtoid[row.codigo] = row.id
-        return (codtoid)
-
-    def gCodToId(self):
-        """Util function that return a dictionary with ids of codes of genero
-        :returns:  dict -- keys = code, values = ids.
-        """
-        codtoid = {} 
-        lQ = self.ldb(
-            self.ldb.genero
-        ).select(
-            self.ldb.genero.id,
-            self.ldb.genero.codigo
-        )
-        for row in lQ:
-            codtoid[row.codigo] = row.id
-        return (codtoid)
-
-    def cNumToId(self,cnum):
-        """Util function that return id for a numero de carpeta in carpeta
-        :returns:  int -- id of the number of .
-        """
-        lQ = self.ldb(
-            self.ldb.carpeta
-        ).select(
-            self.ldb.carpeta.id,
-            self.ldb.carpeta.numero_carpeta
-        ).first()
-        return (lQ.id)
-
-    def uCarpeta(self):
-        """Get carpeta data from DGF.Carpetas_P
-        """
-        # & AND, | OR    
-        rQ = self.rdb(
-            (self.rdb.Carpetas_P.Nro_Carpeta==self.rdb.Planes_Pro.Codigo_Cp) &
-            (self.rdb.Planes_Pro.Codigo==self.rdb.Planes.Codigo_Plan_Pro) &
-            (self.rdb.Planes.Ha_Dec>0) &
-            (self.rdb.Planes.Ano_Dec>1900) & (self.rdb.Planes.Ano_Dec<2100)
-        ).select(
-            self.rdb.Carpetas_P.Nro_Carpeta,
-            self.rdb.Carpetas_P.Cod_Depto,
-            self.rdb.Carpetas_P.Cod_Sj,
-            self.rdb.Carpetas_P.Longitud,
-            self.rdb.Carpetas_P.Latitud,
-            orderby = self.rdb.Carpetas_P.Nro_Carpeta,
-            distinct = True
-        )        
-    
-        if len(rQ) > 0:
-            # Set sequence in departamento
-            self.ldb.executesql("ALTER SEQUENCE carpeta_id_seq MINVALUE 0;")
-            self.ldb.executesql("SELECT setval('carpeta_id_seq', 0, true);")
-            # Delete all data in table carpeta
-            self.ldb(self.ldb.carpeta).delete()
-            # Get id for cod departamento
-            dcodtoid = self.dCodToId()
-            for row in rQ:
-                # print "%i | %s" % (row.Nro_Carpeta,row.Cod_Depto)
-                self.ldb.carpeta.insert(
-                    numero_carpeta = row.Nro_Carpeta,
-                    departamento = dcodtoid[row.Cod_Depto.upper()],    
-                    sec_judicial = row.Cod_Sj,
-                    lon = row.Longitud,
-                    lat = row.Latitud
-                )
-            self.ldb.commit()
 
     def uPlan(self):
-        """Get plan data from DGF.Planes
+        """Inserta todas las carpetas no nulas y que no esten con bajas
         """
-        rQ = self.rdb(
-            (self.rdb.Carpetas_P.Nro_Carpeta==self.rdb.Planes_Pro.Codigo_cp) &
-            (self.rdb.Planes_Pro.Codigo==self.rdb.Planes.Codigo_Plan_Pro) &
-            (self.rdb.Planes.Ha_Dec>0) &
-            (self.rdb.Planes.Ano_Dec>1900) & (self.rdb.Planes.Ano_Dec<2100)
+        sql = "SELECT DISTINCT cp.Nro_Carpeta, d.Numero, cp.Cod_Sj, cp.Longitud, cp.Latitud FROM Carpetas_P cp, Deptos d             WHERE d.Codigo=cp.Cod_Depto AND cp.Baja=0 AND cp.Nro_Carpeta IS NOT NULL AND cp.Cod_Depto IS NOT NULL AND cp.Cod_Sj IS NOT NULL ORDER BY cp.Nro_Carpeta"
+        rows = self.rdb.executesql(sql)
+
+        if len(rows) > 0:
+            # Set sequence in departamento
+            self._db.executesql("ALTER SEQUENCE plan_id_seq MINVALUE 0")
+            self._db.executesql("SELECT setval('plan_id_seq', 0, true)")
+            # Delete all data in table carpeta
+            self._db( self._db['plan'] ).delete()
+            self._db.commit()
+            try:
+                for r in rows:
+                    self._db['plan'].insert(
+                        ncarpeta=r[0],
+                        sjudicial=self.__dsj2id(r[1],r[2]),
+                        lon = r[3],
+                        lat = r[4]
+                    )
+                self._db.commit()
+            except Exception as e:
+                print "Error: %s" % e
+                self._db.rollback()
+
+    def __ge2idE(self, gen, esp):
+        g=gen.strip()
+        e=esp.strip()
+        if len(g)>0 and len(e)>0:
+            r = self._db(
+                ( self._db['especie']['id']>0 ) &
+                ( self._db['especie']['genero']==self._db['genero']['id'] ) &
+                ( self._db['genero']['nombre']==g ) &
+                ( self._db['especie']['nombre']==e)
+            ).select(
+                self._db['especie']['id']
+            )
+            if len(r)==1:
+                return int( r[0]['id'] )
+            else:
+                return None
+        else:
+            return None
+
+
+    def uRodalD(self):
+        """Inserta rodales declarados para cada carpeta
+        """
+        lrows = self._db(
+                ( self._db['plan']['id']>0 )
         ).select(
-            self.rdb.Planes.Codigo,
-            self.rdb.Carpetas_P.Nro_Carpeta,
-            self.rdb.Planes.CodG_Dec,
-            self.rdb.Planes.CodE_Dec,
-            self.rdb.Planes.Ano_Dec,
-            self.rdb.Planes.Ha_Dec
+                self._db['plan']['id'],
+                self._db['plan']['ncarpeta']
         )
-    
-        if len(rQ) > 0:
-            # Set sequence in plan
-            self.ldb.executesql("ALTER SEQUENCE plan_id_seq MINVALUE 0;")
-            self.ldb.executesql("SELECT setval('plan_id_seq', 0, true);")
-            # Delete all data in table plan
-            self.ldb(self.ldb.plan).delete()
-            for row in rQ:
-                self.ldb.carpeta.insert(
-                    carpeta = self.cNumToId(row.Nro_Carpeta),
-                    especie = row[2],    
-                    anio_plantado = row.Ano_Dec,
-                    area_afectada = row.Ha_Dec
-                )
-            self.ldb.commit()
+        if len(lrows)>0:
+            self._db( self._db['rodald'] ).delete()
+            self._db.executesql("ALTER SEQUENCE rodald_id_seq MINVALUE 0")
+            self._db.executesql("SELECT setval('rodald_id_seq', 0, true)")
+            for lr in lrows:
+                id=lr['id']
+                idCarpeta=lr['ncarpeta']
+                #RFPV - TODO: Desde al vista en DGF
+                sql = "SELECT DISTINCT pl.Genero,pl.Especie,p.Ano_Dec,p.Ha_Dec FROM Planes p, Planes_Pro pp, Carpetas_P cp, Plantas pl WHERE p.CodG_Dec IS NOT NULL AND p.CodE_Dec IS NOT NULL AND pp.Codigo_Cp=cp.Codigo AND pp.Codigo==p.Codigo_Plan_Pro AND p.Ano_Dec>0 AND p.Ha_Dec>0 AND cp.Nro_Carpeta=%d AND pl.CodG=p.CodG_Dec AND pl.CodE=p.CodE_Dec ORDER BY p.Ano_Dec" % idCarpeta
+                rows = self.rdb.executesql(sql)
+                if len(rows)>0:
+                    self._db.commit()
+                    try:
+                        for r in rows:
+                            self._db['rodald'].insert(
+                                plan=id,
+                                especie=self.__ge2idE(r[0],r[1]),
+                                anioplant=int(r[2]),
+                                areaafect=float(r[3])
+                            )
+                        self._db.commit()
+                    except Exception as e:
+                        print "Error: %s" % e
+                        self._db.rollback()
+
+
+    def uGenero(self):
+        """Get genero data from DGF.Plantas
+        """
+        sql = "SELECT DISTINCT CodG,Genero FROM Plantas WHERE Genero IS NOT NULL ORDER BY Genero"
+        rows = self.rdb.executesql(sql)
+
+        if len(rows) > 0:
+            # Set sequence in genero
+            self._db.executesql("ALTER SEQUENCE genero_id_seq MINVALUE 0;")
+            self._db.executesql("SELECT setval('genero_id_seq', 0, true);")
+            # Delete all data in table genero
+            self._db( self._db.genero ).delete()
+            self._db.commit()
+            try:
+                for r in rows:
+                    self._db.genero.insert(
+                            nombre=str(r[1]).strip(),
+                            codigo=str(r[0]).strip()
+                    )
+                self._db.commit()
+                return True
+            except Exception as e:
+                print "Error: %s" % e
+                self._db.rollback()
+                return False
+
+
+    def uEspecie(self):
+        """Get especie data from DGF.Plantas
+        """
+        lrows = self._db(
+            ( self._db['genero']['id']>0 )
+        ).select (
+            self._db['genero']['id'],
+            self._db['genero']['nombre'],
+            self._db['genero']['codigo']
+        )
+
+        if len(lrows)>0:
+            # Set sequence in genero
+            self._db.executesql("ALTER SEQUENCE especie_id_seq MINVALUE 0;")
+            self._db.executesql("SELECT setval('especie_id_seq', 0, true);")
+            # Delete all data in table genero
+            self._db( self._db.especie ).delete()
+            for lr in lrows:
+                id=int( lr['id'] )
+                genero=lr['nombre']
+                sql = 'SELECT CodE, Especie FROM Plantas WHERE Genero LIKE \'' + str(genero) + '%\''
+                print sql
+                rows=self.rdb.executesql(sql)
+                self._db.commit()
+                try:
+                    for r in rows:
+                        self._db.especie.insert(
+                            genero = id,
+                            nombre = str(r[1]).strip(),
+                            codigo = str(r[0]).strip()
+                        )
+                    self._db.commit()
+                except Exception as e:
+                    print "Error: %s" % e
+                    self._db.rollback()
+
 
     def uAll(self):
         """Util function to update all the data from remote database to local database
         """
         # Order is important
-        # self.uDepartamento()
-        # self.uGenero()
-        # self.uEspecie()
-        # self.uCarpeta()
-        # self.uPlan()
-        pass
-        
+        self.uGenero()
+        self.uEspecie()
+        self.uPlan()
+        self.uRodalD()

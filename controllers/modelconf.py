@@ -95,6 +95,20 @@ def averifycoefs():
     import json
     result=False
     tableName=request.post_vars.tableName
+    if tableName=='cima':
+        rows = db.executesql("(SELECT DISTINCT rd.especie, sj.departamento FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento) EXCEPT (SELECT DISTINCT especie,departamento FROM cima)")
+        if len(rows)==0:
+            result=True
+        else:
+            result=False
+    elif tableName=='caefectiva':
+        rows = db.executesql("(SELECT DISTINCT rd.especie, sj.departamento FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento) EXCEPT (SELECT DISTINCT especie,departamento FROM caefectiva)")
+        if len(rows)==0:
+            result=True
+        else:
+            result=False
+    else:
+        pass
     data={ 'result': result }
     return json.dumps(data)
 
@@ -317,6 +331,14 @@ def mcgsuelo():
         ('cgsuelo','sjudicial'),
         ('cgsuelo','gsuelo')
         ] )
+    dm.gShowId(False)
+    return dict(toolbar=dm.toolBar(), grid=dm.grid())
+
+
+@auth.requires_login()
+def mtipointervencion():
+    from plugin_dm.datamanager import DataManager
+    dm=DataManager(database=db,tablename='tipointervencion')
     dm.gShowId(False)
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 

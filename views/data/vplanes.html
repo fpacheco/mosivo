@@ -1,0 +1,10 @@
+{{extend 'layout.html'}}
+<h1> {{ = T('Planes de la base de datos remota') }}</h1>
+<div class="alert alert-info">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <h4>Información</h4>
+    Estos son los datos de planes de la base de datos remota.
+</div>
+{{ include "plugin_dm/datamanager.html"}}
+{{ =toolbar }}
+{{ =grid }}

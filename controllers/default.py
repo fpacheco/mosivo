@@ -1,4 +1,17 @@
 # -*- coding: utf-8 -*-
+"""
+Load default values for caefectiva:
+INSERT INTO caefectiva(especie,departamento,aefectiva) (SELECT DISTINCT rd.especie, sj.departamento, 0.65 as aefectiva FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);
+
+
+Load default values for cima:
+INSERT INTO cima(especie,departamento,ima) (SELECT DISTINCT rd.especie, sj.departamento, 20.0 as ima FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);
+
+Areas por departamento y genero
+SELECT d.nombre,g.nombre,sum(rd.areaafect) FROM rodald rd, plan p, seccionjudicial sj, departamento d, especie e, genero g WHERE rd.plan=p.id AND p.sjudicial=sj.id AND sj.departamento=d.id AND rd.especie=e.id AND e.genero=g.id GROUP BY d.nombre,g.nombre ORDER BY d.nombre;
+"""
+
+
 ### required - do no delete
 def user():
     return dict(form=auth())
@@ -51,9 +64,14 @@ def pygal():
     response.headers['Content-Type']='image/svg+xml'
     bar_chart = pygal.Bar(style=CleanStyle) # Then create a bar graph object
     bar_chart.title = 'Superficie plantada por departamento (Ha)'
-    rdb = DAL('sqlite://dgf_database.db', migrate_enabled=False, migrate=False)
-    rows=rdb.executesql("SELECT c.cod_depto,sum(p.ha_dec) FROM planes p, planes_pro pp, carpetas_p c WHERE p.codigo_plan_pro=pp.codigo AND pp.codigo_cp==c.codigo GROUP BY c.cod_depto")
-    bar_chart.x_labels = [ r[0] for r in rows ]
+    # rows=rdb.executesql("SELECT c.cod_depto,sum(p.ha_dec) FROM planes p, planes_pro pp, carpetas_p c WHERE p.codigo_plan_pro=pp.codigo AND pp.codigo_cp==c.codigo GROUP BY c.cod_depto")
+    rows=db.executesql("SELECT d.nombre,sum(rd.areaafect) FROM rodald rd, plan p, seccionjudicial sj, departamento d WHERE rd.plan=p.id AND p.sjudicial=sj.id AND sj.departamento=d.id GROUP BY d.nombre ORDER BY d.nombre")
+    bar_chart.x_labels = [ r[0].encode('ascii', 'ignore') for r in rows ]
     bar_chart.add(u'Áreas totales', [ r[1] for r in rows ] )
     # bar_chart.add('Fibonacci', [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55]) # Add some values
     return bar_chart.render()
+
+
+
+
+
