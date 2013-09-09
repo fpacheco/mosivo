@@ -163,9 +163,7 @@ db.define_table("intervrodald",
     # tiempo en anios desde que se planta
     Field('tintervencion', db.tipointervencion, notnull=True),
     # tiempo en anios desde que se planta
-    Field('aintervencion', type='float', notnull=True, label=u'Corte (años)'),
-    # volumen de corta en m3/ha
-    # Field('volumen', type='float', notnull=True, label=u'Volumen(m3)'),
+    Field('adisp', type='float', notnull=True, label=u'Año de corte'),
 )
 
 # Destinos de la intervencion en el rodal declarado
@@ -174,7 +172,7 @@ db.define_table("destinointervrodald",
     # destino
     Field('destino', db.destino, notnull=True),
     # volumen de corta en m3
-    Field('volumen', type='float', notnull=True, label=u'Volumen(m3 MS)'),
+    Field('mcmcc', type='float', notnull=True, label=u'Volumen (m3 mcc)'),
 )
 
 # Montes proyectados

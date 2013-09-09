@@ -3,6 +3,67 @@
 if 0:
     import static
 
+def addUsersAndGropups():
+    if db(db['auth_group']['id']>0).isempty():
+        db.executesql("ALTER SEQUENCE auth_group_id_seq MINVALUE 0;")
+        db.executesql("SELECT setval('auth_group_id_seq', 0, true);")
+        db.auth_group.insert(
+            id=1,
+            role='admins',
+            description='Administrators',
+        )
+        db.auth_group.insert(
+            id=2,
+            role='users',
+            description='Users',
+        )
+        db.auth_group.insert(
+            id=3,
+            role='eusers',
+            description='External users',
+        )
+    if db(db['auth_user']['id']>0).isempty():
+        db.executesql("ALTER SEQUENCE auth_user_id_seq MINVALUE 0;")
+        db.executesql("SELECT setval('auth_user_id_seq', 0, true);")
+        db.auth_user.insert(
+            id=1,
+            first_name='FAdministrator',
+            last_name='LAdministrator',
+            email='admin@admin.com',
+            password=db.auth_user.password.validate('12admin12')[0]
+        )
+        db.auth_user.insert(
+            id=2,
+            first_name='FUser',
+            last_name='LUser',
+            email='user@user.com',
+            password=db.auth_user.password.validate('12user12')[0]
+        )
+        db.auth_user.insert(
+            id=3,
+            first_name='FEuser',
+            last_name='LEuser',
+            email='euser@euser.com',
+            password=db.auth_user.password.validate('12euser12')[0]
+        )
+    if db(db['auth_membership']['id']>0).isempty():
+        db.auth_membership.insert(
+            user_id=1,
+            group_id=1
+        )
+        db.auth_membership.insert(
+            user_id=1,
+            group_id=2
+        )
+        db.auth_membership.insert(
+            user_id=2,
+            group_id=2
+        )
+        db.auth_membership.insert(
+            user_id=3,
+            group_id=3
+        )
+
 def departamento():
     q = db(
            db.departamento
@@ -547,6 +608,7 @@ def gruposuelo():
             db.rollback()
 
 # Populate mosivo database
+addUsersAndGropups()
 departamento()
 destino()
 dia()

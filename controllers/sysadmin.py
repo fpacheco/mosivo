@@ -1,21 +1,21 @@
 # coding: utf8
 # try something like
-def index(): 
+def index():
     return dict(message="hello from admin.py")
 
-@auth.requires_membership('admin')
+@auth.requires_membership('admins')
 def users():
     form = SQLFORM.grid(db.auth_user)
     title = T("Registered users")
     return dict(form=form, title=title)
 
-@auth.requires_membership('admin')
+@auth.requires_membership('admins')
 def groups():
     form = SQLFORM.grid(db.auth_group)
     title = T("Groups")
     return dict(form=form, title=title)
 
-@auth.requires_membership('admin')
+@auth.requires_membership('admins')
 def memberships():
     form = SQLFORM.grid(db.auth_membership)
     title = T("Membership")

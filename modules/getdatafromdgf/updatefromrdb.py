@@ -45,15 +45,19 @@ class UpdateFromRDB():
     def uPlan(self):
         """Inserta todas las carpetas no nulas y que no esten con bajas
         """
-        sql = "SELECT DISTINCT cp.Nro_Carpeta, d.Numero, cp.Cod_Sj, cp.Longitud, cp.Latitud FROM Carpetas_P cp, Deptos d             WHERE d.Codigo=cp.Cod_Depto AND cp.Baja=0 AND cp.Nro_Carpeta IS NOT NULL AND cp.Cod_Depto IS NOT NULL AND cp.Cod_Sj IS NOT NULL ORDER BY cp.Nro_Carpeta"
+        sql = "SELECT DISTINCT cp.Nro_Carpeta, d.Numero, cp.Cod_Sj, cp.Longitud, cp.Latitud " \
+            "FROM Carpetas_P cp, Deptos d " \
+            "WHERE d.Codigo=cp.Cod_Depto AND cp.Baja=0 AND cp.Nro_Carpeta IS NOT NULL AND " \
+            "cp.Cod_Depto IS NOT NULL AND cp.Cod_Sj IS NOT NULL AND cp.Cod_Sj>0 ORDER BY cp.Nro_Carpeta"
         rows = self.rdb.executesql(sql)
 
         if len(rows) > 0:
             # Set sequence in departamento
+            self._db.executesql("DELETE FROM plan")
             self._db.executesql("ALTER SEQUENCE plan_id_seq MINVALUE 0")
             self._db.executesql("SELECT setval('plan_id_seq', 0, true)")
             # Delete all data in table carpeta
-            self._db( self._db['plan'] ).delete()
+            # self._db( self._db['plan'] ).delete()
             self._db.commit()
             try:
                 for r in rows:

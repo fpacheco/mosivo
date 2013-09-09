@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+
+@auth.requires_membership('users')
 def vplanes():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
@@ -26,6 +28,8 @@ def vplanes():
     # dm.rDetailsURL( "/%s/%s/%s.load" % (request.application, request.controller ,'mcdintervencionr') )
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
+
+@auth.requires_membership('users')
 def vrodald():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)

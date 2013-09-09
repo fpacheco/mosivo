@@ -95,7 +95,7 @@ def createMenu(menuList):
     #    else:
     #        mType=0
     #    return createMenuItems(mType,menuList)
-    if auth.is_logged_in() and auth.has_membership('admin',auth.user.id):
+    if auth.is_logged_in() and auth.has_membership('admins',auth.user.id):
         return menuAdmin
     elif auth.is_logged_in():
         return menuUser

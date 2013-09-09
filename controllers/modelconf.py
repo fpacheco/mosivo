@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-@auth.requires_login()
+@auth.requires_membership('admins')
 def verifymodel():
     import json
     cstr=[
@@ -91,35 +91,51 @@ def verifymodel():
     )
     return dict(table=table)
 
+
+@auth.requires_membership('admins')
 def averifycoefs():
     import json
     result=False
-    tableName=request.post_vars.tableName
-    if tableName=='cima':
-        rows = db.executesql("(SELECT DISTINCT rd.especie, sj.departamento FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento) EXCEPT (SELECT DISTINCT especie,departamento FROM cima)")
-        if len(rows)==0:
-            result=True
+    try:
+        tableName=request.post_vars.tableName
+        from mmodel.mmodel import MModel
+        model = MModel(database=db)
+        if tableName=='cima':
+            result=model.checkCima()
+        elif tableName=='caefectiva':
+            result=model.checkCaefectiva()
+        elif tableName=='cintervencionr':
+            result=model.checkCintervencionr()
+        elif tableName=='cintervenciona':
+            result=model.checkCintervenciona()
+        elif tableName=='cgsuelo':
+            result=model.checkCgsuelo()
+        elif tableName=='ccosecha':
+            result=model.checkCcosecha()
+        elif tableName=='cbcampoe':
+            result=model.checkCbcampoe()
+        elif tableName=='cbcampo':
+            result=model.checkCbcampo()
+        elif tableName=='cbindustria':
+            result=model.checkCbindustria()
         else:
-            result=False
-    elif tableName=='caefectiva':
-        rows = db.executesql("(SELECT DISTINCT rd.especie, sj.departamento FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento) EXCEPT (SELECT DISTINCT especie,departamento FROM caefectiva)")
-        if len(rows)==0:
-            result=True
-        else:
-            result=False
-    else:
-        pass
-    data={ 'result': result }
-    return json.dumps(data)
+            print "Not here!"
+        data={'result': result}
+        return json.dumps(data)
+    except Exception as e:
+        print "Error: %s" % e
+
 
 ###
-@auth.requires_login()
+@auth.requires_membership('admins')
 def mdestino():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db,tablename='destino')
     dm.gShowId(False)
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
+
+@auth.requires_membership('admins')
 def mtiporesiduoforestal():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db,tablename='tiporesiduoforestal')
@@ -127,16 +143,25 @@ def mtiporesiduoforestal():
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
+@auth.requires_membership('admins')
 def mcosecha():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db,tablename='cosecha')
+    dm.gShowId(False)
+    return dict(toolbar=dm.toolBar(), grid=dm.grid())
+
+
+@auth.requires_membership('admins')
+def mtipointervencion():
+    from plugin_dm.datamanager import DataManager
+    dm=DataManager(database=db,tablename='tipointervencion')
     dm.gShowId(False)
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 ###
 
 
 ## Begin manage coefficients
-@auth.requires_login()
+@auth.requires_membership('admins')
 def mcima():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
@@ -158,7 +183,8 @@ def mcima():
     dm.gShowId(False)
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
-@auth.requires_login()
+
+@auth.requires_membership('admins')
 def mcaefectiva():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
@@ -181,7 +207,7 @@ def mcaefectiva():
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
-@auth.requires_login()
+@auth.requires_membership('admins')
 def mcintervencionr():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
@@ -209,7 +235,7 @@ def mcintervencionr():
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
-@auth.requires_login()
+@auth.requires_membership('admins')
 def mcintervenciona():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
@@ -238,7 +264,7 @@ def mcintervenciona():
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
-@auth.requires_login()
+@auth.requires_membership('admins')
 def mcbcampo():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
@@ -265,7 +291,8 @@ def mcbcampo():
     dm.gShowId(False)
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
-@auth.requires_login()
+
+@auth.requires_membership('admins')
 def mcbcampoe():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
@@ -288,7 +315,7 @@ def mcbcampoe():
 
 
 
-@auth.requires_login()
+@auth.requires_membership('admins')
 def mcbindustria():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
@@ -312,7 +339,7 @@ def mcbindustria():
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
-@auth.requires_login()
+@auth.requires_membership('admins')
 def mcgsuelo():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
@@ -335,15 +362,7 @@ def mcgsuelo():
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
-@auth.requires_login()
-def mtipointervencion():
-    from plugin_dm.datamanager import DataManager
-    dm=DataManager(database=db,tablename='tipointervencion')
-    dm.gShowId(False)
-    return dict(toolbar=dm.toolBar(), grid=dm.grid())
-
-
-@auth.requires_login()
+@auth.requires_membership('admins')
 def mccosecha():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
@@ -367,6 +386,8 @@ def mccosecha():
     dm.gShowId(False)
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
+
+@auth.requires_membership('admins')
 def mcdintervencionr():
     # Vendra por ajax, recibe un post con el id de intervencion
     # Se fija si tiene registros y arma tantas forms como destinos existan en al base de datos
@@ -458,6 +479,7 @@ def mcdintervencionr():
             print "%s" % e
 
 
+@auth.requires_membership('admins')
 def mcdintervenciona():
     # Vendra por ajax, recibe un post con el id de intervencion
     # Se fija si tiene registros y arma tantas forms como destinos existan en al base de datos
@@ -549,3 +571,43 @@ def mcdintervenciona():
             print "%s" % e
 
 ## End manage coefficients
+
+@auth.requires_membership('admins')
+def loadDefaults():
+    # Coeficients para area efectiva
+    if db(db['caefectiva']['id']>0).isempty():
+        db.executesql(
+            "INSERT INTO caefectiva(especie,departamento,aefectiva) " \
+            "(SELECT DISTINCT rd.especie, sj.departamento, 0.65 as aefectiva FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
+        )
+    # Coeficientes para ima
+    if db(db['cima']['id']>0).isempty():
+        db.executesql(
+            "INSERT INTO cima(especie,departamento,ima) " \
+            "(SELECT DISTINCT rd.especie, sj.departamento, 20.0 as ima FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
+        )
+    # cgsuelo
+    if db(db['cgsuelo']['id']>0).isempty():
+        db.executesql(
+            "INSERT INTO cgsuelo(sjudicial,gsuelo) " \
+            "(SELECT DISTINCT p.sjudicial, 5 as gsuelo FROM plan p, seccionjudicial sj WHERE sj.id=p.sjudicial ORDER BY p.sjudicial);"
+        )
+    # Coeficientes para cintervencionr
+    if db(db['cintervencionr']['id']>0).isempty():
+        db.executesql(
+            "INSERT INTO cintervencionr(especie,departamento,tintervencion,aintervencion,fextraccion) " \
+            "(SELECT DISTINCT rd.especie, sj.departamento, 1 as tintervencion, 6 as aintervencion, 0.33 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
+        )
+        db.executesql(
+            "INSERT INTO cintervencionr(especie,departamento,tintervencion,aintervencion,fextraccion) " \
+            "(SELECT DISTINCT rd.especie, sj.departamento, 1 as tintervencion, 12 as aintervencion, 0.33 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
+        )
+        db.executesql(
+            "INSERT INTO cintervencionr(especie,departamento,tintervencion,aintervencion,fextraccion) " \
+            "(SELECT DISTINCT rd.especie, sj.departamento, 2 as tintervencion, 20 as aintervencion, 1.00 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
+        )
+        db.executesql(
+            "INSERT INTO cintervencionr(especie,departamento,tintervencion,aintervencion,fextraccion) " \
+            "(SELECT DISTINCT rd.especie, sj.departamento, 3 as tintervencion, 40 as aintervencion, 0.97 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
+        )
+
