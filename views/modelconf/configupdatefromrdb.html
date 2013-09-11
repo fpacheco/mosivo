@@ -1,0 +1,56 @@
+{{extend 'layout.html'}}
+<h1> {{ =T('Update data from remote database (DGF)') }}</h1>
+<script>
+/*
+$(function() {
+    $( "#tabs" ).tabs({
+      beforeLoad: function( event, ui ) {
+        ui.jqXHR.error(function() {
+          ui.panel.html(
+            "Couldn't load this tab. We'll try to fix this as soon as possible. " +
+            "If this wouldn't be a demo." );
+        });
+      }
+    });
+});
+*/
+$(function() {
+        var baseURL = '{{ ='/%s/%s/' % (request.application, request.controller) }}';
+        //load content for first tab and initialize
+        $('#home').load(baseURL+'home', function() {
+            $('#myTabs').tab(); //initialize tabs
+        });    
+        $('#myTabs').bind('show', function(e) {    
+           var pattern=/#.+/gi; //use regex to get anchor(==selector)
+           var contentID = e.target.toString().match(pattern)[0]; //get anchor         
+           //load content for selected tab
+            $(contentID).load(baseURL+contentID.replace('#',''), function(){
+                $('#myTabs').tab(); //reinitialize tabs
+            });
+        });
+});
+</script>
+
+
+<div class="tabbable">
+    <ul class="nav nav-tabs" id="myTabs">    
+        <li><a href="#aupdatefromrdb"  class="active" data-toggle="tab">{{ =T('Automatic') }}</a></li>
+        <li><a href="#mupdatefromrdb" data-toggle="tab">{{ =T('Manual') }}</a></li>
+    </ul>
+ 
+    <div class="tab-content">
+        <div class="tab-pane active" id="aupdatefromrdb"></div>
+        <div class="tab-pane" id="mupdatefromrdb"></div>
+    </div>
+</div>
+
+<!--
+
+<div id="tabs">
+    <ul>
+        <li><a href="{{ =au }}">{{ =T('Automatic') }}</a> </li>
+        <li><a href="{{ =mu }}">{{ =T('Manual') }}</a></li>
+    </ul>
+</div>
+
+-->

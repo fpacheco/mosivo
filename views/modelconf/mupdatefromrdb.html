@@ -1,0 +1,68 @@
+<div class="alert alert-warning">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <h4>{{ =T('Advertencia') }}</h4>
+    <p>Desde aqui Ud. podrá actualizar los datos de base del MoSiVo desde la base de datos DGF.<br />
+    Por favor sea cuidadoso con las actualizaciones, tenga en cuenta que:
+    <ul>
+        <li>actualizar datos de género y/o especie <b>elimina todos los datos de los coeficientes del modelo</b>;</li>
+        <li>actualizar datos de plan elimina <b>todos los datos de los rodales declarados y del modelo</b>;</li>
+        <li>actualizar datos de rodal elimina <b>todos los datos de la modelación</b></li>
+    <ul>
+    </p>
+</div>
+<script>
+var url='{{ ="/%s/%s/%s.load" % (request.application, request.controller, "update") }}';
+
+function updateFromRDB(upd) {
+        // El div de resultados es:
+        var udivid='ru' + upd;
+        var ubutid='u' + upd + 'button';        
+        //Desactivar los botones
+        $('td div span a.btn').attr('disabled',true);
+        // Ocultar el succes y fail
+        $('#f'+upd+'span').hide();
+        $('#s'+upd+'span').hide();
+        $('#e'+upd+'span').hide();
+        // Mostrar la imagen de espera
+        $('#pb' + upd).show();
+        $.post(
+            url,
+            {updWhat:upd},
+            function(data) {
+                //Desactivar la espera                 
+                if (data.result==true) {
+                    // Agregar Succes en el div
+                    $('#s'+upd+'span').show();
+                    $('td span span#'+upd+'_nrecords').text(data.rCount);
+                    $('td span span#'+upd+'_lastupdate').text(data.updateAt);
+                    $('td span span#'+upd+'_lastupdate').attr('title',data.updateBy);
+                } else {
+                    //Agregar Fail en el div
+                    $('#f'+upd+'span').show();
+                }                
+            },
+            'json' //data returned is json
+        ).fail(
+            function(){
+                //activar el boton
+                $('#e'+upd+'span').show();                
+            }
+        ).always(
+            function(){
+                //ocultar la barra
+                $('#pb' + upd).hide();
+                //Activar los botones
+                $('td div span a.btn').attr('disabled',false);
+            }
+        );
+}
+
+function aUpdateAllCoef(upds) {
+    for (var i=0;i<upds.length;i++)
+    {
+        $( '#v' + upds[i] + 'button' ).click();        
+    }
+}
+</script>    
+
+{{ =table }}

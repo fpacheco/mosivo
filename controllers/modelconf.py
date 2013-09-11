@@ -1,4 +1,155 @@
 # -*- coding: utf-8 -*-
+
+@auth.requires_membership('admins')
+def configupdatefromrdb():
+    mu="/%s/%s/%s" % (request.application, request.controller, 'mupdatefromrdb')
+    au="/%s/%s/%s" % (request.application, request.controller, 'aupdatefromrdb')
+    return dict(mu=mu, au=au)
+
+
+@auth.requires_membership('admins')
+def mupdatefromrdb():
+    import json
+    cstr=[
+        T('Genero'),
+        T('Especie'),
+        T('Plan'),
+        T('Rodald')
+    ]
+    tnames=[
+        'genero',
+        'especie',
+        'plan',
+        'rodald'        
+    ]
+
+    lastUpdate=[ tUpdated(tnames[cont])[1] if tUpdated(tnames[cont])[0] else T('No data') for cont in range(0,len(tnames)) ]
+    byUser=[ tUpdated(tnames[cont])[2] if tUpdated(tnames[cont])[0] else T('No data') for cont in range(0,len(tnames)) ]    
+    
+    trs= [
+        TR(
+            TD( T('Update %s') % cstr[cont] ),
+            TD(
+                SPAN(
+                    T('Number of records: '),
+                    SPAN(
+                        db( db[ tnames[cont] ]['id']>0 ).count(), 
+                        _id="%s_nrecords" % tnames[cont],
+                        _class="label"
+                    )    
+                )
+            ),
+            TD(
+                SPAN(
+                    T('Last update on: '),                    
+                    SPAN(
+                        lastUpdate[cont],
+                        _id="%s_lastupdate" % tnames[cont],
+                        _class="label",
+                        _title=T("By: %s") % byUser[cont]
+                    )                    
+                )
+            ),
+            TD(
+                DIV(
+                    SPAN(
+                        #Button
+                        A(
+                            SPAN(I(_class=' icon-repeat icon-black'), T('Update now')),
+                            _class='btn btn-small',
+                            _onclick="return updateFromRDB('%s');" % tnames[cont],
+                            _id="u%sbutton" % tnames[cont]
+                        ),
+                        IMG(
+                            _src="/%s/static/images/pbar_loader.gif" % request.application,
+                            _id="pb%s" % tnames[cont],
+                            _style="display:none;height:10px;"
+                        ),
+                        #Return labels
+                        SPAN(
+                            T('Success'),
+                            _class="label label-success",
+                            _id="s%sspan" % tnames[cont],
+                            _style="display:none",
+                        ),
+                        SPAN(
+                            T('Fail'),
+                            _class="label label-warning",
+                            _id="f%sspan" % tnames[cont],
+                            _style="display:none",
+                        ),
+                        SPAN(
+                            T('Error'),
+                            _class="label label-important",
+                            _id="e%sspan" % tnames[cont],
+                            _style="display:none",
+                        )
+                    ),
+                    _id="ru%s" % tnames[cont],
+                    _class="div div-btn div-info",
+                    _style="width:240px;"
+                )
+            ),
+            _id="%s" % tnames[cont]
+        ) for cont in range(0,len(tnames))
+    ]
+
+    trs.append(
+        TR(
+            TD( B( T('Update all') ), _colspan="3", _style="text-align:right"),
+            TD(
+                A(
+                    SPAN(I(_class=' icon-repeat icon-black'), T('Update now')),
+                    _class='btn btn-small',
+                    _onclick="return aUpdateAllCoef(%s);" % json.dumps(tnames)
+                )
+            )
+        )
+    )
+
+    table=TABLE (
+        TBODY( trs ),
+        _class="table table-striped",
+        _id="modelverify"
+    )
+    return dict(table=table)
+
+
+@auth.requires_membership('admins')
+def update():
+    import json
+    result=False
+    try:
+        updWhat=request.post_vars.updWhat
+        from getdatafromdgf.updatefromrdb import UpdateFromRDB
+        u = UpdateFromRDB(mDatabase=db, inDGF=False)
+        if updWhat=='genero':
+            result=u.uGenero()
+        elif updWhat=='especie':
+            result=u.uEspecie()
+        elif updWhat=='plan':
+            result=u.uPlan()
+        elif updWhat=='rodald':
+            result=u.uRodalD()
+        elif updWhat=='all':
+            result=u.uAll()            
+        else:
+            print "Not here!"
+
+        if result and updWhat!='all':
+            ret,un,nr,uby=insertTUpdated(updWhat)
+            data={
+                'result': True,
+                'rCount': nr if nr>-1 else T('Error'),
+                'updateAt': un if un>-1 else T('No data'),
+                'updateBy': uby if uby>-1 else T('No data'),
+            }
+        else:
+            data={}
+        return json.dumps(data)
+    except Exception as e:
+        print "Error: %s" % e
+
 @auth.requires_membership('admins')
 def verifymodel():
     import json
@@ -99,7 +250,7 @@ def averifycoefs():
     try:
         tableName=request.post_vars.tableName
         from mmodel.mmodel import MModel
-        model = MModel(database=db)
+        model = MModel(mDatabase=db)
         if tableName=='cima':
             result=model.checkCima()
         elif tableName=='caefectiva':
@@ -594,20 +745,57 @@ def loadDefaults():
         )
     # Coeficientes para cintervencionr
     if db(db['cintervencionr']['id']>0).isempty():
+        # 1
         db.executesql(
             "INSERT INTO cintervencionr(especie,departamento,tintervencion,aintervencion,fextraccion) " \
-            "(SELECT DISTINCT rd.especie, sj.departamento, 1 as tintervencion, 6 as aintervencion, 0.33 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
+            "(SELECT DISTINCT rd.especie, sj.departamento, 1 as tintervencion, 3 as aintervencion, 0.3 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
         )
         db.executesql(
+            "INSERT INTO cdintervencionr(cintervencion,destino,fdestino) (SELECT id, 2, 1 FROM cintervencion WHERE tintervencion=1 AND aintervencion=3::numeric(5,3))"
+        )        
+
+        # 2
+        db.executesql(
             "INSERT INTO cintervencionr(especie,departamento,tintervencion,aintervencion,fextraccion) " \
-            "(SELECT DISTINCT rd.especie, sj.departamento, 1 as tintervencion, 12 as aintervencion, 0.33 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
+            "(SELECT DISTINCT rd.especie, sj.departamento, 1 as tintervencion, 8 as aintervencion, 0.3 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
         )
+        db.executesql(
+            "INSERT INTO cdintervencionr(cintervencion,destino,fdestino) (SELECT id, 1, 0.8 FROM cintervencion WHERE tintervencion=1 AND aintervencion=8::numeric(5,3))"
+        )
+        db.executesql(
+            "INSERT INTO cdintervencionr(cintervencion,destino,fdestino) (SELECT id, 2, 0.2 FROM cintervencion WHERE tintervencion=1 AND aintervencion=8::numeric(5,3))"
+        )
+
+        # 3                 
+        db.executesql(
+            "INSERT INTO cintervencionr(especie,departamento,tintervencion,aintervencion,fextraccion) " \
+            "(SELECT DISTINCT rd.especie, sj.departamento, 1 as tintervencion, 15 as aintervencion, 0.3 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
+        )
+        db.executesql(
+            "INSERT INTO cdintervencionr(cintervencion,destino,fdestino) (SELECT id, 1, 0.5 FROM cintervencion WHERE tintervencion=1 AND aintervencion=15::numeric(5,3))"
+        )
+        db.executesql(
+            "INSERT INTO cdintervencionr(cintervencion,destino,fdestino) (SELECT id, 2, 0.5 FROM cintervencion WHERE tintervencion=1 AND aintervencion=15::numeric(5,3))"
+        )
+
+        # 4                 
         db.executesql(
             "INSERT INTO cintervencionr(especie,departamento,tintervencion,aintervencion,fextraccion) " \
             "(SELECT DISTINCT rd.especie, sj.departamento, 2 as tintervencion, 20 as aintervencion, 1.00 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
         )
         db.executesql(
+            "INSERT INTO cdintervencionr(cintervencion,destino,fdestino) (SELECT id, 1, 0.8 FROM cintervencion WHERE tintervencion=1 AND aintervencion=20::numeric(5,3))"
+        )
+        db.executesql(
+            "INSERT INTO cdintervencionr(cintervencion,destino,fdestino) (SELECT id, 2, 0.2 FROM cintervencion WHERE tintervencion=1 AND aintervencion=20::numeric(5,3))"
+        )
+
+        # 5        
+        db.executesql(
             "INSERT INTO cintervencionr(especie,departamento,tintervencion,aintervencion,fextraccion) " \
             "(SELECT DISTINCT rd.especie, sj.departamento, 3 as tintervencion, 40 as aintervencion, 0.97 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
         )
-
+        db.executesql(
+            "INSERT INTO cdintervencionr(cintervencion,destino,fdestino) (SELECT id, 2, 1 FROM cintervencion WHERE tintervencion=1 AND aintervencion=40::numeric(5,3))"
+        )        
+        

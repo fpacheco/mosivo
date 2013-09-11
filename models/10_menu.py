@@ -169,7 +169,7 @@ menuAdmin = [
     ),
     ( T('Model Configuration'), URL('config','index')==URL, URL('config','index'),
         [
-            ( T('Data updates'), URL('modelconf','dataupdate')==URL(), URL('modelconf','dataupdate'), [] ),
+            ( T('Data updates'), URL('modelconf','configupdatefromrdb')==URL(), URL('modelconf','configupdatefromrdb'), [] ),
             ( T('Model execution'), URL('modelconf','modelupdate')==URL(), URL('modelconf','modelupdate'), [] ),
             LI(_class="divider"),
             ( T('Coefficients'), URL()==URL(), URL(),

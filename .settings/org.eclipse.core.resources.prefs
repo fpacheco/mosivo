@@ -1,8 +1,6 @@
 eclipse.preferences.version=1
 encoding//controllers/about.py=utf8
 encoding//controllers/appadmin.py=utf-8
-encoding//controllers/coef.py=utf-8
-encoding//controllers/config.py=utf-8
 encoding//controllers/default.py=utf-8
 encoding//controllers/dgf.py=utf8
 encoding//controllers/modelconf.py=utf-8
@@ -24,7 +22,6 @@ encoding//modules/daplugin/ipluginbase.py=utf-8
 encoding//modules/daplugin/pluginmanager.py=utf-8
 encoding//modules/daplugin/remotedata.py=utf-8
 encoding//modules/folder.py=utf-8
-encoding//modules/getdatafromdgf/model.py=utf-8
 encoding//modules/getdatafromdgf/updatefromrdb.py=utf-8
 encoding//modules/registries.py=utf-8
 encoding//modules/utils.py=utf-8

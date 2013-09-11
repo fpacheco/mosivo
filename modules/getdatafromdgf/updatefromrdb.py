@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""This module update relevant data from remote database (DGF) database to local database (mosivo)
+"""This module update relevant data from remote database (DGF) to local database (mosivo)
 """
 from gluon.dal import DAL
 
@@ -51,13 +51,12 @@ class UpdateFromRDB():
             "cp.Cod_Depto IS NOT NULL AND cp.Cod_Sj IS NOT NULL AND cp.Cod_Sj>0 ORDER BY cp.Nro_Carpeta"
         rows = self.rdb.executesql(sql)
 
-        if len(rows) > 0:
-            # Set sequence in departamento
-            self._db.executesql("DELETE FROM plan")
-            self._db.executesql("ALTER SEQUENCE plan_id_seq MINVALUE 0")
-            self._db.executesql("SELECT setval('plan_id_seq', 0, true)")
+        if len(rows) > 0:            
             # Delete all data in table carpeta
-            # self._db( self._db['plan'] ).delete()
+            self._db.executesql("DELETE FROM plan")
+            # Set sequence in departamento
+            self._db.executesql("ALTER SEQUENCE plan_id_seq MINVALUE 0")
+            self._db.executesql("SELECT setval('plan_id_seq', 0, true)")            
             self._db.commit()
             try:
                 for r in rows:
@@ -67,10 +66,12 @@ class UpdateFromRDB():
                         lon = r[3],
                         lat = r[4]
                     )
-                self._db.commit()
+                self._db.commit()                
+                return True
             except Exception as e:
                 print "Error: %s" % e
                 self._db.rollback()
+                return False
 
     def __ge2idE(self, gen, esp):
         g=gen.strip()
@@ -102,30 +103,37 @@ class UpdateFromRDB():
                 self._db['plan']['ncarpeta']
         )
         if len(lrows)>0:
-            self._db( self._db['rodald'] ).delete()
+            #self._db( self._db['rodald'] ).delete()
+            self._db.executesql("DELETE FROM rodald")
             self._db.executesql("ALTER SEQUENCE rodald_id_seq MINVALUE 0")
             self._db.executesql("SELECT setval('rodald_id_seq', 0, true)")
-            for lr in lrows:
-                id=lr['id']
-                idCarpeta=lr['ncarpeta']
-                #RFPV - TODO: Desde al vista en DGF
-                sql = "SELECT DISTINCT pl.Genero,pl.Especie,p.Ano_Dec,p.Ha_Dec FROM Planes p, Planes_Pro pp, Carpetas_P cp, Plantas pl WHERE p.CodG_Dec IS NOT NULL AND p.CodE_Dec IS NOT NULL AND pp.Codigo_Cp=cp.Codigo AND pp.Codigo==p.Codigo_Plan_Pro AND p.Ano_Dec>0 AND p.Ha_Dec>0 AND cp.Nro_Carpeta=%d AND pl.CodG=p.CodG_Dec AND pl.CodE=p.CodE_Dec ORDER BY p.Ano_Dec" % idCarpeta
-                rows = self.rdb.executesql(sql)
-                if len(rows)>0:
-                    self._db.commit()
-                    try:
-                        for r in rows:
-                            self._db['rodald'].insert(
-                                plan=id,
-                                especie=self.__ge2idE(r[0],r[1]),
-                                anioplant=int(r[2]),
-                                areaafect=float(r[3])
-                            )
-                        self._db.commit()
-                    except Exception as e:
-                        print "Error: %s" % e
-                        self._db.rollback()
-
+            self._db.commit()
+            try:
+                for lr in lrows:
+                    id=lr['id']
+                    idCarpeta=lr['ncarpeta']
+                    #RFPV - TODO: Desde al vista en DGF
+                    sql = "SELECT DISTINCT pl.Genero,pl.Especie,p.Ano_Dec,p.Ha_Dec FROM Planes p, Planes_Pro pp, Carpetas_P cp, Plantas pl WHERE p.CodG_Dec IS NOT NULL AND p.CodE_Dec IS NOT NULL AND pp.Codigo_Cp=cp.Codigo AND pp.Codigo==p.Codigo_Plan_Pro AND p.Ano_Dec>0 AND p.Ha_Dec>0 AND cp.Nro_Carpeta=%d AND pl.CodG=p.CodG_Dec AND pl.CodE=p.CodE_Dec ORDER BY p.Ano_Dec" % idCarpeta
+                    rows = self.rdb.executesql(sql)
+                    if len(rows)>0:                    
+                        try:
+                            for r in rows:
+                                self._db['rodald'].insert(
+                                    plan=id,
+                                    especie=self.__ge2idE(r[0],r[1]),
+                                    anioplant=int(r[2]),
+                                    areaafect=float(r[3])
+                                )
+                        except Exception as e:
+                            print "Error: %s" % e
+                            raise Exception("uRodalD!")
+                self._db.commit()
+                return True
+            except Exception as e:
+                print "Error: %s" % e
+                self._db.rollback()
+                return False
+                
 
     def uGenero(self):
         """Get genero data from DGF.Plantas
@@ -134,11 +142,11 @@ class UpdateFromRDB():
         rows = self.rdb.executesql(sql)
 
         if len(rows) > 0:
+            # Delete all data in table genero
+            self._db.executesql("DELETE FROM genero")
             # Set sequence in genero
             self._db.executesql("ALTER SEQUENCE genero_id_seq MINVALUE 0;")
             self._db.executesql("SELECT setval('genero_id_seq', 0, true);")
-            # Delete all data in table genero
-            self._db( self._db.genero ).delete()
             self._db.commit()
             try:
                 for r in rows:
@@ -146,7 +154,7 @@ class UpdateFromRDB():
                             nombre=str(r[1]).strip(),
                             codigo=str(r[0]).strip()
                     )
-                self._db.commit()
+                self._db.commit()                                
                 return True
             except Exception as e:
                 print "Error: %s" % e
@@ -157,6 +165,7 @@ class UpdateFromRDB():
     def uEspecie(self):
         """Get especie data from DGF.Plantas
         """
+       
         lrows = self._db(
             ( self._db['genero']['id']>0 )
         ).select (
@@ -166,30 +175,37 @@ class UpdateFromRDB():
         )
 
         if len(lrows)>0:
-            # Set sequence in genero
+            # Delete all data in table especie
+            self._db.executesql("DELETE FROM especie;")
+            # Set sequence in especie
             self._db.executesql("ALTER SEQUENCE especie_id_seq MINVALUE 0;")
             self._db.executesql("SELECT setval('especie_id_seq', 0, true);")
-            # Delete all data in table genero
-            self._db( self._db.especie ).delete()
-            for lr in lrows:
-                id=int( lr['id'] )
-                genero=lr['nombre']
-                sql = 'SELECT CodE, Especie FROM Plantas WHERE Genero LIKE \'' + str(genero) + '%\''
-                print sql
-                rows=self.rdb.executesql(sql)
-                self._db.commit()
-                try:
-                    for r in rows:
-                        self._db.especie.insert(
-                            genero = id,
-                            nombre = str(r[1]).strip(),
-                            codigo = str(r[0]).strip()
-                        )
-                    self._db.commit()
-                except Exception as e:
-                    print "Error: %s" % e
-                    self._db.rollback()
 
+            self._db.commit()
+            try:           
+                for lr in lrows:
+                    id=int( lr['id'] )
+                    genero=lr['nombre']
+                    sql = 'SELECT CodE, Especie FROM Plantas WHERE Genero LIKE \'' + str(genero) + '%\''
+                    print sql
+                    rows=self.rdb.executesql(sql)                    
+                    try:
+                        for r in rows:
+                            self._db.especie.insert(
+                                genero = id,
+                                nombre = str(r[1]).strip(),
+                                codigo = str(r[0]).strip()
+                            )                        
+                    except Exception as e:
+                        print "Error: %s" % e
+                        raise Exception('Especie error')                        
+                self._db.commit()
+                return True              
+            except Exception as e:
+                print "Error: %s" % e
+                self._db.rollback()
+                return False
+                
 
     def uAll(self):
         """Util function to update all the data from remote database to local database

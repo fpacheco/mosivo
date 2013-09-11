@@ -109,6 +109,20 @@ db.define_table("cosecha",
     format='%(nombre)s'
 )
 
+# tablas que pued actualizar
+db.define_table("tname",
+    Field("nombre", type='string', notnull=True, unique=True, label=T("Table name")),
+    format='%(nombre)s'
+)
+
+# registro de actualizaciones
+db.define_table("tupdated",
+    Field("fecha", type='datetime', notnull=True, label=T("Fecha actualizacion")),
+    Field('tname', db.tname, notnull=True, label=T('Tabla')),
+    Field('uid', db.auth_user, notnull=True, label=T('User')),
+    format='%(tname)s'
+)
+
 # Planes presentados a al DGF
 db.define_table("plan",
     # El numero del Plan de manejo

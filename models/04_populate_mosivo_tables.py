@@ -607,16 +607,42 @@ def gruposuelo():
         except:
             db.rollback()
 
+def tname():
+    q = db(
+           db.tname
+        ).select(
+            db.tname.ALL
+        )
+    if len(q) == 0:
+        # Lista de destinos
+        tnames = [
+            'genero',
+            'especie',
+            'plan',
+            'rodald',
+            'ubicacionrodald'
+        ]
+        db.commit()
+        try:
+            # Set sequence in departamento
+            db.executesql("ALTER SEQUENCE tname_id_seq MINVALUE 0;")
+            db.executesql("SELECT setval('tname_id_seq', 0, true);")
+            for t in tnames:
+                db.tname.insert(nombre = t)
+            db.commit()
+        except:
+            db.rollback()
+
+
 # Populate mosivo database
 addUsersAndGropups()
 departamento()
 destino()
 dia()
-# genero()
-# especie()
 seccionjudicial()
 cosecha()
 tipointervencion()
 tiporesiduoforestal()
 gruposuelo()
+tname()
 
