@@ -1,14 +1,43 @@
 # -*- coding: utf-8 -*-
 
 @auth.requires_membership('admins')
+def nOfRows():
+    """Number of rows in table
+    """
+    tName=request.post_vars.tName
+    data={ 'nRows': nRows(tName) }
+    return data
+
+
+@auth.requires_membership('admins')
+def updatedData():
+    """Number of rows in table
+    """
+    tName=request.post_vars.tName
+    ui = updatedInfo(tName)
+    data={ 'updatedOn': ui[1], 'updatedBy': ui[2] }
+    return data
+
+
+@auth.requires_membership('admins')
 def configupdatefromrdb():
+    """Central page for update. Two tabs
+    """
     mu="/%s/%s/%s" % (request.application, request.controller, 'mupdatefromrdb')
     au="/%s/%s/%s" % (request.application, request.controller, 'aupdatefromrdb')
     return dict(mu=mu, au=au)
 
 
 @auth.requires_membership('admins')
+def aupdatefromrdb():
+    """Automatic update page
+    """
+    pass
+
+@auth.requires_membership('admins')
 def mupdatefromrdb():
+    """Manual update page
+    """
     import json
     cstr=[
         T('Genero'),
@@ -23,8 +52,8 @@ def mupdatefromrdb():
         'rodald'        
     ]
 
-    lastUpdate=[ tUpdated(tnames[cont])[1] if tUpdated(tnames[cont])[0] else T('No data') for cont in range(0,len(tnames)) ]
-    byUser=[ tUpdated(tnames[cont])[2] if tUpdated(tnames[cont])[0] else T('No data') for cont in range(0,len(tnames)) ]    
+    lastUpdate=[ updatedInfo(tnames[cont])[1] for cont in range(0,len(tnames)) ]
+    byUser=[ updatedInfo(tnames[cont])[2] for cont in range(0,len(tnames)) ]    
     
     trs= [
         TR(
@@ -101,7 +130,8 @@ def mupdatefromrdb():
                 A(
                     SPAN(I(_class=' icon-repeat icon-black'), T('Update now')),
                     _class='btn btn-small',
-                    _onclick="return aUpdateAllCoef(%s);" % json.dumps(tnames)
+                    _onclick="return aUpdateAllCoef(%s);" % json.dumps(tnames),
+                    _disabled="disabled"                    
                 )
             )
         )
@@ -118,7 +148,9 @@ def mupdatefromrdb():
 @auth.requires_membership('admins')
 def update():
     import json
+    tnames=['genero','especie','plan','rodald']
     result=False
+    res=[]
     try:
         updWhat=request.post_vars.updWhat
         from getdatafromdgf.updatefromrdb import UpdateFromRDB
@@ -131,22 +163,15 @@ def update():
             result=u.uPlan()
         elif updWhat=='rodald':
             result=u.uRodalD()
-        elif updWhat=='all':
-            result=u.uAll()            
+        # elif updWhat=='all':            
+        #    res=u.uAll()
         else:
             print "Not here!"
 
-        if result and updWhat!='all':
-            ret,un,nr,uby=insertTUpdated(updWhat)
-            data={
-                'result': True,
-                'rCount': nr if nr>-1 else T('Error'),
-                'updateAt': un if un>-1 else T('No data'),
-                'updateBy': uby if uby>-1 else T('No data'),
-            }
+        if result==True:
+            return { 'result': insertTUpdated(updWhat) }
         else:
-            data={}
-        return json.dumps(data)
+            return { 'result': False }
     except Exception as e:
         print "Error: %s" % e
 
@@ -751,7 +776,7 @@ def loadDefaults():
             "(SELECT DISTINCT rd.especie, sj.departamento, 1 as tintervencion, 3 as aintervencion, 0.3 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
         )
         db.executesql(
-            "INSERT INTO cdintervencionr(cintervencion,destino,fdestino) (SELECT id, 2, 1 FROM cintervencion WHERE tintervencion=1 AND aintervencion=3::numeric(5,3))"
+            "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 2, 1 FROM cintervencionr WHERE tintervencion=1 AND aintervencion=3::numeric(5,3))"
         )        
 
         # 2
@@ -760,10 +785,10 @@ def loadDefaults():
             "(SELECT DISTINCT rd.especie, sj.departamento, 1 as tintervencion, 8 as aintervencion, 0.3 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
         )
         db.executesql(
-            "INSERT INTO cdintervencionr(cintervencion,destino,fdestino) (SELECT id, 1, 0.8 FROM cintervencion WHERE tintervencion=1 AND aintervencion=8::numeric(5,3))"
+            "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 1, 0.8 FROM cintervencionr WHERE tintervencion=1 AND aintervencion=8::numeric(5,3))"
         )
         db.executesql(
-            "INSERT INTO cdintervencionr(cintervencion,destino,fdestino) (SELECT id, 2, 0.2 FROM cintervencion WHERE tintervencion=1 AND aintervencion=8::numeric(5,3))"
+            "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 2, 0.2 FROM cintervencionr WHERE tintervencion=1 AND aintervencion=8::numeric(5,3))"
         )
 
         # 3                 
@@ -772,10 +797,10 @@ def loadDefaults():
             "(SELECT DISTINCT rd.especie, sj.departamento, 1 as tintervencion, 15 as aintervencion, 0.3 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
         )
         db.executesql(
-            "INSERT INTO cdintervencionr(cintervencion,destino,fdestino) (SELECT id, 1, 0.5 FROM cintervencion WHERE tintervencion=1 AND aintervencion=15::numeric(5,3))"
+            "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 1, 0.5 FROM cintervencionr WHERE tintervencion=1 AND aintervencion=15::numeric(5,3))"
         )
         db.executesql(
-            "INSERT INTO cdintervencionr(cintervencion,destino,fdestino) (SELECT id, 2, 0.5 FROM cintervencion WHERE tintervencion=1 AND aintervencion=15::numeric(5,3))"
+            "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 2, 0.5 FROM cintervencionr WHERE tintervencion=1 AND aintervencion=15::numeric(5,3))"
         )
 
         # 4                 
@@ -784,10 +809,10 @@ def loadDefaults():
             "(SELECT DISTINCT rd.especie, sj.departamento, 2 as tintervencion, 20 as aintervencion, 1.00 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
         )
         db.executesql(
-            "INSERT INTO cdintervencionr(cintervencion,destino,fdestino) (SELECT id, 1, 0.8 FROM cintervencion WHERE tintervencion=1 AND aintervencion=20::numeric(5,3))"
+            "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 1, 0.8 FROM cintervencionr WHERE tintervencion=2 AND aintervencion=20::numeric(5,3))"
         )
         db.executesql(
-            "INSERT INTO cdintervencionr(cintervencion,destino,fdestino) (SELECT id, 2, 0.2 FROM cintervencion WHERE tintervencion=1 AND aintervencion=20::numeric(5,3))"
+            "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 2, 0.2 FROM cintervencionr WHERE tintervencion=2 AND aintervencion=20::numeric(5,3))"
         )
 
         # 5        
@@ -796,6 +821,6 @@ def loadDefaults():
             "(SELECT DISTINCT rd.especie, sj.departamento, 3 as tintervencion, 40 as aintervencion, 0.97 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
         )
         db.executesql(
-            "INSERT INTO cdintervencionr(cintervencion,destino,fdestino) (SELECT id, 2, 1 FROM cintervencion WHERE tintervencion=1 AND aintervencion=40::numeric(5,3))"
+            "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 2, 1 FROM cintervencionr WHERE tintervencion=3 AND aintervencion=40::numeric(5,3))"
         )        
         

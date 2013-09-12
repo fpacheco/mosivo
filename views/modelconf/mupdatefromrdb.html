@@ -10,57 +10,118 @@
     <ul>
     </p>
 </div>
-<script>
-var url='{{ ="/%s/%s/%s.load" % (request.application, request.controller, "update") }}';
 
-function updateFromRDB(upd) {
-        // El div de resultados es:
-        var udivid='ru' + upd;
-        var ubutid='u' + upd + 'button';        
-        //Desactivar los botones
-        $('td div span a.btn').attr('disabled',true);
-        // Ocultar el succes y fail
-        $('#f'+upd+'span').hide();
-        $('#s'+upd+'span').hide();
-        $('#e'+upd+'span').hide();
-        // Mostrar la imagen de espera
-        $('#pb' + upd).show();
-        $.post(
-            url,
-            {updWhat:upd},
-            function(data) {
-                //Desactivar la espera                 
-                if (data.result==true) {
-                    // Agregar Succes en el div
-                    $('#s'+upd+'span').show();
-                    $('td span span#'+upd+'_nrecords').text(data.rCount);
-                    $('td span span#'+upd+'_lastupdate').text(data.updateAt);
-                    $('td span span#'+upd+'_lastupdate').attr('title',data.updateBy);
-                } else {
-                    //Agregar Fail en el div
-                    $('#f'+upd+'span').show();
-                }                
-            },
-            'json' //data returned is json
-        ).fail(
-            function(){
-                //activar el boton
-                $('#e'+upd+'span').show();                
+<script>
+var url='{{ ="/%s/%s/%s.json" % (request.application, request.controller, "update") }}';
+var tnames=['genero','especie','plan','rodald'];
+
+function updateFromRDB(upd,cAsync) {
+    // If not set then true
+    if (typeof cAsync==="undefined") {
+        cAsync=true;
+    }  
+    // El div de resultados es:
+    var udivid='ru' + upd;
+    var ubutid='u' + upd + 'button';        
+    //Desactivar los botones
+    //$('td div span a.btn').attr('disabled',true);
+    $('td a.btn').attr('disabled',true);
+    // Ocultar el succes y fail
+    for (var i=0;i<tnames.length;i++)
+    {
+        $('#f'+tnames[i]+'span').hide();
+        $('#s'+tnames[i]+'span').hide();
+        $('#e'+tnames[i]+'span').hide();
+    }
+
+    // Mostrar la imagen de espera
+    $('#pb' + upd).show();
+
+    $.ajax(
+        {
+            type: "POST",
+            url: url,
+            data: {updWhat:upd},
+            async: cAsync,
+            dataType: "json"
+        }
+    ).done(
+        function( data ) {
+            //Desactivar la espera
+            if (data.result==true) {
+                // Agregar Succes en el div
+                $('#s'+upd+'span').show();
+                updateNRows();
+                updateUData();
+            } else {
+                //Agregar Fail en el div
+                $('#f'+upd+'span').show();
             }
-        ).always(
-            function(){
-                //ocultar la barra
-                $('#pb' + upd).hide();
-                //Activar los botones
-                $('td div span a.btn').attr('disabled',false);
-            }
-        );
+        }
+    ).fail(
+        function(){
+            //activar el boton
+            $('#e'+upd+'span').show();
+        }
+    ).always(
+        function(){
+            //ocultar la barra
+            $('#pb' + upd).hide();
+            //Activar los botones
+            $('td a.btn').attr('disabled',false);
+        }
+    );
 }
 
-function aUpdateAllCoef(upds) {
-    for (var i=0;i<upds.length;i++)
+function updateUData(){
+    /** Update UpdateOn and updateBy
+    */
+    var url='{{ ="/%s/%s/%s.json" % (request.application, request.controller, "updatedData") }}';
+    for (var i=0;i<tnames.length;i++)
     {
-        $( '#v' + upds[i] + 'button' ).click();        
+        $.post(
+            url,
+            {tName:tnames[i]},
+            mhuudata(i),
+            'json'
+        );
+    }
+}
+
+function mhuudata(i){
+    return function(data) {
+        $('td span span#'+tnames[i]+'_lastupdate').text(data.updatedOn);
+        $('td span span#'+tnames[i]+'_lastupdate').attr('title',data.updatedBy);        
+    };
+};
+
+function updateNRows(){
+    /** Update nRows
+    */    
+    var url='{{ ="/%s/%s/%s.json" % (request.application, request.controller, "nOfRows") }}';
+    for (var i=0;i<tnames.length;i++)
+    {
+        $.post(
+            url,
+            {tName:tnames[i]},
+            mhunrows(i),
+            'json'
+        );
+    }
+}
+
+function mhunrows(i){
+    return function(data) {
+        $('td span#'+ tnames[i] +'_nrecords').text(data.nRows);
+    };
+};
+
+
+function aUpdateAllCoef(tns) {
+    // call updateFromRDB synchronus
+    for (var i=0;i<tns.length;i++)
+    {        
+        updateFromRDB(tns[i],false);
     }
 }
 </script>    

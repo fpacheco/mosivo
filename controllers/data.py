@@ -37,7 +37,9 @@ def vrodald():
         (db.rodald.id > 0) &
         (db.rodald.plan==db.plan.id) &
         (db.rodald.especie==db.especie.id) &
-        (db.especie.genero==db.genero.id)
+        (db.especie.genero==db.genero.id) &
+        (db.seccionjudicial.id==db.plan.sjudicial) &
+        (db.seccionjudicial.departamento==db.departamento.id) 
     )
 
     dm.gQuery( query )
@@ -46,6 +48,8 @@ def vrodald():
     dm.gFields( [
         ('rodald','id'),
         ('plan','ncarpeta'),
+        ('departamento','nombre'),
+        ('seccionjudicial','nombre'),
         ('genero','nombre'),
         ('especie','nombre'),
         ('rodald','anioplant'),

@@ -135,6 +135,15 @@ db.define_table("plan",
     Field('lat', type='double', label=T('Latitud(º)')),
 )
 
+# Datos de plan temporal (desde DGF)
+db.define_table("plantmp",
+    Field('ncarpeta', type='integer', unique=True, notnull=True, label=T('Número de carpeta')),
+    Field('depto', type='integer'),
+    Field('sj', type='integer'),
+    Field('lon', type='double', label=T('Longitud (º)')),
+    Field('lat', type='double', label=T('Latitud(º)')),
+)
+
 # Montes declarados
 db.define_table("rodald",
     # Referencia al plan
@@ -144,6 +153,17 @@ db.define_table("rodald",
     # Anio en que se planto el monte
     Field('anioplant', type='integer', notnull=True),
     # Area afectada por el monte
+    Field('areaafect', type='float', notnull=True),
+)
+
+# Datos de rodales temporal (desde DGF)
+db.define_table("rodaldtmp",
+    Field('ncarpeta', type='integer', notnull=True),
+    # Genero: Eucalyptus
+    Field('ngen', type="string", notnull=True),
+    # Especie: globolus spp
+    Field('nesp', type='string', notnull=True),
+    Field('anioplant', type='integer', notnull=True),
     Field('areaafect', type='float', notnull=True),
 )
 

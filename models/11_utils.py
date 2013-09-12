@@ -1,44 +1,48 @@
 # -*- coding: utf-8 -*-
 """This module update relevant data from remote database (DGF) to local database (mosivo)
 """
+def nRows(tablename):
+    """Numbers of rows in table
+    """
+    if tablename in db.tables:
+        return db(db[tablename]['id']>0).count()
+    else:
+        return -1
 
-@auth.requires_membership('admins')
+
+def updatedInfo(tablename):
+    """Numbers of rows in table
+    """
+    if tablename in db.tables:
+        sql = "SELECT tu.fecha, u.email FROM tupdated tu, tname tn, auth_user u " \
+            "WHERE tn.nombre='%s' AND tu.tname=tn.id AND u.id=tu.uid ORDER BY tu.fecha DESC" % tablename
+        rows=db.executesql(sql)
+        if len(rows)>0:
+            return ( True, rows[0][0], rows[0][1] )
+        else:
+            return (False, 'No info', 'No info')
+    else:
+        return (False, 'No table', 'No table')
+
+
 def insertTUpdated(namea):
     """Insert a record in tupdated table
     Return datetime and number of records in other table
     """
     from datetime import datetime
-    un=datetime.now()
-    q=db( db['tname']['nombre']==namea )
-    if not q.isempty():
-        _id=q.select( db['tname']['id'] )[0]['id']
-        db['tupdated'].insert(
-            fecha=un,
-            tname=_id,
-            uid=auth.user_id
-        )
-        uemail=db( db['auth_user']['id']==auth.user_id ).select( db['auth_user']['email'] )[0]['email']
-        return (True, un, db(db[namea]['id']>0).count(), uemail)
-    else:
-        return (False, -1, -1, -1)
-
-@auth.requires_membership('admins')
-def tUpdated(namea):
-    qq=db( db['tname']['nombre']==namea )
-    if not qq.isempty():
-        _id=qq.select(db['tname']['id'])[0]['id']
-        q=db(
-            ( db['tupdated']['tname']==_id ) &
-            ( db['tupdated']['uid']==db['auth_user']['id'] )
-        )
+    if namea in db.tables:
+        un=datetime.now()
+        q=db( db['tname']['nombre']==namea )
         if not q.isempty():
-            row = q.select(
-                db['tupdated']['fecha'],
-                db['auth_user']['email'],
-                orderby=~db['tupdated']['fecha']
-            )
-            return (True, row[0]['tupdated']['fecha'], row[0]['auth_user']['email'])
+            _id=q.select( db['tname']['id'] )[0]['id']
+            db['tupdated'].insert(
+                fecha=un,
+                tname=_id,
+                uid=auth.user_id
+            )            
+            return True
         else:
-            return (False, -1, -1)
+            return False
     else:
-        return (False, -100, -100)
+        return False
+
