@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
+from gluon.tools import Service
+service=Service()
 
+def call():
+    return service()
+
+@service.json
 @auth.requires_membership('admins')
 def nOfRows():
     """Number of rows in table
@@ -9,6 +15,7 @@ def nOfRows():
     return data
 
 
+@service.json
 @auth.requires_membership('admins')
 def updatedData():
     """Number of rows in table
@@ -32,7 +39,7 @@ def configupdatefromrdb():
 def aupdatefromrdb():
     """Automatic update page
     """
-    pass
+    return dict()
 
 @auth.requires_membership('admins')
 def mupdatefromrdb():
@@ -49,12 +56,12 @@ def mupdatefromrdb():
         'genero',
         'especie',
         'plan',
-        'rodald'        
+        'rodald'
     ]
 
     lastUpdate=[ updatedInfo(tnames[cont])[1] for cont in range(0,len(tnames)) ]
-    byUser=[ updatedInfo(tnames[cont])[2] for cont in range(0,len(tnames)) ]    
-    
+    byUser=[ updatedInfo(tnames[cont])[2] for cont in range(0,len(tnames)) ]
+
     trs= [
         TR(
             TD( T('Update %s') % cstr[cont] ),
@@ -62,21 +69,21 @@ def mupdatefromrdb():
                 SPAN(
                     T('Number of records: '),
                     SPAN(
-                        db( db[ tnames[cont] ]['id']>0 ).count(), 
+                        db( db[ tnames[cont] ]['id']>0 ).count(),
                         _id="%s_nrecords" % tnames[cont],
                         _class="label"
-                    )    
+                    )
                 )
             ),
             TD(
                 SPAN(
-                    T('Last update on: '),                    
+                    T('Last update on: '),
                     SPAN(
                         lastUpdate[cont],
                         _id="%s_lastupdate" % tnames[cont],
                         _class="label",
                         _title=T("By: %s") % byUser[cont]
-                    )                    
+                    )
                 )
             ),
             TD(
@@ -131,7 +138,7 @@ def mupdatefromrdb():
                     SPAN(I(_class=' icon-repeat icon-black'), T('Update now')),
                     _class='btn btn-small',
                     _onclick="return aUpdateAllCoef(%s);" % json.dumps(tnames),
-                    _disabled="disabled"                    
+                    _disabled="disabled"
                 )
             )
         )
@@ -145,6 +152,7 @@ def mupdatefromrdb():
     return dict(table=table)
 
 
+@service.json
 @auth.requires_membership('admins')
 def update():
     import json
@@ -154,7 +162,8 @@ def update():
     try:
         updWhat=request.post_vars.updWhat
         from getdatafromdgf.updatefromrdb import UpdateFromRDB
-        u = UpdateFromRDB(mDatabase=db, inDGF=False)
+        #u = UpdateFromRDB(mDatabase=db, inDGF=False)
+        u = UpdateFromRDB(mDatabase=db, inDGF=True)
         if updWhat=='genero':
             result=u.uGenero()
         elif updWhat=='especie':
@@ -163,7 +172,7 @@ def update():
             result=u.uPlan()
         elif updWhat=='rodald':
             result=u.uRodalD()
-        # elif updWhat=='all':            
+        # elif updWhat=='all':
         #    res=u.uAll()
         else:
             print "Not here!"
@@ -777,7 +786,7 @@ def loadDefaults():
         )
         db.executesql(
             "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 2, 1 FROM cintervencionr WHERE tintervencion=1 AND aintervencion=3::numeric(5,3))"
-        )        
+        )
 
         # 2
         db.executesql(
@@ -791,7 +800,7 @@ def loadDefaults():
             "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 2, 0.2 FROM cintervencionr WHERE tintervencion=1 AND aintervencion=8::numeric(5,3))"
         )
 
-        # 3                 
+        # 3
         db.executesql(
             "INSERT INTO cintervencionr(especie,departamento,tintervencion,aintervencion,fextraccion) " \
             "(SELECT DISTINCT rd.especie, sj.departamento, 1 as tintervencion, 15 as aintervencion, 0.3 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
@@ -803,7 +812,7 @@ def loadDefaults():
             "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 2, 0.5 FROM cintervencionr WHERE tintervencion=1 AND aintervencion=15::numeric(5,3))"
         )
 
-        # 4                 
+        # 4
         db.executesql(
             "INSERT INTO cintervencionr(especie,departamento,tintervencion,aintervencion,fextraccion) " \
             "(SELECT DISTINCT rd.especie, sj.departamento, 2 as tintervencion, 20 as aintervencion, 1.00 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
@@ -815,12 +824,32 @@ def loadDefaults():
             "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 2, 0.2 FROM cintervencionr WHERE tintervencion=2 AND aintervencion=20::numeric(5,3))"
         )
 
-        # 5        
+        # 5
         db.executesql(
             "INSERT INTO cintervencionr(especie,departamento,tintervencion,aintervencion,fextraccion) " \
             "(SELECT DISTINCT rd.especie, sj.departamento, 3 as tintervencion, 40 as aintervencion, 0.97 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
         )
         db.executesql(
             "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 2, 1 FROM cintervencionr WHERE tintervencion=3 AND aintervencion=40::numeric(5,3))"
-        )        
-        
+        )
+
+
+### Model update and run
+@auth.requires_membership('admins')
+def modelupdate():
+    """Central page for update. Two tabs
+    """
+    mmu="/%s/%s/%s" % (request.application, request.controller, 'mmodelupdate')
+    amu="/%s/%s/%s" % (request.application, request.controller, 'amodelupdate')
+    return dict(mmu=mmu, amu=amu)
+
+
+@auth.requires_membership('admins')
+def mmodelupdate():
+    return dict()
+
+
+@auth.requires_membership('admins')
+def amodelupdate():
+    return dict()
+

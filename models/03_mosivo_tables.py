@@ -39,7 +39,7 @@ db.define_table("departamento",
 # Seccion judicial por departamento
 db.define_table("seccionjudicial",
     Field("departamento", db.departamento),
-    Field("nombre", type="integer", notnull=True, label=T('Seccion judicial')),
+    Field("nombre", type="integer", notnull=True, label=T('Sección judicial')),
 )
 # seccion and departamento must be uniques
 db.seccionjudicial.nombre.requires=IS_NOT_IN_DB(
@@ -49,7 +49,7 @@ db.seccionjudicial.nombre.requires=IS_NOT_IN_DB(
 # Generos de arboles
 db.define_table("genero",
     Field("nombre", type="string", length=50, unique=True, notnull=True, label=T("Género")),
-    Field("codigo", type="string", length=1, notnull=True),
+    Field("codigo", type="string", length=1, notnull=True, label=T("Código del género")),
     format='%(nombre)s'
 )
 # Nombre and codigo uniques
@@ -117,7 +117,7 @@ db.define_table("tname",
 
 # registro de actualizaciones
 db.define_table("tupdated",
-    Field("fecha", type='datetime', notnull=True, label=T("Fecha actualizacion")),
+    Field("fecha", type='datetime', notnull=True, label=T("Fecha actualización")),
     Field('tname', db.tname, notnull=True, label=T('Tabla')),
     Field('uid', db.auth_user, notnull=True, label=T('User')),
     format='%(tname)s'
@@ -151,9 +151,9 @@ db.define_table("rodald",
     # referencia a la especie
     Field('especie', db.especie, notnull=True),
     # Anio en que se planto el monte
-    Field('anioplant', type='integer', notnull=True),
+    Field('anioplant', type='integer', notnull=True, label=T('Año plantado')),
     # Area afectada por el monte
-    Field('areaafect', type='float', notnull=True),
+    Field('areaafect', type='float', notnull=True, label=T('Área afectada(ha)')),
 )
 
 # Datos de rodales temporal (desde DGF)
@@ -184,7 +184,7 @@ db.define_table("gruposuelorodald",
     # Seccion judicial para ese departamento
     Field('gsuelo', db.gruposuelo, notnull=True),
     # Superficie
-    Field('superficie', notnull=True, type='double')
+    Field('superficie', notnull=True, type='double', label=T('Superficie de tipo de suelo'))
 )
 # rodal and suelo uniques
 db.gruposuelorodald.gsuelo.requires=IS_NOT_IN_DB(
@@ -197,7 +197,7 @@ db.define_table("intervrodald",
     # tiempo en anios desde que se planta
     Field('tintervencion', db.tipointervencion, notnull=True),
     # tiempo en anios desde que se planta
-    Field('adisp', type='float', notnull=True, label=u'Año de corte'),
+    Field('adisp', type='float', notnull=True, label=T('Año de corte')),
 )
 
 # Destinos de la intervencion en el rodal declarado
@@ -206,7 +206,7 @@ db.define_table("destinointervrodald",
     # destino
     Field('destino', db.destino, notnull=True),
     # volumen de corta en m3
-    Field('mcmcc', type='float', notnull=True, label=u'Volumen (m3 mcc)'),
+    Field('mcmcc', type='float', notnull=True, label=T('Volumen (m3 mcc)')),
 )
 
 # Montes proyectados

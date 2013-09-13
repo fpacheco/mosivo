@@ -1,10 +1,10 @@
 {{extend 'layout.html'}}
-<h1> {{ =T('Update data from remote database (DGF)') }}</h1>
+<h1> {{ =T('Model update and run') }}</h1>
 <script>
 $(function() {
         var baseURL = '{{ ='/%s/%s/' % (request.application, request.controller) }}';
         //load content for first tab and initialize
-        $('#aupdatefromrdb').load(baseURL+'aupdatefromrdb', function() {
+        $('#amodelupdate').load(baseURL+'amodelupdate', function() {
             $('#myTabs').tab(); //initialize tabs
         });
         $('#myTabs').bind('show', function(e) {
@@ -20,12 +20,12 @@ $(function() {
 
 <div class="tabbable">
     <ul class="nav nav-tabs" id="myTabs">
-        <li><a href="#aupdatefromrdb"  class="active" data-toggle="tab">{{ =T('Automatic') }}</a></li>
-        <li><a href="#mupdatefromrdb" data-toggle="tab">{{ =T('Manual') }}</a></li>
+        <li><a href="#amodelupdate"  class="active" data-toggle="tab">{{ =T('Automatic') }}</a></li>
+        <li><a href="#mmodelupdate" data-toggle="tab">{{ =T('Manual') }}</a></li>
     </ul>
 
     <div class="tab-content">
-        <div class="tab-pane active" id="aupdatefromrdb"></div>
-        <div class="tab-pane" id="mupdatefromrdb"></div>
+        <div class="tab-pane active" id="amodelupdate"></div>
+        <div class="tab-pane" id="mmodelupdate"></div>
     </div>
 </div>

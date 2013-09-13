@@ -101,11 +101,25 @@ class UpdateFromRDB():
         self._db.executesql("ALTER SEQUENCE rodaldtmp_id_seq MINVALUE 0")
         self._db.executesql("SELECT setval('rodaldtmp_id_seq', 0, true)")
         
+        '''
         sql = "SELECT cp.Nro_Carpeta, pl.Genero, pl.Especie, p.Ano_Dec, p.Ha_Dec " 
         sql += "FROM Planes p, Planes_Pro pp, Carpetas_P cp, Plantas pl "
         sql += "WHERE p.CodG_Dec IS NOT NULL AND p.CodE_Dec IS NOT NULL AND " \
-            "pp.Codigo_Cp=cp.Codigo AND pp.Codigo=p.Codigo_Plan_Pro AND " \
+            "pp.Codigo_Cp=cp.Nro_Carpeta AND pp.Codigo=p.Codigo_Plan_Pro AND " \
             "p.Ano_Dec>0 AND p.Ha_Dec>0 AND " \
+            "pl.CodG=p.CodG_Dec AND pl.CodE=p.CodE_Dec ORDER BY cp.Nro_Carpeta"
+        '''
+        #####################################################################
+        # RFPV - Muy importante:
+        # Planes_Pro.Codigo_Cp=Carpetas_P.Nro_Carpeta
+        # Planes_Pro.Codigo=Planes.Codigo_Plan_Pro
+        # RFPV - Muy importante
+        ####################################################################
+        sql = "SELECT cp.Nro_Carpeta, pl.Genero, pl.Especie, p.Anio_Dec, p.Ha_Dec " 
+        sql += "FROM Planes_View p, Planes_Pro pp, Carpetas_P cp, Plantas pl "
+        sql += "WHERE p.CodG_Dec IS NOT NULL AND p.CodE_Dec IS NOT NULL AND " \
+            "pp.Codigo_Cp=cp.Nro_Carpeta AND pp.Codigo=p.Codigo_Plan_Pro AND " \
+            "p.Anio_Dec>0 AND p.Ha_Dec>0 AND " \
             "pl.CodG=p.CodG_Dec AND pl.CodE=p.CodE_Dec ORDER BY cp.Nro_Carpeta"
         rows = self.rdb.executesql(sql)
         

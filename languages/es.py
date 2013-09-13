@@ -386,6 +386,7 @@
 'Model data': 'Datos del modelo',
 'Model execution': 'Ejecución del modelo',
 'Model run': 'Ejecutar modelo',
+'Model update and run': 'Model update and run',
 'Model updates': 'Actualizar modelo',
 'Models': 'Modelos',
 'models': 'modelos',
