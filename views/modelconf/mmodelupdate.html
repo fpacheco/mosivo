@@ -4,4 +4,49 @@
     <p>Desde aqui Ud. podrá ejecutar el modelo para simular los resultados.<br />
     </p>
 </div>
-Todavía no está operativo
+<script>
+var url='{{ ="/%s/%s/%s.json" % (request.application, request.controller, "modelrun") }}';
+
+function modelrun(cAsync) {
+    // If not set then true
+    if (typeof cAsync==="undefined") {
+        cAsync=true;
+    }
+
+    // Mostrar la imagen de espera
+    $('#pb').show();
+
+    $.ajax(
+        {
+            type: "POST",
+            url: url,
+            async: cAsync,
+            dataType: "json"
+        }
+    ).done(
+        function( data ) {
+            //Desactivar la espera
+            if (data.result==true) {
+                // Agregar Succes en el div
+                $('#sspan').show();
+            } else {
+                //Agregar Fail en el div
+                $('#fspan').show();
+            }
+        }
+    ).fail(
+        function(){
+            //activar el boton
+            $('#espan').show();
+        }
+    ).always(
+        function(){
+            //ocultar la barra
+            $('#pb').hide();
+            //Activar los botones
+            $('td a.btn').attr('disabled',false);
+        }
+    );
+}
+</script>
+{{ =table }}

@@ -1,1 +1,144 @@
-mcdintervenciona.load
+<table class="table table-bordered table-condensed table-striped table-form">
+<thead>
+    <tr>
+        <th>{{=T('Destino')}}</th>
+        <th>{{=T('Factor de destino')}}</th>
+    </tr>
+</thead>
+<tbody>
+{{i=0}}
+{{ for f in forms: }}
+    <tr>
+        <td>{{=dnombres[i]}}</td>
+        <td>
+            <!-- Form -->
+            {{=f.custom.begin}}
+            {{=f.custom.widget.id}}
+            {{=f.custom.widget.cintervenciona}}
+            {{=f.custom.widget.destino}}
+            {{=f.custom.widget.fdestino}}
+            {{=f.custom.end}}
+        </td>
+    </tr>
+{{i=i+1}}
+{{pass}}
+</tbody>
+</table>
+<script>
+var rid=new Array();
+var rcint=new Array();
+var rdest=new Array();
+var rfdest=new Array();
+var submitURL='{{ ="/%s/%s/%s.load" % (request.application, request.controller, request.function) }}';
+
+function checkLoadValues() {
+    var forms=$('#detailsEResult form');
+    for (var i=0;i<forms.length;i++)
+    {
+        checkFDestino(i);
+    }
+    //Dont save yet
+    $('#detailsEDialog #save').attr('disabled',true);
+};
+
+function checkSum() {
+    var sumValid=false;
+    var rfdestsum=0;
+    for (var i=0;i<rfdest.length;i++)
+    {
+        if ( isNaN(parseFloat(rfdest[i])) ) {
+            // Nada
+        } else {
+            rfdestsum = rfdestsum + parseFloat( rfdest[i] );
+        }
+    }
+    var rfi=parseInt(rfdestsum*100)/100;
+    if (rfi==1) {
+        //detailsEDialog save enabled
+        $('#detailsEDialog #save').attr('disabled',false);
+        sumValid=true;
+    } else {
+        //detailsEDialog save disabled
+        $('#detailsEDialog #save').attr('disabled',true);
+    }
+    return sumValid;
+};
+
+function checkFDestino(val) {
+    /**
+    * On every focus out on fdestino check values. Activate save if
+    * int(sum(fdestinos)*100)=100
+    */
+    var afdest=parseFloat( $('#detailsEResult form#cdintervenciona_' + val + ' input#cdintervenciona_fdestino').attr('value') );
+    if (afdest>0) {
+        if (afdest<=1) {
+            rfdest[val]=afdest;
+        } else {
+            //Value is greather than 1 (100%)!
+            $('#detailsEResult form#cdintervenciona_' + val + ' input#cdintervenciona_fdestino').attr('value','');
+            rfdest[val]="";
+        }
+    } else {
+        //detailsEDialog save disabled
+        rfdest[val]="";
+        $('#detailsEResult form#cdintervenciona_' + val + ' input#cdintervenciona_fdestino').attr('value','');
+        //detailsEDialog save disabled
+        $('#detailsEDialog #save').attr('disabled',true);
+    }
+    checkSum();
+};
+
+function formCustomPost() {
+    //
+    var forms=$('#detailsEResult form');
+    if (checkSum()==true) {
+        for (var i=0;i<forms.length;i++)
+        {
+            rid[i]=$('#detailsEResult form#cdintervenciona_' + i + ' span#cdintervenciona_id').text();
+            rcint[i]=$('#detailsEResult form#cdintervenciona_' + i + ' input#cdintervenciona_cintervenciona').attr('value');
+            rdest[i]=$('#detailsEResult form#cdintervenciona_' + i + ' select#cdintervenciona_destino').attr('value');
+        }
+        var dataPost = {
+            "cdia_id":rid,
+            "cdia_cintervenciona":rcint,
+            "cdia_destino":rdest,
+            "cdia_fdestino":rfdest,
+        };
+        $.post(
+            submitURL,
+            dataPost,
+            function(data) {
+                //Desactivar la espera
+                if (data.result==true) {
+                    // Reload current page
+                    // location.reload();
+                    // Agregar Succes en el div
+                    // $('#s'+tablename+'span').show();
+                } else {
+                    //alert(data.message);
+                    //Agregar Fail en el div
+                    // $('#f'+tablename+'span').show();
+                }
+                //activar el boton
+                //$('#'+rbutid).attr('disabled',false);
+            },
+            'json' //data returned is json
+        ).fail(
+            function(){
+                //activar el boton
+                //$('#e'+tablename+'span').show();
+            }
+        ).always(
+            function(){
+                //ocultar la barra
+                //$('#pb' + tablename).hide();
+                //activar el boton
+                //$('#'+rbutid).attr('disabled',false);
+            }
+        );
+    }
+};
+
+checkLoadValues();
+
+</script>

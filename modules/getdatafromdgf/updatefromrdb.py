@@ -35,13 +35,13 @@ class UpdateFromRDB():
             "cp.Cod_Depto IS NOT NULL AND cp.Cod_Sj IS NOT NULL AND cp.Cod_Sj>0 ORDER BY cp.Nro_Carpeta"
         rows = self.rdb.executesql(sql)
 
-        if len(rows) > 0:                        
+        if len(rows) > 0:
             # Delete all data in table carpeta
             self._db.executesql("DELETE FROM plantmp")
             # Set sequence in departamento
             self._db.executesql("ALTER SEQUENCE plantmp_id_seq MINVALUE 0")
             self._db.executesql("SELECT setval('plantmp_id_seq', 0, true)")
-            
+
             self._db.commit()
             try:
                 for r in rows:
@@ -52,7 +52,7 @@ class UpdateFromRDB():
                         lon = r[3],
                         lat = r[4]
                     )
-                self._db.commit()                
+                self._db.commit()
                 return True
             except Exception as e:
                 print "Error: %s" % e
@@ -68,9 +68,9 @@ class UpdateFromRDB():
         # Set sequence in plan
         self._db.executesql("ALTER SEQUENCE plan_id_seq MINVALUE 0")
         self._db.executesql("SELECT setval('plan_id_seq', 0, true)")
-        
+
         sql = "INSERT INTO plan(ncarpeta,sjudicial,lon,lat) "
-        sql += "(SELECT pt.ncarpeta, sj.id, pt.lon, pt.lat "        
+        sql += "(SELECT pt.ncarpeta, sj.id, pt.lon, pt.lat "
         sql += "FROM plantmp pt, seccionjudicial sj "
         sql += "WHERE pt.depto=sj.departamento AND pt.sj=sj.nombre "
         sql += "ORDER BY pt.ncarpeta)"
@@ -81,7 +81,7 @@ class UpdateFromRDB():
             print "Error: %s" % e
             return False
 
-        
+
     def uPlan(self):
         """Actualiza en dos etapas plan desde DGF
         """
@@ -93,16 +93,16 @@ class UpdateFromRDB():
         else:
             return False
 
-            
+
     def uRodalDTmp(self):
         """Inserta rodales declarados para cada carpeta
         """
         self._db.executesql("DELETE FROM rodaldtmp")
         self._db.executesql("ALTER SEQUENCE rodaldtmp_id_seq MINVALUE 0")
         self._db.executesql("SELECT setval('rodaldtmp_id_seq', 0, true)")
-        
+
         '''
-        sql = "SELECT cp.Nro_Carpeta, pl.Genero, pl.Especie, p.Ano_Dec, p.Ha_Dec " 
+        sql = "SELECT cp.Nro_Carpeta, pl.Genero, pl.Especie, p.Ano_Dec, p.Ha_Dec "
         sql += "FROM Planes p, Planes_Pro pp, Carpetas_P cp, Plantas pl "
         sql += "WHERE p.CodG_Dec IS NOT NULL AND p.CodE_Dec IS NOT NULL AND " \
             "pp.Codigo_Cp=cp.Nro_Carpeta AND pp.Codigo=p.Codigo_Plan_Pro AND " \
@@ -115,14 +115,14 @@ class UpdateFromRDB():
         # Planes_Pro.Codigo=Planes.Codigo_Plan_Pro
         # RFPV - Muy importante
         ####################################################################
-        sql = "SELECT cp.Nro_Carpeta, pl.Genero, pl.Especie, p.Anio_Dec, p.Ha_Dec " 
+        sql = "SELECT cp.Nro_Carpeta, pl.Genero, pl.Especie, p.Anio_Dec, p.Ha_Dec "
         sql += "FROM Planes_View p, Planes_Pro pp, Carpetas_P cp, Plantas pl "
         sql += "WHERE p.CodG_Dec IS NOT NULL AND p.CodE_Dec IS NOT NULL AND " \
             "pp.Codigo_Cp=cp.Nro_Carpeta AND pp.Codigo=p.Codigo_Plan_Pro AND " \
             "p.Anio_Dec>0 AND p.Ha_Dec>0 AND " \
             "pl.CodG=p.CodG_Dec AND pl.CodE=p.CodE_Dec ORDER BY cp.Nro_Carpeta"
         rows = self.rdb.executesql(sql)
-        
+
         self._db.commit()
         try:
             for r in rows:
@@ -149,9 +149,9 @@ class UpdateFromRDB():
         # Set sequence in plan
         self._db.executesql("ALTER SEQUENCE rodald_id_seq MINVALUE 0")
         self._db.executesql("SELECT setval('rodald_id_seq', 0, true)")
-        
+
         sql = "INSERT INTO rodald(plan,especie,anioplant,areaafect) "
-        sql += "(SELECT p.id, e.id, rdt.anioplant, rdt.areaafect "        
+        sql += "(SELECT p.id, e.id, rdt.anioplant, rdt.areaafect "
         sql += "FROM plan p, especie e, genero g, rodaldtmp rdt "
         sql += "WHERE rdt.ncarpeta=p.ncarpeta AND e.nombre=rdt.nesp AND g.nombre=rdt.ngen AND " \
             "e.genero=g.id "
@@ -175,7 +175,7 @@ class UpdateFromRDB():
         else:
             return False
 
-                
+
 
     def uGenero(self):
         """Get genero data from DGF.Plantas
@@ -196,7 +196,7 @@ class UpdateFromRDB():
                             nombre=str(r[1]).strip(),
                             codigo=str(r[0]).strip()
                     )
-                self._db.commit()                                
+                self._db.commit()
                 return True
             except Exception as e:
                 print "Error: %s" % e
@@ -207,7 +207,7 @@ class UpdateFromRDB():
     def uEspecie(self):
         """Get especie data from DGF.Plantas
         """
-       
+
         lrows = self._db(
             ( self._db['genero']['id']>0 )
         ).select (
@@ -224,30 +224,30 @@ class UpdateFromRDB():
             self._db.executesql("SELECT setval('especie_id_seq', 0, true);")
 
             self._db.commit()
-            try:           
+            try:
                 for lr in lrows:
                     id=int( lr['id'] )
                     genero=lr['nombre']
                     sql = 'SELECT CodE, Especie FROM Plantas WHERE Genero LIKE \'' + str(genero) + '%\''
                     print sql
-                    rows=self.rdb.executesql(sql)                    
+                    rows=self.rdb.executesql(sql)
                     try:
                         for r in rows:
                             self._db.especie.insert(
                                 genero = id,
                                 nombre = str(r[1]).strip(),
                                 codigo = str(r[0]).strip()
-                            )                        
+                            )
                     except Exception as e:
                         print "Error: %s" % e
-                        raise Exception('Especie error')                        
+                        raise Exception('Especie error')
                 self._db.commit()
-                return True              
+                return True
             except Exception as e:
                 print "Error: %s" % e
                 self._db.rollback()
                 return False
-                
+
 
     def uAll(self):
         """Util function to update all the data from remote database to local database
@@ -259,7 +259,3 @@ class UpdateFromRDB():
             self.uPlan(),
             self.uRodalD()
         ]
-        
-        
-        
-        

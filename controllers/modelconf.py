@@ -28,7 +28,7 @@ def updatedData():
 
 @auth.requires_membership('admins')
 def configupdatefromrdb():
-    """Central page for update. Two tabs
+    """Central page for update. Two tabs. See mupdatefromrdb and aupdatefromrdb
     """
     mu="/%s/%s/%s" % (request.application, request.controller, 'mupdatefromrdb')
     au="/%s/%s/%s" % (request.application, request.controller, 'aupdatefromrdb')
@@ -37,13 +37,13 @@ def configupdatefromrdb():
 
 @auth.requires_membership('admins')
 def aupdatefromrdb():
-    """Automatic update page
+    """Automatic update page from remote database
     """
     return dict()
 
 @auth.requires_membership('admins')
 def mupdatefromrdb():
-    """Manual update page
+    """Manual update page from remote database
     """
     import json
     cstr=[
@@ -147,23 +147,27 @@ def mupdatefromrdb():
     table=TABLE (
         TBODY( trs ),
         _class="table table-striped",
-        _id="modelverify"
+        _id="modelupdate"
     )
     return dict(table=table)
 
 
+# @auth.requires_membership('admins')
 @service.json
-@auth.requires_membership('admins')
 def update():
-    import json
     tnames=['genero','especie','plan','rodald']
     result=False
     res=[]
     try:
         updWhat=request.post_vars.updWhat
+        if IN_DGF:
+            print "You are in DGF!!!!!!"
+        else:
+            print "You are in InGeSur!!!!!!"
+        print "updWhat: %s" % updWhat
+
         from getdatafromdgf.updatefromrdb import UpdateFromRDB
-        #u = UpdateFromRDB(mDatabase=db, inDGF=False)
-        u = UpdateFromRDB(mDatabase=db, inDGF=True)
+        u = UpdateFromRDB(mDatabase=db, inDGF=IN_DGF)
         if updWhat=='genero':
             result=u.uGenero()
         elif updWhat=='especie':
@@ -178,11 +182,12 @@ def update():
             print "Not here!"
 
         if result==True:
-            return { 'result': insertTUpdated(updWhat) }
+            return dict( result=insertTUpdated(updWhat) )
         else:
-            return { 'result': False }
+            return dict( result=False )
     except Exception as e:
         print "Error: %s" % e
+        return dict( result=False )
 
 @auth.requires_membership('admins')
 def verifymodel():
@@ -846,10 +851,128 @@ def modelupdate():
 
 @auth.requires_membership('admins')
 def mmodelupdate():
-    return dict()
+    import json
+    tnames=[]
+    
+    trs= [
+        TR(
+            TD( B( T('Run model without full requirement verification') )),
+            TD(                
+                DIV(
+                    
+                    SPAN(
+                        #Button
+                        A(
+                            SPAN(I(_class=' icon-repeat icon-black'), T('Run now')),
+                            _class='btn btn-small',
+                            _onclick="return modelrun();",
+                            _id="ubutton"
+                        ),
+                        IMG(
+                            _src="/%s/static/images/pbar_loader.gif" % request.application,
+                            _id="pb",
+                            _style="display:none;height:10px;"
+                        ),
+                        #Return labels
+                        SPAN(
+                            T('Success'),
+                            _class="label label-success",
+                            _id="sspan",
+                            _style="display:none",
+                        ),
+                        SPAN(
+                            T('Fail'),
+                            _class="label label-warning",
+                            _id="fspan",
+                            _style="display:none",
+                        ),
+                        SPAN(
+                            T('Error'),
+                            _class="label label-important",
+                            _id="espan",
+                            _style="display:none",
+                        )
+                    ),
+                    _id="ru",
+                    _class="div div-btn div-info",
+                    _style="width:240px;"
+                )
+            )
+        )
+    ]
+
+    table=TABLE (
+        TBODY( trs ),
+        _class="table table-striped",
+        _id="modelupdate"
+    )
+    return dict(table=table)
 
 
 @auth.requires_membership('admins')
 def amodelupdate():
     return dict()
 
+
+@auth.requires_membership('admins')
+@service.json
+def modelrun():
+    """Run the model
+    """
+    try:
+        from mmodel.mmodel import MModel
+        m = MModel(mDatabase=db)
+        result = m.run()
+        return dict( result=False )
+    except Exception as e:
+        print "Error: %s" % e
+        return dict( result=False )
+
+@auth.requires_membership('admins')
+def pspecies():
+    from plugin_dm.datamanager import DataManager
+    dm=DataManager(database=db)
+    query=(
+        (db.ccosecha.id > 0) &
+        (db.especie.id==db.ccosecha.especie) &
+        (db.genero.id==db.especie.genero) &
+        (db.destino.id==db.ccosecha.destino) &
+        (db.cosecha.id==db.ccosecha.cosecha)
+        )
+    dm.gQuery( query )
+    dm.actionTableName('ccosecha')
+    dm.gFieldId('id')
+    dm.gFields( [
+        ('ccosecha','id'),
+        ('genero','nombre'),
+        ('ccosecha','especie'),
+        ('ccosecha','destino'),
+        ('ccosecha','cosecha')
+        ] )
+    dm.gShowId(False)
+    return dict(toolbar=dm.toolBar(), grid=dm.grid())
+
+
+@auth.requires_membership('admins')
+def pregions():
+    from plugin_dm.datamanager import DataManager
+    dm=DataManager(database=db)
+    query=(
+        (db.ccosecha.id > 0) &
+        (db.especie.id==db.ccosecha.especie) &
+        (db.genero.id==db.especie.genero) &
+        (db.destino.id==db.ccosecha.destino) &
+        (db.cosecha.id==db.ccosecha.cosecha)
+        )
+    dm.gQuery( query )
+    dm.actionTableName('ccosecha')
+    dm.gFieldId('id')
+    dm.gFields( [
+        ('ccosecha','id'),
+        ('genero','nombre'),
+        ('ccosecha','especie'),
+        ('ccosecha','destino'),
+        ('ccosecha','cosecha')
+        ] )
+    dm.gShowId(False)
+    return dict(toolbar=dm.toolBar(), grid=dm.grid())

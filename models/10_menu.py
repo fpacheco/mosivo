@@ -150,19 +150,18 @@ menuAdmin = [
     ( T('Home'), URL('default','index')==URL, URL('default','index'),[] ),
     ( T('View'), URL('view','index')==URL, URL('view','index'),
         [
-            ( T('Model data'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'),
-                [
-                    ( T('Raleo'), URL('modelconf','craleo')==URL(), URL('modelconf','craleo'), [] ),
-                    ( T('Turno'), URL('modelconf','cturno')==URL(), URL('modelconf','cturno'), [] ),
-                    ( T('Turno'), URL('modelconf','cturno')==URL(), URL('modelconf','cturno'), [] ),
-                    ( T('Turno'), URL('modelconf','cturno')==URL(), URL('modelconf','cturno'), [] ),
-                    ( T('Turno'), URL('modelconf','cturno')==URL(), URL('modelconf','cturno'), [] ),
-                ]
-            ),
+
             ( T('Data'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'),
                 [
                     ( T('Plans'), URL('data','vplanes')==URL(), URL('data','vplanes'), [] ),
                     ( T('Declared stands'), URL('data','vrodald')==URL(), URL('data','vrodald'), [] ),
+                ]
+            ),        
+            ( T('Model data'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'),
+                [
+                    ( T('By criteria'), URL('modeldata','bycriteria')==URL(), URL('modeldata','bycriteria'), [] ),
+                    LI(_class="divider"),
+                    ( I(T('All')), URL('modeldata','all')==URL(), URL('modeldata','all'), [] ),
                 ]
             ),
         ]
@@ -170,10 +169,18 @@ menuAdmin = [
     ( T('Model Configuration'), URL('config','index')==URL, URL('config','index'),
         [
             ( T('Data updates'), URL('modelconf','configupdatefromrdb')==URL(), URL('modelconf','configupdatefromrdb'), [] ),
-            ( T('Model execution'), URL('modelconf','modelupdate')==URL(), URL('modelconf','modelupdate'), [] ),
+            LI(_class="divider"),
+            ( T('Parameters'), URL('modelconf','exclusions')==URL(), URL('modelconf','exclusions'),
+                [
+                    ( T('Species'), URL('modelconf','pspecies')==URL(), URL('modelconf','pspecies'), [] ),
+                    ( T('Regions'), URL('modelconf','pregions')==URL(), URL('modelconf','pregions'), [] ),
+                ]
+            ),
             LI(_class="divider"),
             ( T('Coefficients'), URL()==URL(), URL(),
                 [
+                    ( I(T('Load default coefficients')), URL('modelconf','loadDefaults')==URL(), URL('modelconf','loadDefaults'), [] ),
+                    LI(_class="divider"),
                     ( T('Área efectiva por especie y departamento'), URL('modelconf','mcaefectiva')==URL(), URL('modelconf','mcaefectiva'), [] ),
                     ( T('IMA por especie y departamento'), URL('modelconf','mcima')==URL(), URL('modelconf','mcima'), [] ),
                     ( T('Intervención (rodal)'), URL('modelconf','mcintervencionr')==URL(), URL('modelconf','mcintervencionr'), [] ),
@@ -187,7 +194,7 @@ menuAdmin = [
                     ( T('Biomasa en campo'), URL('modelconf','mcbcampo')==URL(), URL('modelconf','mcbcampo'), [] ),
                     ( T('Biomasa en la industria'), URL('modelconf','mcbindustria')==URL(), URL('modelconf','mcbindustria'), [] ),
                 ]
-            ),
+            ),                        
             ( T('Others'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'),
                 [
                     ( T('Destinations'), URL('modelconf','mdestino')==URL(), URL('modelconf','mdestino'), [] ),
@@ -197,6 +204,8 @@ menuAdmin = [
             ),
             LI(_class="divider"),
             ( T('Verificar cumplimiento'), URL('modelconf','verifymodel')==URL(), URL('modelconf','verifymodel'), [] ),
+            LI(_class="divider"),
+            ( T('Model execution'), URL('modelconf','modelupdate')==URL(), URL('modelconf','modelupdate'), [] ),
         ]
     ),
     ( T('System administration'), URL('admin','index')==URL(), URL('admin','index'),
