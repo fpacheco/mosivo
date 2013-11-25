@@ -66,7 +66,7 @@ def pygal():
     bar_chart.title = 'Superficie plantada por departamento (Ha)'
     # rows=rdb.executesql("SELECT c.cod_depto,sum(p.ha_dec) FROM planes p, planes_pro pp, carpetas_p c WHERE p.codigo_plan_pro=pp.codigo AND pp.codigo_cp==c.codigo GROUP BY c.cod_depto")
     rows=db.executesql("SELECT d.nombre,sum(rd.areaafect) FROM rodald rd, plan p, seccionjudicial sj, departamento d WHERE rd.plan=p.id AND p.sjudicial=sj.id AND sj.departamento=d.id GROUP BY d.nombre ORDER BY d.nombre")
-    bar_chart.x_labels = [ r[0].encode('ascii', 'ignore') for r in rows ]
+    bar_chart.x_labels = [ "%s" % r[0].encode('utf-8', 'ignore') for r in rows ]
     bar_chart.add(u'Áreas totales', [ r[1] for r in rows ] )
     # bar_chart.add('Fibonacci', [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55]) # Add some values
     return bar_chart.render()

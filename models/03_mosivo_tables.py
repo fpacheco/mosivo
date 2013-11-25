@@ -59,7 +59,7 @@ db.genero.codigo.requires=IS_NOT_IN_DB(
 
 # Especies para cada genero
 db.define_table("especie",
-    Field("genero", db.genero, label=T(u"Género de la especie"),
+    Field("genero", db.genero, label=T(u"Género"),
       required=True, requires=IS_IN_DB(db, 'genero.id', '%(nombre)s'),
       represent=lambda id, r: db.genero(id).nombre
     ),
@@ -195,7 +195,7 @@ db.gruposuelorodald.gsuelo.requires=IS_NOT_IN_DB(
 db.define_table("intervrodald",
     Field('rodal', db.rodald, notnull=True),
     # tiempo en anios desde que se planta
-    Field('tintervencion', db.tipointervencion, notnull=True),
+    Field('tintervencion', db.tipointervencion, notnull=True, label=T('Tipo intervencion')),
     # tiempo en anios desde que se planta
     Field('adisp', type='float', notnull=True, label=T('Año de corte')),
 )
