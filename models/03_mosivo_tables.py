@@ -43,7 +43,7 @@ db.define_table("seccionjudicial",
     # Excluido de la modelacion?
     Field('exc', type='boolean', notnull=True, default=False, label=T('Excluída')),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por')),    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por')),    
 )
 # seccion and departamento must be uniques
 db.seccionjudicial.nombre.requires=IS_NOT_IN_DB(
@@ -58,7 +58,7 @@ db.define_table("genero",
     Field("nombre", type="string", length=50, unique=True, notnull=True, label=T("Género")),
     Field("codigo", type="string", length=1, notnull=True, label=T("Código del género")),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por')),    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por')),    
     format='%(nombre)s'
 )
 # Nombre and codigo uniques
@@ -80,7 +80,7 @@ db.define_table("especie",
     # Excluido de la modelacion?
     Field('exc', type='boolean', notnull=True, default=False, label=T('Excluída')),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por')),    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por')),    
     format='%(nombre)s'
 )
 # Genero, codigo y cby son unicos
@@ -151,7 +151,7 @@ db.define_table("tname",
 db.define_table("tupdated",
     Field("fecha", type='datetime', notnull=True, label=T("Fecha actualización")),
     Field('tname', db.tname, notnull=True, label=T('Tabla')),
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por')),
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por')),
     format='%(tname)s'
 )
 
@@ -167,7 +167,7 @@ db.define_table("plan",
     # Latitud en grados decimales
     Field('lat', type='double', label=T('Latitud(º)')),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por'))
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por'))
 )
 # Filtro comun para todas las consultas
 db.plan._common_filter = lambda query: (db.plan.cby == auth.user_id)
@@ -181,7 +181,7 @@ db.define_table("plantmp",
     Field('lon', type='double', label=T('Longitud (º)')),
     Field('lat', type='double', label=T('Latitud(º)')),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por'))    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por'))    
 )
 # Filtro comun para todas las consultas
 db.plantmp._common_filter = lambda query: (db.plantmp.cby == auth.user_id)
@@ -198,7 +198,7 @@ db.define_table("rodald",
     # Area afectada por el monte
     Field('areaafect', type='float', notnull=True, label=T('Área afectada(ha)')),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por'))
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por'))
 )
 # Filtro comun para todas las consultas
 db.rodald._common_filter = lambda query: (db.rodald.cby == auth.user_id)
@@ -214,7 +214,7 @@ db.define_table("rodaldtmp",
     Field('anioplant', type='integer', notnull=True),
     Field('areaafect', type='float', notnull=True),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por'))    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por'))    
 )
 # Filtro comun para todas las consultas
 db.rodaldtmp._common_filter = lambda query: (db.rodaldtmp.cby == auth.user_id)
@@ -230,7 +230,7 @@ db.define_table("ubicacionrodald",
     # Latitud en grados decimales
     Field('lat', type='double'),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por'))    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por'))    
 )
 # Filtro comun para todas las consultas
 db.ubicacionrodald._common_filter = lambda query: (db.ubicacionrodald.cby == auth.user_id)
@@ -244,7 +244,7 @@ db.define_table("gruposuelorodald",
     # Superficie
     Field('superficie', notnull=True, type='double', label=T('Superficie de tipo de suelo')),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por'))
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por'))
 )
 # rodal and suelo uniques
 db.gruposuelorodald.gsuelo.requires=IS_NOT_IN_DB(
@@ -261,7 +261,7 @@ db.define_table("intervrodald",
     # tiempo en anios desde que se planta
     Field('adisp', type='float', notnull=True, label=T('Año de corte')),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por')),    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por')),    
 )
 # Filtro comun para todas las consultas
 db.intervrodald._common_filter = lambda query: (db.intervrodald.cby == auth.user_id)
@@ -275,7 +275,7 @@ db.define_table("destinointervrodald",
     # volumen de corta en m3
     Field('mcmcc', type='float', notnull=True, label=T('Volumen (m3 mcc)')),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por')),    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por')),    
 )
 # Filtro comun para todas las consultas
 db.destinointervrodald._common_filter = lambda query: (db.destinointervrodald.cby == auth.user_id)
@@ -313,7 +313,7 @@ db.define_table("cima",
     ),
     Field("ima", type="float", notnull=True, label=T(u"IMA (m3/ha/año)")),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por')),    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por')),    
 )
 # Filtro comun para todas las consultas
 db.cima._common_filter = lambda query: (db.cima.cby == auth.user_id)
@@ -342,7 +342,7 @@ db.define_table("caefectiva",
     ),
     Field("aefectiva", type="float", notnull=True, label=T("Área efectiva")),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por')),    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por')),    
 )
 # Filtro comun para todas las consultas
 db.caefectiva._common_filter = lambda query: (db.caefectiva.cby == auth.user_id)
@@ -376,7 +376,7 @@ db.define_table("cintervencionr",
     Field("aintervencion", type="decimal(5,3)", notnull=True, label=T(u"Tiempo (años)")),
     Field("fextraccion", type="float", notnull=True, label=T("Factor extracción")),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por')),    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por')),    
 )
 # Filtro comun para todas las consultas
 db.cintervencionr._common_filter = lambda query: (db.cintervencionr.cby == auth.user_id)
@@ -393,7 +393,7 @@ db.define_table("cdintervencionr",
     ),
     Field("fdestino", type="float", notnull=True, label=T("Factor de destino")),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por')),    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por')),    
 )
 # Filtro comun para todas las consultas
 db.cdintervencionr._common_filter = lambda query: (db.cdintervencionr.cby == auth.user_id)
@@ -417,7 +417,7 @@ db.define_table("cintervenciona",
     Field("aintervencion", type="decimal(5,3)", notnull=True, label=T(u"Tiempo (años)")),
     Field("fextraccion", type="float", notnull=True, label=T("Factor extracción")),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por')),    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por')),    
 )
 # Filtro comun para todas las consultas
 db.cintervenciona._common_filter = lambda query: (db.cintervenciona.cby == auth.user_id)
@@ -436,7 +436,7 @@ db.define_table("cdintervenciona",
     ),
     Field("fdestino", type="float", notnull=True, label=T("Factor de destino")),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por')),    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por')),    
 )
 # Filtro comun para todas las consultas
 db.cdintervenciona._common_filter = lambda query: (db.cdintervenciona.cby == auth.user_id)
@@ -462,7 +462,7 @@ db.define_table("cbcampo",
     ),
     Field("bcampo", type="float", notnull=True, label=T("Fv (m3 MS)")),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por')),    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por')),    
 )
 # Filtro comun para todas las consultas
 db.cbcampo._common_filter = lambda query: (db.cbcampo.cby == auth.user_id)
@@ -489,7 +489,7 @@ db.define_table("cbindustria",
     ),
     Field("bindustria", type="float", notnull=True, label=T("Coeficiente")),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por')),    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por')),    
 )
 # Filtro comun para todas las consultas
 db.cbindustria._common_filter = lambda query: (db.cbindustria.cby == auth.user_id)
@@ -514,7 +514,7 @@ db.define_table("cbindustriatrf",
     ),
     Field("coeficiente", type="float", notnull=True, label=T("Coeficiente")),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por')),    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por')),    
 )
 # Filtro comun para todas las consultas
 db.cbindustriatrf._common_filter = lambda query: (db.cbindustriatrf.cby == auth.user_id)
@@ -541,7 +541,7 @@ db.define_table("cgsuelo",
         represent=lambda id, r: db.gruposuelo(id).nombre
     ),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por')),    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por')),    
 )
 # Filtro comun para todas las consultas
 db.cgsuelo._common_filter = lambda query: (db.cgsuelo.cby == auth.user_id)
@@ -567,7 +567,7 @@ db.define_table("ccosecha",
         represent=lambda id, r: db.cosecha(id).nombre
     ),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por')),    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por')),    
 )
 # Filtro comun para todas las consultas
 db.ccosecha._common_filter = lambda query: (db.ccosecha.cby == auth.user_id)
@@ -581,7 +581,7 @@ db.define_table("cbcampoe",
         represent=lambda id, r: db.especie(id).nombre),
     Field("bcampo", type="float", notnull=True, label=T("Fv (T biomasa)")),
     # Creado por ... 
-    Field('cby', db.auth_user, notnull=True, default=auth.user_id, label=T('Creado por')),    
+    Field('cby', db.auth_user, writable=False, readable=False, notnull=True, default=auth.user_id, label=T('Creado por')),    
 )
 # Filtro comun para todas las consultas
 db.cbcampoe._common_filter = lambda query: (db.cbcampoe.cby == auth.user_id)

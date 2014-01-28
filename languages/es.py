@@ -256,6 +256,7 @@
 'Especies': 'Especies',
 'Especies simuladas': 'Especies simuladas',
 'Exclusión de especies': 'Exclusión de especies',
+'Exclusión de regiones': 'Exclusión de regiones',
 'Excluída': 'Excluída',
 'Export': 'Exportar',
 'export as csv file': 'exportar como archivo CSV',

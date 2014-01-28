@@ -70,7 +70,7 @@ class UpdateFromRDB():
         self._db.executesql("DELETE FROM plan WHERE cby=%i" % self._muid)
 
         sql = "INSERT INTO plan(ncarpeta,sjudicial,lon,lat,cby) "
-        sql += "(SELECT pt.ncarpeta, sj.id, pt.lon, pt.lat "
+        sql += "(SELECT pt.ncarpeta, sj.id, pt.lon, pt.lat, sj.cby "
         sql += "FROM plantmp pt, seccionjudicial sj "
         sql += "WHERE pt.depto=sj.departamento AND pt.sj=sj.nombre "
         sql += "AND pt.cby=%i AND sj.cby=%i" % (self._muid,self._muid)
@@ -148,7 +148,7 @@ class UpdateFromRDB():
         self._db.executesql("DELETE FROM rodald WHERE cby=%i" % self._muid)
 
         sql = "INSERT INTO rodald(plan,especie,anioplant,areaafect,cby) "
-        sql += "(SELECT p.id, e.id, rdt.anioplant, rdt.areaafect "
+        sql += "(SELECT p.id, e.id, rdt.anioplant, rdt.areaafect, g.cby "
         sql += "FROM plan p, especie e, genero g, rodaldtmp rdt "
         sql += "WHERE rdt.ncarpeta=p.ncarpeta AND e.nombre=rdt.nesp AND g.nombre=rdt.ngen AND e.genero=g.id "
         sql += "AND p.cby=%i AND e.cby=%i AND g.cby=%i AND rdt.cby=%i " % (self._muid,self._muid,self._muid,self._muid)

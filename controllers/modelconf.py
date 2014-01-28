@@ -6,7 +6,7 @@ def call():
     return service()
 
 @service.json
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def nOfRows():
     """Number of rows in table
     """
@@ -16,7 +16,7 @@ def nOfRows():
 
 
 @service.json
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def updatedData():
     """Number of rows in table
     """
@@ -26,7 +26,7 @@ def updatedData():
     return data
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def configupdatefromrdb():
     """Central page for update. Two tabs. See mupdatefromrdb and aupdatefromrdb
     """
@@ -35,13 +35,13 @@ def configupdatefromrdb():
     return dict(mu=mu, au=au)
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def aupdatefromrdb():
     """Automatic update page from remote database
     """
     return dict()
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def mupdatefromrdb():
     """Manual update page from remote database
     """
@@ -152,7 +152,7 @@ def mupdatefromrdb():
     return dict(table=table)
 
 
-# @auth.requires_membership('admins')
+# @auth.requires_membership('users')
 @service.json
 def update():
     tnames=['genero','especie','plan','rodald']
@@ -189,7 +189,7 @@ def update():
         print "Error: %s" % e
         return dict( result=False )
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def verifymodel():
     import json
     cstr=[
@@ -282,7 +282,7 @@ def verifymodel():
     return dict(table=table)
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def averifycoefs():
     import json
     result=False
@@ -317,7 +317,7 @@ def averifycoefs():
 
 
 ###
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def mdestino():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db,tablename='destino')
@@ -325,7 +325,7 @@ def mdestino():
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def mtiporesiduoforestal():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db,tablename='tiporesiduoforestal')
@@ -333,7 +333,7 @@ def mtiporesiduoforestal():
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def mcosecha():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db,tablename='cosecha')
@@ -341,7 +341,7 @@ def mcosecha():
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def mtipointervencion():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db,tablename='tipointervencion')
@@ -349,7 +349,7 @@ def mtipointervencion():
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def mstintervencion():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db,tablename='stintervencion')
@@ -359,7 +359,7 @@ def mstintervencion():
 
 
 ## Begin manage coefficients
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def mcima():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
@@ -382,7 +382,7 @@ def mcima():
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def mcaefectiva():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
@@ -405,7 +405,7 @@ def mcaefectiva():
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def mcintervencionr():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
@@ -433,7 +433,7 @@ def mcintervencionr():
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def mcintervenciona():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
@@ -462,7 +462,7 @@ def mcintervenciona():
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def mcbcampo():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
@@ -490,7 +490,7 @@ def mcbcampo():
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def mcbcampoe():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
@@ -513,7 +513,7 @@ def mcbcampoe():
 
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def mcbindustria():
     # Coeficiente de biomasa en la industria
     # Un coeficiente por especie que se puede desglosar (o no) por tipos de residuos forestales
@@ -539,7 +539,7 @@ def mcbindustria():
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def mcgsuelo():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
@@ -589,7 +589,7 @@ def mccosecha():
 """
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def mcdintervencionr():
     # Vendra por ajax, recibe un post con el id de intervencion
     # Se fija si tiene registros y arma tantas forms como destinos existan en al base de datos
@@ -681,7 +681,7 @@ def mcdintervencionr():
             print "%s" % e
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def mcdintervenciona():
     # Vendra por ajax, recibe un post con el id de intervencion
     # Se fija si tiene registros y arma tantas forms como destinos existan en al base de datos
@@ -775,7 +775,7 @@ def mcdintervenciona():
 ## End manage coefficients
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def mcbindustriatrf():
     # Vendra por ajax, recibe un post con el id de cbindustria
     # Se fija si tiene registros y arma tantas forms como destinos existan en al base de datos
@@ -874,7 +874,7 @@ def mcbindustriatrf():
             print "%s" % e
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def loadDefaults():
     # Coeficients para area efectiva
     if db(db['caefectiva']['id']>0).isempty():
@@ -952,7 +952,7 @@ def loadDefaults():
 
 
 ### Model update and run
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def modelupdate():
     """Central page for update. Two tabs
     """
@@ -961,7 +961,7 @@ def modelupdate():
     return dict(mmu=mmu, amu=amu)
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def mmodelupdate():
     import json
     tnames=[]
@@ -1021,12 +1021,12 @@ def mmodelupdate():
     return dict(table=table)
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def amodelupdate():
     return dict()
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 @service.json
 def modelrun():
     """Run the model
@@ -1040,61 +1040,44 @@ def modelrun():
         print "Error: %s" % e
         return dict( result=False )
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def pspecies():
     # Tiene common_filter!
-    # Si no hay valores para el usuario
-    # No hay pcion que haya valores pero falten algunos
-    if db(db['especie_excluida']['id']>0).isempty():
-        # Inserto todas las especies en false (por defecto)
-        rs=db(db['especie']['id']>0).select(db.especie.id,orderby=db.especie.id)
-        for r in rs:
-            print r
-            db.especie_excluida.insert(
-                especie=r['id']
-            )
-    else:
-        pass
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
     query=(
-        (db.especie_excluida.id > 0) &        
-        (db.especie_excluida.especie==db.especie.id) &
+        (db.especie.id > 0) &
         (db.genero.id==db.especie.genero)
         )
     dm.gQuery( query )
-    dm.actionTableName('especie_excluida')
+    dm.actionTableName('especie')
     dm.gFieldId('id')
     dm.gFields( [
-        ('especie_excluida','id'),
         ('genero','nombre'),
         ('especie','nombre'),
-        ('especie_excluida','excluida')
+        ('especie','exc')
         ] )
     dm.gShowId(False)
+    dm.showMActions(False)
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
-@auth.requires_membership('admins')
+@auth.requires_membership('users')
 def pregions():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
     query=(
-        (db.ccosecha.id > 0) &
-        (db.especie.id==db.ccosecha.especie) &
-        (db.genero.id==db.especie.genero) &
-        (db.destino.id==db.ccosecha.destino) &
-        (db.cosecha.id==db.ccosecha.cosecha)
+        (db.seccionjudicial.id > 0) &
+        (db.seccionjudicial.departamento==db.departamento.id)
         )
     dm.gQuery( query )
-    dm.actionTableName('ccosecha')
+    dm.actionTableName('seccionjudicial')
     dm.gFieldId('id')
     dm.gFields( [
-        ('ccosecha','id'),
-        ('genero','nombre'),
-        ('ccosecha','especie'),
-        ('ccosecha','destino'),
-        ('ccosecha','cosecha')
+        ('departamento','nombre'),
+        ('seccionjudicial','nombre'),
+        ('seccionjudicial','exc')
         ] )
     dm.gShowId(False)
+    dm.showMActions(False)    
     return dict(toolbar=dm.toolBar(), grid=dm.grid())

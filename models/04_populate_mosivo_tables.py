@@ -697,11 +697,11 @@ addUsersAndGropups()
 departamento()
 destino()
 dia()
-seccionjudicial()
 cosecha()
 tipointervencion()
 stintervencion()
 tiporesiduoforestal()
 gruposuelo()
 tname()
-
+if auth.user_id:
+    seccionjudicial()

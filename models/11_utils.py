@@ -15,7 +15,7 @@ def updatedInfo(tablename):
     """
     if tablename in db.tables:
         sql = "SELECT tu.fecha, u.email FROM tupdated tu, tname tn, auth_user u " \
-            "WHERE tn.nombre='%s' AND tu.tname=tn.id AND u.id=tu.uid ORDER BY tu.fecha DESC" % tablename
+            "WHERE tn.nombre='%s' AND tu.tname=tn.id AND u.id=tu.cby ORDER BY tu.fecha DESC" % tablename
         rows=db.executesql(sql)
         if len(rows)>0:
             return ( True, rows[0][0], rows[0][1] )
@@ -38,7 +38,7 @@ def insertTUpdated(namea):
             db['tupdated'].insert(
                 fecha=un,
                 tname=_id,
-                uid=auth.user_id
+                cby=auth.user_id
             )            
             return True
         else:
