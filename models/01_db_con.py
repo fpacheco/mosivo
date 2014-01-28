@@ -14,21 +14,10 @@ from gluon.dal import DAL, Field
 #from gluon import T
 #from gluon import current, request, session, response
 
-if not request.env.web2py_runtime_gae:
-    ## if NOT running on Google App Engine use SQLite or other DB
-    db = DAL('postgres://mosivo:12mosivo12@localhost/mosivo', migrate_enabled=True)
-    #db = DAL('sqlite://storage.db', migrate_enabled=True)
-    #db2 = DAL('postgres://jgalan:12jgalan12@192.168.1.10/mosivo', migrate_enabled=False)
-    #db2 = DAL('postgres://mosivo:12mosivo12@192.168.1.2/mosivo', migrate_enabled=True)
-else:
-    ## connect to Google BigTable (optional 'google:datastore://namespace')
-    db = DAL('google:datastore')
-    ## store sessions and tickets there
-    session.connect(request, response, db=db)
-    ## or store session in Memcache, Redis, etc.
-    ## from gluon.contrib.memdb import MEMDB
-    ## from google.appengine.api.memcache import Client
-    ## session.connect(request, response, db = MEMDB(Client()))
+db = DAL('postgres://mosivo:12mosivo12@localhost/mosivo', migrate_enabled=True)
+#db = DAL('sqlite://storage.db', migrate_enabled=True)
+#db2 = DAL('postgres://jgalan:12jgalan12@192.168.1.10/mosivo', migrate_enabled=False)
+#db2 = DAL('postgres://mosivo:12mosivo12@192.168.1.2/mosivo', migrate_enabled=True)
 
 ## by default give a view/generic.extension to all actions from localhost
 ## none otherwise. a pattern can be 'controller/function.extension'

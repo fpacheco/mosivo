@@ -8,17 +8,17 @@ def addUsersAndGropups():
         db.executesql("ALTER SEQUENCE auth_group_id_seq MINVALUE 0;")
         db.executesql("SELECT setval('auth_group_id_seq', 0, true);")
         db.auth_group.insert(
-            id=1,
+            #id=1,
             role='admins',
             description='Administrators',
         )
         db.auth_group.insert(
-            id=2,
+            #id=2,
             role='users',
             description='Users',
         )
         db.auth_group.insert(
-            id=3,
+            #id=3,
             role='eusers',
             description='External users',
         )
@@ -26,21 +26,21 @@ def addUsersAndGropups():
         db.executesql("ALTER SEQUENCE auth_user_id_seq MINVALUE 0;")
         db.executesql("SELECT setval('auth_user_id_seq', 0, true);")
         db.auth_user.insert(
-            id=1,
+            #id=1,
             first_name='FAdministrator',
             last_name='LAdministrator',
             email='admin@admin.com',
             password=db.auth_user.password.validate('12admin12')[0]
         )
         db.auth_user.insert(
-            id=2,
+            #id=2,
             first_name='FUser',
             last_name='LUser',
             email='user@user.com',
             password=db.auth_user.password.validate('12user12')[0]
         )
         db.auth_user.insert(
-            id=3,
+            #id=3,
             first_name='FEuser',
             last_name='LEuser',
             email='euser@euser.com',
@@ -279,44 +279,49 @@ def especie():
         db.commit()
 
 def seccionjudicial():
-    q = db(
-           db.seccionjudicial
-        ).select(
-            db.seccionjudicial.ALL
-        )
+    if auth.user_id:
+        q = db(
+               (db.seccionjudicial.id>0) &
+               (db.seccionjudicial.cby == auth.user_id) 
+            ).select(
+                db.seccionjudicial.ALL
+            )
 
-    if len(q) == 0:
-        # Set sequence in departamento
-        db.executesql("ALTER SEQUENCE seccionjudicial_id_seq MINVALUE 0;")
-        db.executesql("SELECT setval('seccionjudicial_id_seq', 0, true);")
-        # Lista de secciones por departamento
-        # RFPV: Revisar
-        secciones = [
-            # (departamento, de, hasta)
-            (1, 1, 25),
-            (2, 1, 25),
-            (3, 1, 25),
-            (4, 1, 25),
-            (5, 1, 25),
-            (6, 1, 25),
-            (7, 1, 25),
-            (8, 1, 25),
-            (9, 1, 25),
-            (10, 1, 25),
-            (11, 1, 25),
-            (12, 1, 25),
-            (13, 1, 25),
-            (14, 1, 25),
-            (15, 1, 25),
-            (16, 1, 25),
-            (17, 1, 25),
-            (18, 1, 25),
-            (19, 1, 25)
-        ]
-        for d in secciones:
-            for s in xrange(d[1], d[2]):
-                db.seccionjudicial.insert(departamento=d[0], nombre=s)
-        db.commit()
+        if len(q) == 0:
+            # Set sequence in departamento
+            # db.executesql("ALTER SEQUENCE seccionjudicial_id_seq MINVALUE 0;")
+            # db.executesql("SELECT setval('seccionjudicial_id_seq', 0, true);")
+
+            # Lista de secciones por departamento
+            # RFPV: Revisar
+            secciones = [
+                # (departamento, de, hasta)
+                (1, 1, 25),
+                (2, 1, 25),
+                (3, 1, 25),
+                (4, 1, 25),
+                (5, 1, 25),
+                (6, 1, 25),
+                (7, 1, 25),
+                (8, 1, 25),
+                (9, 1, 25),
+                (10, 1, 25),
+                (11, 1, 25),
+                (12, 1, 25),
+                (13, 1, 25),
+                (14, 1, 25),
+                (15, 1, 25),
+                (16, 1, 25),
+                (17, 1, 25),
+                (18, 1, 25),
+                (19, 1, 25)
+            ]
+            for d in secciones:
+                for s in xrange(d[1], d[2]):
+                    db.seccionjudicial.insert(departamento=d[0], nombre=s)
+            db.commit()
+    else:
+        pass
 
 def cosecha():
     q = db(
@@ -353,8 +358,8 @@ def tiporesiduoforestal():
         db.executesql("SELECT setval('tiporesiduoforestal_id_seq', 0, true);")
         # Lista de tipos
         tipo = [
-            u'Aserrío',
-            'Biruta',
+            u'Aserrín',
+            'Viruta',
             'Corteza',
             'Costaneros',
             'Despuntes',
@@ -397,6 +402,33 @@ def tipointervencion():
         except:
             db.rollback()
 
+def stintervencion():
+    q = db(
+            db.stintervencion
+        ).select(
+            db.stintervencion.ALL
+        )
+
+    if len(q) == 0:
+        # Set sequence in departamento
+        db.executesql("ALTER SEQUENCE stintervencion_id_seq MINVALUE 0;")
+        db.executesql("SELECT setval('stintervencion_id_seq', 0, true);")
+        # Lista de coef
+        tipo = [
+            [1,'Raleo Tipo I'],
+            [1,'Raleo Tipo II'],
+            [1,'Raleo Tipo III'],
+            [1,'Raleo Tipo IV'],
+            [2,'Tala Rasa'],
+            [3,'Rebrote'],
+        ]
+        db.commit()
+        try:
+            for d in tipo:
+                db.stintervencion.insert(tintervencion=d[0],nombre=d[1])
+            db.commit()
+        except:
+            db.rollback()
 
 def gruposuelo():
     q = db(
@@ -409,6 +441,7 @@ def gruposuelo():
         db.executesql("ALTER SEQUENCE gruposuelo_id_seq MINVALUE 0;")
         db.executesql("SELECT setval('gruposuelo_id_seq', 0, true);")
         # Lista de coef
+        """
         tipo = [
             '1.10a',
             '1.10b',
@@ -599,6 +632,31 @@ def gruposuelo():
             '13.4',
             '13.5',
         ]
+        """
+        tipo = [
+            '1',
+            '2',
+            '3',
+            '03',
+            'B03',
+            'G03',
+            '4',
+            '5',
+            '6',
+            '7',
+            '07',
+            '8',
+            '9',
+            '09',
+            'S09',
+            '10',
+            'D10',
+            'G10',
+            'S10',
+            '11',
+            '12',
+            '13',
+        ]
         db.commit()
         try:
             for d in tipo:
@@ -642,6 +700,7 @@ dia()
 seccionjudicial()
 cosecha()
 tipointervencion()
+stintervencion()
 tiporesiduoforestal()
 gruposuelo()
 tname()

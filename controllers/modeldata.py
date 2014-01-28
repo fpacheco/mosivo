@@ -135,7 +135,6 @@ def sjudicial():
             print "%s" % sj
         else:
             pass
-        data={'result': True,'rows':rows}
-        return dict(result=True,sj=sj)            
+        return dict(result=True,sj=sj)
     else:
         return dict(result=False,message='No data')

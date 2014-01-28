@@ -1,0 +1,145 @@
+<table class="table table-bordered table-condensed table-striped table-form">
+<thead>
+    <tr>
+        <th>{{=T('Tipo de residuo forestal')}}</th>
+        <th>{{=T('Coeficiente')}}</th>
+    </tr>
+</thead>
+<tbody>
+{{i=0}}
+{{ for f in forms: }}
+    <tr>
+        <td>{{=trfnombres[i]}}</td>
+        <td>
+            <!-- Form -->
+            {{=f.custom.begin}}
+            {{=f.custom.widget.id}}
+            {{=f.custom.widget.cbindustria}}
+            {{=f.custom.widget.trf}}
+            {{=f.custom.widget.coeficiente}}
+            {{=f.custom.end}}
+        </td>
+    </tr>
+{{i=i+1}}
+{{pass}}
+</tbody>
+</table>
+<script>
+var rid=new Array();
+var rcbind=new Array();
+var rtrf=new Array();
+var rcoef=new Array();
+var submitURL='{{ ="/%s/%s/%s.load" % (request.application, request.controller, request.function) }}';
+
+function checkLoadValues() {
+    var forms=$('#detailsEResult form');
+    for (var i=0;i<forms.length;i++)
+    {
+        checkCoeficiente(i);
+    }
+    //Dont save yet
+    $('#detailsEDialog #save').attr('disabled',true);
+};
+
+function checkSum() {
+    var sumValid=false;
+    var rfcoefsum=0;
+    for (var i=0;i<rcoef.length;i++)
+    {
+        if ( isNaN(parseFloat(rcoef[i])) ) {
+            // Nada
+        } else {
+            rfcoefsum = rfcoefsum + parseFloat( rcoef[i] );
+        }
+    }
+    var rfi=parseInt(rfcoefsum*100)/100;
+    if (rfi==1) {
+        //detailsEDialog save enabled
+        $('#detailsEDialog #save').attr('disabled',false);
+        sumValid=true;
+    } else {
+        //detailsEDialog save disabled
+        $('#detailsEDialog #save').attr('disabled',true);
+    }
+    return sumValid;
+};
+
+function checkCoeficiente(val) {
+    /**
+    * On every focus out on ftrf check values. Activate save if
+    * int(sum(ftrfs)*100)=100
+    */
+    var acoef=parseFloat( $('#detailsEResult form#cbindustriatrf_' + val + ' input#cbindustriatrf_coeficiente').attr('value') );
+    if (acoef>0) {
+        if (acoef<=1) {
+            rcoef[val]=acoef;
+        } else {
+            //Value is greather than 1 (100%)!
+            $('#detailsEResult form#cbindustriatrf_' + val + ' input#cbindustriatrf_coeficiente').attr('value','');
+            rcoef[val]="";
+        }
+    } else {
+        //detailsEDialog save disabled
+        rcoef[val]="";
+        $('#detailsEResult form#cbindustriatrf_' + val + ' input#cbindustriatrf_coeficiente').attr('value','');
+        //detailsEDialog save disabled
+        $('#detailsEDialog #save').attr('disabled',true);
+    }
+    checkSum();
+};
+
+function formCustomPost() {
+    //
+    var forms=$('#detailsEResult form');
+    if (checkSum()==true) {
+        for (var i=0;i<forms.length;i++)
+        {
+            rid[i]=$('#detailsEResult form#cbindustriatrf_' + i + ' span#cbindustriatrf_id').text();
+            rcbind[i]=$('#detailsEResult form#cbindustriatrf_' + i + ' input#cbindustriatrf_cbindustria').attr('value');
+            rtrf[i]=$('#detailsEResult form#cbindustriatrf_' + i + ' select#cbindustriatrf_trf').attr('value');
+            rcoef[i]=$('#detailsEResult form#cbindustriatrf_' + i + ' select#cbindustriatrf_coeficiente').attr('value');
+        }
+        var dataPost = {
+            "cdir_id":rid,
+            "cdir_cbindustria":rcbind,
+            "cdir_trf":rtrf,
+            "cdir_coef":rcoef,
+        };
+        $.post(
+            submitURL,
+            dataPost,
+            function(data) {
+                //Desactivar la espera
+                if (data.result==true) {
+                    // Reload current page
+                    // location.reload();
+                    // Agregar Succes en el div
+                    // $('#s'+tablename+'span').show();
+                } else {
+                    //alert(data.message);
+                    //Agregar Fail en el div
+                    // $('#f'+tablename+'span').show();
+                }
+                //activar el boton
+                //$('#'+rbutid).attr('disabled',false);
+            },
+            'json' //data returned is json
+        ).fail(
+            function(){
+                //activar el boton
+                //$('#e'+tablename+'span').show();
+            }
+        ).always(
+            function(){
+                //ocultar la barra
+                //$('#pb' + tablename).hide();
+                //activar el boton
+                //$('#'+rbutid).attr('disabled',false);
+            }
+        );
+    }
+};
+
+checkLoadValues();
+
+</script>

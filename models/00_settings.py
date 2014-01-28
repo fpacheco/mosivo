@@ -25,7 +25,7 @@ DEVELOP_MODE = True
 # Versionado de cada una de las tablas de la base de datos
 VERSIONING_DB = False
 # Si esto en InGeSur emulo con postgresql via ODBC
-IN_DGF = True
+IN_DGF = False
 
 # Datos de acceso al servidor MSSQL vía ODBC (pyodbc/FreeTDS)
 MSSQL_USER = 'fpacheco'

@@ -62,11 +62,11 @@
       {{=T('"update" is an optional expression like "field1=\'newvalue\'". You cannot update or delete the results of a JOIN')}}</p>
     <br/><br/>
     <h4>{{=T("%s selected", nrows)}}</h4>
-    {{if start>0:}}{{=A(T('previous 100 rows'),_href=URL('select',args=request.args[0],vars=dict(start=start-100)),_class="btn")}}{{pass}}
-    {{if stop<nrows:}}{{=A(T('next 100 rows'),_href=URL('select',args=request.args[0],vars=dict(start=start+100)),_class="btn")}}{{pass}}
+    {{if start>0:}}{{=A(T('previous %s rows') % step,_href=URL('select',args=request.args[0],vars=dict(start=start-step)),_class="btn")}}{{pass}}
+    {{if stop<nrows:}}{{=A(T('next %s rows') % step,_href=URL('select',args=request.args[0],vars=dict(start=start+step)),_class="btn")}}{{pass}}
     {{if rows:}}
        <div style="overflow: auto;" width="80%">
-       {{linkto=URL('update',args=request.args[0])}}
+       {{linkto = lambda f, t, r: URL('update', args=[request.args[0], r, f]) if f else "#"}}
        {{upload=URL('download',args=request.args[0])}}
        {{=SQLTABLE(rows,linkto,upload,orderby=True,_class='sortable')}}
        </div>
@@ -116,13 +116,15 @@
 
 
 {{elif request.function == 'ccache':}}
-<h2>{{T("Cache")}}</h2>
-<div class="list">
-
+<h2>{{=T("Cache")}}</h2>
   <div class="list-header">
-    <h3>{{T("Statistics")}}</h3>
+    <h3>{{=T("Statistics")}}</h3>
   </div>
 
+{{if request.env.web2py_runtime_gae:}}
+{{=BEAUTIFY(total)}}
+{{else:}}
+<div class="list">
   <div class="content">
     <h4>{{=T("Overview")}}</h4>
     <p>{{=T.M("Number of entries: **%s**", total['entries'])}}</p>
@@ -210,6 +212,8 @@
     {{pass}}
   </div>
 
+{{pass}}
+
   <div class="list-header">
     <h3>{{=T("Manage Cache")}}</h3>
   </div>
@@ -229,7 +233,40 @@
     {{=T('pygraphviz library not found')}}
   {{elif not databases:}}
     {{=T("No databases in this application")}}
-  {{else:}}
+  {{else:}}	   
+    <div class="btn-group">
+      <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+        <i class="icon-download"></i> {{=T('Save model as...')}}
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+          <li><a href="{{=URL('appadmin', 'bg_graph_model', args=['png'])}}">png</a></li>
+          <li><a href="{{=URL('appadmin', 'bg_graph_model', args=['svg'])}}">svg</a></li>
+          <li><a href="{{=URL('appadmin', 'bg_graph_model', args=['pdf'])}}">pdf</a></li>
+          <li><a href="{{=URL('appadmin', 'bg_graph_model', args=['ps'])}}">ps</a></li>          
+          <li><a href="{{=URL('appadmin', 'bg_graph_model', args=['dot'])}}">dot</a></li>                                   
+      </ul>
+    </div>
+    <br />
     {{=IMG(_src=URL('appadmin', 'bg_graph_model'))}}
   {{pass}}
+{{pass}}
+
+{{if request.function == 'manage':}}
+<h2>{{=heading}}</h2>
+<ul class="nav nav-tabs">
+  {{for k, tablename in enumerate(tablenames):}}
+  <li{{=XML(' class="active"') if k == 0 else ''}}>
+    <a href="#table-{{=tablename}}" data-toggle="tab">{{=labels[k]}}</a>
+  </li>
+  {{pass}}
+</ul>
+
+<div class="tab-content">
+  {{for k, tablename in enumerate(tablenames):}}
+  <div class="tab-pane{{=XML(' active') if k == 0 else ''}}" id="table-{{=tablename}}">
+    {{=LOAD(f='manage.load', args=[request.args(0), k], ajax=True)}}
+  </div>
+  {{pass}}
+</div>
 {{pass}}

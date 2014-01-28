@@ -7,15 +7,20 @@ class UpdateFromRDB():
     """This class update all the tables necesary to the simulation
     """
 
-    def __init__(self, mDatabase, inDGF=True):
+    def __init__(self, mDatabase, mUid, inDGF=True):
         """Class initialization function
 
         :param mDatabase: local database (MoSiVo).
         :type mDatabase: DAL connection.
+        :param mUid: Mosivo user id.
+        :type inDGF: Integer.        
         :param inDGF: App is in DGF.
         :type inDGF: Bool.
         """
+        # mosivo database
         self._db = mDatabase
+        # mosivo app user id
+        self._muid = mUid
         # DGF connection. Please use read only user
         user='mosivo'
         passw=''
@@ -36,11 +41,8 @@ class UpdateFromRDB():
         rows = self.rdb.executesql(sql)
 
         if len(rows) > 0:
-            # Delete all data in table carpeta
-            self._db.executesql("DELETE FROM plantmp")
-            # Set sequence in departamento
-            self._db.executesql("ALTER SEQUENCE plantmp_id_seq MINVALUE 0")
-            self._db.executesql("SELECT setval('plantmp_id_seq', 0, true)")
+            # Delete all data in table carpeta for this user
+            self._db.executesql("DELETE FROM plantmp WHERE cby=%i" % self._muid)
 
             self._db.commit()
             try:
@@ -50,7 +52,8 @@ class UpdateFromRDB():
                         depto=r[1],
                         sj=r[2],
                         lon = r[3],
-                        lat = r[4]
+                        lat = r[4],
+                        cby = self._muid, 
                     )
                 self._db.commit()
                 return True
@@ -63,16 +66,14 @@ class UpdateFromRDB():
     def uPT2P(self):
         """Pasa de plantmp a plan
         """
-        # Delete all data in table plan
-        self._db.executesql("DELETE FROM plan")
-        # Set sequence in plan
-        self._db.executesql("ALTER SEQUENCE plan_id_seq MINVALUE 0")
-        self._db.executesql("SELECT setval('plan_id_seq', 0, true)")
+        # Delete all data in table plan for this user
+        self._db.executesql("DELETE FROM plan WHERE cby=%i" % self._muid)
 
-        sql = "INSERT INTO plan(ncarpeta,sjudicial,lon,lat) "
+        sql = "INSERT INTO plan(ncarpeta,sjudicial,lon,lat,cby) "
         sql += "(SELECT pt.ncarpeta, sj.id, pt.lon, pt.lat "
         sql += "FROM plantmp pt, seccionjudicial sj "
         sql += "WHERE pt.depto=sj.departamento AND pt.sj=sj.nombre "
+        sql += "AND pt.cby=%i AND sj.cby=%i" % (self._muid,self._muid)
         sql += "ORDER BY pt.ncarpeta)"
         try:
             rows = self._db.executesql(sql)
@@ -97,9 +98,7 @@ class UpdateFromRDB():
     def uRodalDTmp(self):
         """Inserta rodales declarados para cada carpeta
         """
-        self._db.executesql("DELETE FROM rodaldtmp")
-        self._db.executesql("ALTER SEQUENCE rodaldtmp_id_seq MINVALUE 0")
-        self._db.executesql("SELECT setval('rodaldtmp_id_seq', 0, true)")
+        self._db.executesql("DELETE FROM rodaldtmp WHERE cby=%i" % self._muid)
 
         '''
         sql = "SELECT cp.Nro_Carpeta, pl.Genero, pl.Especie, p.Ano_Dec, p.Ha_Dec "
@@ -131,7 +130,8 @@ class UpdateFromRDB():
                     ngen=r[1].strip(),
                     nesp=r[2].strip(),
                     anioplant=int(r[3]),
-                    areaafect=float(r[4])
+                    areaafect=float(r[4]),
+                    cby = self._muid,
                 )
             self._db.commit()
             return True
@@ -145,16 +145,13 @@ class UpdateFromRDB():
         """Pasa de rodaldtmp a rodald
         """
         # Delete all data in table plan
-        self._db.executesql("DELETE FROM rodald")
-        # Set sequence in plan
-        self._db.executesql("ALTER SEQUENCE rodald_id_seq MINVALUE 0")
-        self._db.executesql("SELECT setval('rodald_id_seq', 0, true)")
+        self._db.executesql("DELETE FROM rodald WHERE cby=%i" % self._muid)
 
-        sql = "INSERT INTO rodald(plan,especie,anioplant,areaafect) "
+        sql = "INSERT INTO rodald(plan,especie,anioplant,areaafect,cby) "
         sql += "(SELECT p.id, e.id, rdt.anioplant, rdt.areaafect "
         sql += "FROM plan p, especie e, genero g, rodaldtmp rdt "
-        sql += "WHERE rdt.ncarpeta=p.ncarpeta AND e.nombre=rdt.nesp AND g.nombre=rdt.ngen AND " \
-            "e.genero=g.id "
+        sql += "WHERE rdt.ncarpeta=p.ncarpeta AND e.nombre=rdt.nesp AND g.nombre=rdt.ngen AND e.genero=g.id "
+        sql += "AND p.cby=%i AND e.cby=%i AND g.cby=%i AND rdt.cby=%i " % (self._muid,self._muid,self._muid,self._muid)
         sql += "ORDER BY rdt.ncarpeta)"
         try:
             rows = self._db.executesql(sql)
@@ -185,16 +182,15 @@ class UpdateFromRDB():
 
         if len(rows) > 0:
             # Delete all data in table genero
-            self._db.executesql("DELETE FROM genero")
-            # Set sequence in genero
-            self._db.executesql("ALTER SEQUENCE genero_id_seq MINVALUE 0;")
-            self._db.executesql("SELECT setval('genero_id_seq', 0, true);")
+            self._db.executesql("DELETE FROM genero WHERE cby=%i" % self._muid)
+            
             self._db.commit()
             try:
                 for r in rows:
                     self._db.genero.insert(
-                            nombre=str(r[1]).strip(),
-                            codigo=str(r[0]).strip()
+                        nombre=str(r[1]).strip(),
+                        codigo=str(r[0]).strip(),
+                        cby = self._muid,    
                     )
                 self._db.commit()
                 return True
@@ -209,7 +205,8 @@ class UpdateFromRDB():
         """
 
         lrows = self._db(
-            ( self._db['genero']['id']>0 )
+            ( self._db['genero']['id']>0 ) &
+            ( self._db['genero']['cby'] == self._muid )
         ).select (
             self._db['genero']['id'],
             self._db['genero']['nombre'],
@@ -218,10 +215,7 @@ class UpdateFromRDB():
 
         if len(lrows)>0:
             # Delete all data in table especie
-            self._db.executesql("DELETE FROM especie;")
-            # Set sequence in especie
-            self._db.executesql("ALTER SEQUENCE especie_id_seq MINVALUE 0;")
-            self._db.executesql("SELECT setval('especie_id_seq', 0, true);")
+            self._db.executesql("DELETE FROM especie WHERE cby=%i" % self._muid)
 
             self._db.commit()
             try:
@@ -236,7 +230,8 @@ class UpdateFromRDB():
                             self._db.especie.insert(
                                 genero = id,
                                 nombre = str(r[1]).strip(),
-                                codigo = str(r[0]).strip()
+                                codigo = str(r[0]).strip(),
+                                cby = self._muid,
                             )
                     except Exception as e:
                         print "Error: %s" % e

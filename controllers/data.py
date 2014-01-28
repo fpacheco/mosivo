@@ -17,8 +17,8 @@ def vplanes():
     dm.gFields( [
         ('plan','id'),
         ('plan','ncarpeta'),
-        ('departamento','nombre'),
-        ('seccionjudicial','nombre'),
+        ('seccionjudicial','departamento'),
+        ('plan','sjudicial'),
         ('plan','lon'),
         ('plan','lat'),
         ] )
@@ -48,10 +48,10 @@ def vrodald():
     dm.gFields( [
         ('rodald','id'),
         ('plan','ncarpeta'),
-        ('departamento','nombre'),
+        ('seccionjudicial','departamento'),
         ('seccionjudicial','nombre'),
-        ('genero','nombre'),
-        ('especie','nombre'),
+        ('especie','genero'),
+        ('rodald','especie'),
         ('rodald','anioplant'),
         ('rodald','areaafect')
         ] )
