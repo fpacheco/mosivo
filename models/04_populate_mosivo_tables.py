@@ -102,6 +102,8 @@ def departamento():
         db.commit()
 
 def destino():
+    """No cby
+    """
     q = db(
            db.destino
         ).select(
@@ -155,134 +157,11 @@ def dia():
             db.rollback()
 
 
-def genero():
-    q = db(
-           db.genero
-        ).select(
-            db.genero.ALL
-        )
-    if len(q) == 0:
-        # Lista de generos
-        generos = [
-            ('O', 'Acacia'),
-            ('E', 'Eucaliptus'),
-            ('O', 'Fraxinus'),
-            ('M', 'Mezcla'),
-            ('A', 'No se define'),
-            ('O', 'Patanus'),
-            ('P', 'Pinus'),
-            ('S', 'Populus'),
-            ('O', 'Querqus'),
-            ('S', 'Salix'),
-            ('O', 'Taxodium'),
-        ]
-        db.commit()
-        try:
-            # Set sequence in departamento
-            db.executesql("ALTER SEQUENCE genero_id_seq MINVALUE 0;")
-            db.executesql("SELECT setval('genero_id_seq', 0, true);")
-            for d in generos:
-                db.genero.insert(codigo=d[0], nombre=d[1])
-            db.commit()
-        except:
-            db.rollback()
-
-
-def especie():
-    q = db(
-           db.especie
-        ).select(
-            db.especie.ALL
-        )
-
-    if len(q) == 0:
-        # Set sequence in departamento
-        db.executesql("ALTER SEQUENCE especie_id_seq MINVALUE 0;")
-        db.executesql("SELECT setval('especie_id_seq', 0, true);")
-        # Lista de especies
-        especies = [
-            # O = 1 Acacia
-            (1, 0, 'Sp.'),
-            (1, 3, 'Longifolia'),
-            # E = 2 Eucalyptus
-            (2, 0, 'Sp.'),
-            (2, 1, 'Botryoides'),
-            (2, 2, 'Camaldulensis (rostrata)'),
-            (2, 3, 'Corinocalix'),
-            (2, 4, 'Bicostata'),
-            (2, 5, 'Diversicolor'),
-            (2, 6, 'Globulus ssp. globulus'),
-            (2, 7, 'Gomphocephala'),
-            (2, 8, 'Grandis'),
-            (2, 10, 'Hempholia'),
-            (2, 11, 'Leucoxylon'),
-            (2, 12, 'Marcarthuri'),
-            (2, 13, 'Melliodora'),
-            (2, 14, 'Paniculata'),
-            (2, 15, 'Punctata'),
-            (2, 16, 'Resinifera'),
-            (2, 17, 'Robusta'),
-            (2, 18, 'Rudis'),
-            (2, 19, 'Saligna'),
-            (2, 20, 'Smithii'),
-            (2, 21, 'Sideroxylon'),
-            (2, 22, 'Tereticornis (umbellata)'),
-            (2, 23, 'Viminalis'),
-            (2, 24, 'Globulus ssp. maidenii'),
-            (2, 25, 'Cinerea'),
-            (2, 26, 'Grandis + maidenii'),
-            (2, 27, 'Bosistoana'),
-            (2, 28, 'Dunnii'),
-            (2, 29, 'Grandis + saligna'),
-            (2, 30, 'Mezcla'),
-            (2, 31, 'Ssp. globulus + ssp. maidenii'),
-            (2, 32, 'Crebra'),
-            (2, 33, 'Nitens'),
-            # O = 3 Fraxinus
-            (3, 19, 'Sp.'),
-            # M = 4 Mezcla
-            (4, 0, 'Mezcla'),
-            # A = 5 no se define
-            (5, 0, 'No se define'),
-            # O = 6 Pantanus
-            (6, 16, 'Sp.'),
-            # P = 7 Pinus
-            (7, 0, 'Sp.'),
-            (7, 1, 'Canariensis'),
-            (7, 2, 'Elliottii'),
-            (7, 3, 'Patula'),
-            (7, 4, 'Pinaster'),
-            (7, 5, 'Radiata'),
-            (7, 6, 'Taeda'),
-            (7, 7, 'Elliottii + taeda'),
-            (7, 8, 'Elliottii + pinaster'),
-            (7, 9, 'Mezcla'),
-            (7, 10, 'Roxbughii'),
-            # S = 8 Populus
-            (8, 0, 'Sp.'),
-            (8, 1, 'Deltoides'),
-            (8, 2, 'X euroamericana 74D'),
-            (8, 3, 'X euroamericana I-214'),
-            (8, 4, 'X euroamericana 63/51'),
-            (8, 7, 'X euroamericana I-15'),
-            # O = 9 Querqus
-            (9, 21, 'Sp.'),
-            # S = 10 Salix
-            (10, 5, 'Alba var. coerulea'),
-            (10, 6, 'Otros'),
-            (10, 8, 'Babylonica x alba cv. 131/25 y 131/27'),
-            # O = 11 Taxodium
-            (11, 20, 'Distinchum'),
-        ]
-        for d in especies:
-            db.especie.insert(genero=d[0], codigo=d[1], nombre=d[2])
-        db.commit()
-
 def seccionjudicial():
     if auth.user_id:
         q = db(
                (db.seccionjudicial.id>0) &
-               (db.seccionjudicial.cby == auth.user_id) 
+               (db.seccionjudicial.cby == auth.user_id)
             ).select(
                 db.seccionjudicial.ALL
             )
@@ -323,6 +202,7 @@ def seccionjudicial():
     else:
         pass
 
+
 def cosecha():
     q = db(
            db.cosecha
@@ -345,7 +225,10 @@ def cosecha():
             db.cosecha.insert(nombre=d[0], descripcion=d[1])
         db.commit()
 
+
 def tiporesiduoforestal():
+    """No cby
+    """
     q = db(
            db.tiporesiduoforestal
         ).select(
@@ -378,6 +261,8 @@ def tiporesiduoforestal():
 
 
 def tipointervencion():
+    """No cby
+    """
     q = db(
             db.tipointervencion
         ).select(
@@ -401,6 +286,7 @@ def tipointervencion():
             db.commit()
         except:
             db.rollback()
+
 
 def stintervencion():
     q = db(
@@ -429,6 +315,7 @@ def stintervencion():
             db.commit()
         except:
             db.rollback()
+
 
 def gruposuelo():
     q = db(
@@ -664,6 +551,7 @@ def gruposuelo():
                 db.commit()
         except:
             db.rollback()
+
 
 def tname():
     q = db(

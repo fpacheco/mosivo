@@ -11,13 +11,9 @@
 
 ### RFPV borrar
 from gluon.dal import DAL, Field
-#from gluon import T
-#from gluon import current, request, session, response
 
+### Database connection
 db = DAL('postgres://mosivo:12mosivo12@localhost/mosivo', migrate_enabled=True)
-#db = DAL('sqlite://storage.db', migrate_enabled=True)
-#db2 = DAL('postgres://jgalan:12jgalan12@192.168.1.10/mosivo', migrate_enabled=False)
-#db2 = DAL('postgres://mosivo:12mosivo12@192.168.1.2/mosivo', migrate_enabled=True)
 
 ## by default give a view/generic.extension to all actions from localhost
 ## none otherwise. a pattern can be 'controller/function.extension'
@@ -43,7 +39,6 @@ auth = Auth(db, hmac_key=Auth.get_or_create_key())
 crud, service, plugins = Crud(db), Service(), PluginManager()
 
 ## create all tables needed by auth if not custom tables
-
 #######################################
 db.define_table('auth_user',
     Field('first_name', type='string',
@@ -112,7 +107,6 @@ if len(rows) == 1:
 ## >>> rows=db(db.mytable.myfield=='value').select(db.mytable.ALL)
 ## >>> for row in rows: print row.id, row.myfield
 #########################################################################
-
 
 mail.settings.server = settings.email_server
 mail.settings.sender = settings.email_sender

@@ -156,7 +156,7 @@ menuAdmin = [
                     ( T('Plans'), URL('data','vplanes')==URL(), URL('data','vplanes'), [] ),
                     ( T('Declared stands'), URL('data','vrodald')==URL(), URL('data','vrodald'), [] ),
                 ]
-            ),        
+            ),
             ( T('Model data'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'),
                 [
                     ( T('By criteria'), URL('modeldata','bycriteria')==URL(), URL('modeldata','bycriteria'), [] ),
@@ -193,7 +193,7 @@ menuAdmin = [
                     ( T('Biomasa en campo'), URL('modelconf','mcbcampo')==URL(), URL('modelconf','mcbcampo'), [] ),
                     ( T('Biomasa en la industria'), URL('modelconf','mcbindustria')==URL(), URL('modelconf','mcbindustria'), [] ),
                 ]
-            ),                        
+            ),
             ( T('Others'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'),
                 [
                     ( T('Intervention type'), URL('modelconf','mtipointervencion')==URL(), URL('modelconf','mtipointervencion'), [] ),
@@ -228,15 +228,80 @@ menuAdmin = [
 
 menuUser = [
     ( T('Home'), URL('default','index')==URL, URL('default','index'),[] ),
-    ( T('About'),URL('about','index')==URL(), URL('about','index'),
+    ( T('View'), URL('view','index')==URL, URL('view','index'),
         [
+
+            ( T('Data'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'),
+                [
+                    ( T('Plans'), URL('data','vplanes')==URL(), URL('data','vplanes'), [] ),
+                    ( T('Declared stands'), URL('data','vrodald')==URL(), URL('data','vrodald'), [] ),
+                ]
+            ),
+            ( T('Model data'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'),
+                [
+                    ( T('By criteria'), URL('modeldata','bycriteria')==URL(), URL('modeldata','bycriteria'), [] ),
+                    LI(_class="divider"),
+                    ( I(T('All')), URL('modeldata','all')==URL(), URL('modeldata','all'), [] ),
+                ]
+            ),
+        ]
+    ),
+    ( T('Model Configuration'), URL('config','index')==URL, URL('config','index'),
+        [
+            ( T('Data updates'), URL('modelconf','configupdatefromrdb')==URL(), URL('modelconf','configupdatefromrdb'), [] ),
+            LI(_class="divider"),
+            ( T('Parameters'), URL('modelconf','exclusions')==URL(), URL('modelconf','exclusions'),
+                [
+                    ( T('Species'), URL('modelconf','pspecies')==URL(), URL('modelconf','pspecies'), [] ),
+                    ( T('Regions'), URL('modelconf','pregions')==URL(), URL('modelconf','pregions'), [] ),
+                ]
+            ),
+            LI(_class="divider"),
+            ( T('Coefficients'), URL()==URL(), URL(),
+                [
+                    ( I(T('Load default coefficients')), URL('modelconf','loadDefaults')==URL(), URL('modelconf','loadDefaults'), [] ),
+                    LI(_class="divider"),
+                    ( T('Área efectiva por especie y departamento'), URL('modelconf','mcaefectiva')==URL(), URL('modelconf','mcaefectiva'), [] ),
+                    ( T('IMA por especie y departamento'), URL('modelconf','mcima')==URL(), URL('modelconf','mcima'), [] ),
+                    ( T('Intervención (rodal)'), URL('modelconf','mcintervencionr')==URL(), URL('modelconf','mcintervencionr'), [] ),
+                    ( T('Intervención (por departamento)'), URL('modelconf','mcintervenciona')==URL(), URL('modelconf','mcintervenciona'), [] ),
+                    LI(_class="divider"),
+                    # ( T('Cosecha por especie y destino'), URL('modelconf','mccosecha')==URL(), URL('modelconf','mccosecha'), [] ),
+                    ( T('Suelo por sección judicial'), URL('modelconf','mcgsuelo')==URL(), URL('modelconf','mcgsuelo'), [] ),
+                    ( T('Biomasa por especie'), URL('modelconf','mcbcampoe')==URL(), URL('modelconf','mcbcampoe'), [] ),
+                    LI(_class="divider"),
+                    ( T('Biomasa en campo'), URL('modelconf','mcbcampo')==URL(), URL('modelconf','mcbcampo'), [] ),
+                    ( T('Biomasa en la industria'), URL('modelconf','mcbindustria')==URL(), URL('modelconf','mcbindustria'), [] ),
+                ]
+            ),
+            ( T('Others'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'),
+                [
+                    ( T('Intervention type'), URL('modelconf','mtipointervencion')==URL(), URL('modelconf','mtipointervencion'), [] ),
+                    ( T('Subintervention type'), URL('modelconf','mstintervencion')==URL(), URL('modelconf','mstintervencion'), [] ),
+                    ( T('Destinations'), URL('modelconf','mdestino')==URL(), URL('modelconf','mdestino'), [] ),
+                    ( T('Forest residues'), URL('modelconf','mtiporesiduoforestal')==URL(), URL('modelconf','mtiporesiduoforestal'), [] ),
+                    ( T('Harvest type'), URL('modelconf','mcosecha')==URL(), URL('modelconf','mcosecha'), [] ),
+                ]
+            ),
+            LI(_class="divider"),
+            ( T('Verificar cumplimiento'), URL('modelconf','verifymodel')==URL(), URL('modelconf','verifymodel'), [] ),
+            LI(_class="divider"),
+            ( T('Model execution'), URL('modelconf','modelupdate')==URL(), URL('modelconf','modelupdate'), [] ),
+        ]
+    ),
+    ( T('System administration'), URL('admin','index')==URL(), URL('admin','index'),
+        [
+            ( T('Users'), URL('sysadmin','users')==URL(), URL('sysadmin','users'), [] ),
+            ( T('Memberships'), URL('sysadmin','memberships')==URL(), URL('sysadmin','memberships'), [] )
+
         ]
     ),
     ( T('Help'), URL('help','index')==URL(), URL('help','index'),
         [
-            ( T('Basic help'), URL('help','appbasic')==URL(), URL('help','appbasic'),[] ),
             ( T('App manual'), URL('help','appmanual')==URL(), URL('help','appmanual'),[] ),
             ( T('System documentation'),URL('help','sysmanual')==URL(), URL('help','sysmanual'),[] ),
+            LI(_class="divider"),
+            ( T('About'),URL('about','index')==URL(), URL('about','index'),[]),
         ]
     ),
 ]

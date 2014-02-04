@@ -6,22 +6,41 @@
 class MModel(object):
 
 
-    def __init__(self, mDatabase):
+    def __init__(self, mDatabase, mUid):
+        """Class initialization function
+
+        :param mDatabase: local database (MoSiVo).
+        :type mDatabase: DAL connection.
+        :param mUid: Mosivo user id.
+        :type mUis: Integer.
+        """
+        # mosivo app database
         self._db=mDatabase
+        # mosivo app user id
+        self._muid = mUid
 
 
     def checkCima(self):
         """Verifica si los datos del coeficiente de IMA estan correctos
         """
-        q = self._db( self._db['cima']['id']>0 )
+        q = self._db(
+            (self._db['cima']['cby']==self._muid)
+        )
         if q.isempty():
             return False
         else:
-            q = self._db( self._db['rodald']['id']>0 )
+            q = self._db(
+                (self._db['rodald']['cby']==self._muid)
+            )
             if q.isempty():
                 return False
             else:
-                rows = self._db.executesql("(SELECT DISTINCT rd.especie, sj.departamento FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento) EXCEPT (SELECT DISTINCT especie,departamento FROM cima)")
+                sql1 = "SELECT DISTINCT rd.especie, sj.departamento FROM rodald rd, plan p, seccionjudicial sj " \
+                       "WHERE rd.plan=p.id AND sj.id=p.sjudicial AND p.cby=%i  ORDER BY sj.departamento" % (self._muid)
+                sql2 = "SELECT DISTINCT c.especie,c.departamento FROM cima c, especie e WHERE c.cby=%i AND e.cby=%i AND e.exc=false" % (self._muid,self._muid)
+                rows = self._db.executesql(
+                    "(%s) EXCEPT (%s)" % (sql1,sql2)
+                )
                 if len(rows)==0:
                     return True
                 else:
@@ -276,14 +295,14 @@ class MModel(object):
                 self._db.commit()
             except Exception as e:
                 print "Error: %s" % e
-                self._db.rollback()            
+                self._db.rollback()
         else:
             pass
 
     def run(self):
         #if checkAll:
         if self.checkCima() and self.checkCaefectiva() and \
-                self.checkCintervencionr():            
+                self.checkCintervencionr():
             self.UbicacionRodalD()
             self.GrupoSueloRodalD()
             self.IntervRodalD()

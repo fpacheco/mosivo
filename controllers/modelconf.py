@@ -69,7 +69,7 @@ def mupdatefromrdb():
                 SPAN(
                     T('Number of records: '),
                     SPAN(
-                        db( db[ tnames[cont] ]['id']>0 ).count(),
+                        nRows( tnames[cont] ),
                         _id="%s_nrecords" % tnames[cont],
                         _class="label"
                     )
@@ -354,7 +354,7 @@ def mstintervencion():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db,tablename='stintervencion')
     dm.gShowId(False)
-    return dict(toolbar=dm.toolBar(), grid=dm.grid())    
+    return dict(toolbar=dm.toolBar(), grid=dm.grid())
 ###
 
 
@@ -366,7 +366,8 @@ def mcima():
     query=(
         (db.cima.id > 0) &
         (db.especie.id==db.cima.especie) &
-        (db.genero.id==db.especie.genero)
+        (db.genero.id==db.especie.genero) &
+        (db.genero.cby==auth.user_id)
         )
     dm.gQuery( query )
     dm.actionTableName('cima')
@@ -389,7 +390,8 @@ def mcaefectiva():
     query=(
         (db.caefectiva.id > 0) &
         (db.especie.id==db.caefectiva.especie) &
-        (db.genero.id==db.especie.genero)
+        (db.genero.id==db.especie.genero) &
+        (db.genero.cby==auth.user_id)
     )
     dm.gQuery( query )
     dm.actionTableName('caefectiva')
@@ -413,6 +415,7 @@ def mcintervencionr():
         (db.cintervencionr.id > 0) &
         (db.especie.id==db.cintervencionr.especie) &
         (db.genero.id==db.especie.genero) &
+        (db.genero.cby==auth.user_id) &
         (db.departamento.id==db.cintervencionr.departamento)
         )
     dm.gQuery( query )
@@ -441,6 +444,7 @@ def mcintervenciona():
         (db.cintervenciona.id > 0) &
         (db.especie.id==db.cintervenciona.especie) &
         (db.genero.id==db.especie.genero) &
+        (db.genero.cby==auth.user_id) &
         (db.departamento.id==db.cintervenciona.departamento)
         )
     dm.gQuery( query )
@@ -470,6 +474,7 @@ def mcbcampo():
         (db.cbcampo.id > 0) &
         (db.especie.id==db.cbcampo.especie) &
         (db.genero.id==db.especie.genero) &
+        (db.genero.cby==auth.user_id) &
         (db.gruposuelo.id==db.cbcampo.gsuelo) &
         (db.stintervencion.id==db.cbcampo.stintervencion) &
         (db.cosecha.id==db.cbcampo.cosecha)
@@ -497,7 +502,8 @@ def mcbcampoe():
     query=(
         (db.cbcampoe.id > 0) &
         (db.especie.id==db.cbcampoe.especie) &
-        (db.genero.id==db.especie.genero)
+        (db.genero.id==db.especie.genero) &
+        (db.genero.cby==auth.user_id)
         )
     dm.gQuery( query )
     dm.actionTableName('cbcampoe')
@@ -522,7 +528,8 @@ def mcbindustria():
     query=(
         (db.cbindustria.id > 0) &
         (db.especie.id==db.cbindustria.especie) &
-        (db.genero.id==db.especie.genero)
+        (db.genero.id==db.especie.genero) &
+        (db.genero.cby==auth.user_id)
         )
     dm.gQuery( query )
     dm.actionTableName('cbindustria')
@@ -535,7 +542,7 @@ def mcbindustria():
         ] )
     dm.gShowId(False)
     dm.showDActions(True)
-    dm.rDetailsURL( "/%s/%s/%s.load" % (request.application, request.controller ,'mcbindustriatrf') )    
+    dm.rDetailsURL( "/%s/%s/%s.load" % (request.application, request.controller ,'mcbindustriatrf') )
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
 
 
@@ -794,11 +801,11 @@ def mcbindustriatrf():
         ntrf=len(trf)
         trfid=[ trf[i]['id'] for i in range(0,ntrf) ]
         trfnombres=[ trf[i]['nombre'] for i in range(0,ntrf) ]
-        
+
         #print ntrf
         #print trfid
         #print trfnombres
-        
+
         forms=[]
         for c in range(0,ntrf):
             q=db(
@@ -821,7 +828,7 @@ def mcbindustriatrf():
             submit['_style'] = 'display:none;'
             # Ocultar idCBIndustria
             fcintervencionr = form.element('input',_id='cbindustriatrf_cbindustria')
-            fcintervencionr['_value'] = idCBIndustria            
+            fcintervencionr['_value'] = idCBIndustria
             fcintervencionr['_style'] = 'display:none;'
             fcintervencionr['_disabled'] = 'disabled'
             # Valor del destino
@@ -877,17 +884,33 @@ def mcbindustriatrf():
 @auth.requires_membership('users')
 def loadDefaults():
     # Coeficients para area efectiva
-    if db(db['caefectiva']['id']>0).isempty():
-        db.executesql(
-            "INSERT INTO caefectiva(especie,departamento,aefectiva) " \
-            "(SELECT DISTINCT rd.especie, sj.departamento, 0.65 as aefectiva FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
-        )
+    if db(
+        (db['caefectiva']['id']>0) &
+        (db['caefectiva']['especie']==db['especie']['id']>0) &
+        (db['especie']['genero']==db['genero']['id']>0) &
+        (db['genero']['cby']==auth.user_id)
+    ).isempty():
+        sql1="INSERT INTO caefectiva(especie,departamento,aefectiva)"
+        sql2="SELECT DISTINCT rd.especie, sj.departamento, 0.65 as aefectiva FROM rodald rd, plan p, seccionjudicial sj, especie e, genero g " \
+            "WHERE rd.plan=p.id AND sj.id=p.sjudicial AND rd.especie=e.id AND e.genero=g.id AND g.cby=%i AND p.cby=%i AND e.exc='F' " \
+            "ORDER BY sj.departamento" % (auth.user_id, auth.user_id)
+        sql = "%s ( %s )" % (sql1, sql2)
+        print sql
+        db.executesql( sql )
     # Coeficientes para ima
-    if db(db['cima']['id']>0).isempty():
-        db.executesql(
-            "INSERT INTO cima(especie,departamento,ima) " \
-            "(SELECT DISTINCT rd.especie, sj.departamento, 20.0 as ima FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
-        )
+    if db(
+        db['cima']['id']>0 &
+        (db['cima']['especie']==db['especie']['id']>0) &
+        (db['especie']['genero']==db['genero']['id']>0) &
+        (db['genero']['cby']==auth.user_id)
+    ).isempty():
+        sql1= "INSERT INTO cima(especie,departamento,ima) "
+        sql2="(SELECT DISTINCT rd.especie, sj.departamento, 20.0 as ima FROM rodald rd, plan p, seccionjudicial sj, especie e, genero g  " \
+            "WHERE rd.plan=p.id AND sj.id=p.sjudicial AND rd.especie=e.id AND e.genero=g.id AND g.cby=%i AND p.cby=%i AND e.exc='F' "\
+            "ORDER BY sj.departamento)" % (auth.user_id, auth.user_id)
+        sql = "%s ( %s )" % (sql1, sql2)
+        print sql
+        db.executesql( sql )
     # cgsuelo
     if db(db['cgsuelo']['id']>0).isempty():
         db.executesql(
@@ -965,13 +988,13 @@ def modelupdate():
 def mmodelupdate():
     import json
     tnames=[]
-    
+
     trs= [
         TR(
             TD( B( T('Run model without full requirement verification') )),
-            TD(                
+            TD(
                 DIV(
-                    
+
                     SPAN(
                         #Button
                         A(
@@ -1048,12 +1071,13 @@ def pspecies():
     query=(
         (db.especie.id > 0) &
         (db.genero.id==db.especie.genero)
+        # (db.genero.cby==auth.user_id)
         )
     dm.gQuery( query )
     dm.actionTableName('especie')
     dm.gFieldId('id')
     dm.gFields( [
-        ('genero','nombre'),
+        ('especie','genero'),
         ('especie','nombre'),
         ('especie','exc')
         ] )
@@ -1079,5 +1103,5 @@ def pregions():
         ('seccionjudicial','exc')
         ] )
     dm.gShowId(False)
-    dm.showMActions(False)    
+    dm.showMActions(False)
     return dict(toolbar=dm.toolBar(), grid=dm.grid())

@@ -357,6 +357,7 @@
 'Invalid action': 'Acción inválida',
 'Invalid email': 'Correo inválido',
 'Invalid login': 'Invalid login',
+'Invalid password': 'Invalid password',
 'invalid password': 'contraseña inválida',
 'Invalid Query': 'Consulta inválida',
 'invalid request': 'solicitud inválida',

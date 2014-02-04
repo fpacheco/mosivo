@@ -13,7 +13,7 @@ class UpdateFromRDB():
         :param mDatabase: local database (MoSiVo).
         :type mDatabase: DAL connection.
         :param mUid: Mosivo user id.
-        :type inDGF: Integer.        
+        :type inDGF: Integer.
         :param inDGF: App is in DGF.
         :type inDGF: Bool.
         """
@@ -53,7 +53,7 @@ class UpdateFromRDB():
                         sj=r[2],
                         lon = r[3],
                         lat = r[4],
-                        cby = self._muid, 
+                        cby = self._muid,
                     )
                 self._db.commit()
                 return True
@@ -144,14 +144,14 @@ class UpdateFromRDB():
     def uRDT2RD(self):
         """Pasa de rodaldtmp a rodald
         """
-        # Delete all data in table plan
-        self._db.executesql("DELETE FROM rodald WHERE cby=%i" % self._muid)
+        # Delete all data in table rodald for this user
+        self._db.executesql("DELETE FROM rodald WHERE plan IN (SELECT id FROM plan WHERE cby=%i)" % self._muid)
 
-        sql = "INSERT INTO rodald(plan,especie,anioplant,areaafect,cby) "
-        sql += "(SELECT p.id, e.id, rdt.anioplant, rdt.areaafect, g.cby "
+        sql = "INSERT INTO rodald(plan,especie,anioplant,areaafect) "
+        sql += "(SELECT p.id, e.id, rdt.anioplant, rdt.areaafect "
         sql += "FROM plan p, especie e, genero g, rodaldtmp rdt "
         sql += "WHERE rdt.ncarpeta=p.ncarpeta AND e.nombre=rdt.nesp AND g.nombre=rdt.ngen AND e.genero=g.id "
-        sql += "AND p.cby=%i AND e.cby=%i AND g.cby=%i AND rdt.cby=%i " % (self._muid,self._muid,self._muid,self._muid)
+        sql += "AND p.cby=%i AND g.cby=%i AND rdt.cby=%i " % (self._muid, self._muid, self._muid)
         sql += "ORDER BY rdt.ncarpeta)"
         try:
             rows = self._db.executesql(sql)
@@ -183,14 +183,14 @@ class UpdateFromRDB():
         if len(rows) > 0:
             # Delete all data in table genero
             self._db.executesql("DELETE FROM genero WHERE cby=%i" % self._muid)
-            
+
             self._db.commit()
             try:
                 for r in rows:
                     self._db.genero.insert(
                         nombre=str(r[1]).strip(),
                         codigo=str(r[0]).strip(),
-                        cby = self._muid,    
+                        cby = self._muid,
                     )
                 self._db.commit()
                 return True
@@ -215,7 +215,8 @@ class UpdateFromRDB():
 
         if len(lrows)>0:
             # Delete all data in table especie
-            self._db.executesql("DELETE FROM especie WHERE cby=%i" % self._muid)
+            # self._db.executesql("DELETE FROM especie WHERE cby=%i" % self._muid)
+            self._db.executesql( "DELETE FROM especie WHERE genero IN (SELECT id FROM genero WHERE cby=%i)" % self._muid )
 
             self._db.commit()
             try:
@@ -231,7 +232,7 @@ class UpdateFromRDB():
                                 genero = id,
                                 nombre = str(r[1]).strip(),
                                 codigo = str(r[0]).strip(),
-                                cby = self._muid,
+                                # cby = self._muid,
                             )
                     except Exception as e:
                         print "Error: %s" % e
