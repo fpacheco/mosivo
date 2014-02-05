@@ -3,6 +3,8 @@
 
 @auth.requires_membership('users')
 def vplanes():
+    """Muestra los datos de planes
+    """
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
     query=(
@@ -31,29 +33,34 @@ def vplanes():
 
 @auth.requires_membership('users')
 def vrodald():
+    """Muestra los datos de rodales declarados
+    """
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
     query=(
-        (db.rodald.id > 0) &
+        (db.ubicacionrodald.rodal==db.rodald.id) &
         (db.rodald.plan==db.plan.id) &
+        (db.ubicacionrodald.sjudicial==db.seccionjudicial.id) &
+        (db.seccionjudicial.departamento==db.departamento.id) &
         (db.rodald.especie==db.especie.id) &
         (db.especie.genero==db.genero.id) &
-        (db.seccionjudicial.id==db.plan.sjudicial) &
-        (db.seccionjudicial.departamento==db.departamento.id) 
+        (db.plan.cby==auth.user_id)
     )
 
     dm.gQuery( query )
-    dm.actionTableName('planes')
+    dm.actionTableName('ubicacionrodald')
     dm.gFieldId('id')
     dm.gFields( [
-        ('rodald','id'),
+        ('ubicacionrodald','id'),
         ('plan','ncarpeta'),
         ('seccionjudicial','departamento'),
         ('seccionjudicial','nombre'),
+        ('ubicacionrodald','lon'),
+        ('ubicacionrodald','lat'),
         ('especie','genero'),
         ('rodald','especie'),
         ('rodald','anioplant'),
-        ('rodald','areaafect')
+        ('rodald','areaafect'),
         ] )
     dm.gShowId(False)
     dm.showMActions(False)

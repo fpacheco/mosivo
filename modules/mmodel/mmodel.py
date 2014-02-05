@@ -24,23 +24,28 @@ class MModel(object):
         """Verifica si los datos del coeficiente de IMA estan correctos
         """
         q = self._db(
-            (self._db['cima']['cby']==self._muid)
+            (self._db['cima']['especie']==self._db['especie']['id']) &
+            (self._db['especie']['genero']==self._db['genero']['id']) &
+            (self._db['genero']['cby']==self._muid)
         )
         if q.isempty():
             return False
         else:
             q = self._db(
-                (self._db['rodald']['cby']==self._muid)
+                (self._db['rodald']['plan']==self._db['plan']['id']) &
+                (self._db['plan']['cby']==self._muid)
             )
             if q.isempty():
                 return False
             else:
+                # RFPV - ¿Y si todas las sj hacen que un depto no sea valido?
                 sql1 = "SELECT DISTINCT rd.especie, sj.departamento FROM rodald rd, plan p, seccionjudicial sj " \
-                       "WHERE rd.plan=p.id AND sj.id=p.sjudicial AND p.cby=%i  ORDER BY sj.departamento" % (self._muid)
-                sql2 = "SELECT DISTINCT c.especie,c.departamento FROM cima c, especie e WHERE c.cby=%i AND e.cby=%i AND e.exc=false" % (self._muid,self._muid)
-                rows = self._db.executesql(
-                    "(%s) EXCEPT (%s)" % (sql1,sql2)
-                )
+                    "WHERE rd.plan=p.id AND sj.id=p.sjudicial AND p.cby=%i AND sj.cby=%i ORDER BY sj.departamento" % (self._muid,self._muid)
+                sql2 = "SELECT DISTINCT c.especie,c.departamento FROM cima c, especie e, genero g " \
+                    "WHERE c.especie=e.id AND e.genero=g.id AND g.cby=%i AND e.exc='F'" % (self._muid)
+                sql = "(%s) EXCEPT (%s)" % (sql1,sql2)
+                print "MModel.checkCima.sql: %s" % sql
+                rows = self._db.executesql( sql )
                 if len(rows)==0:
                     return True
                 else:
@@ -49,15 +54,29 @@ class MModel(object):
     def checkCaefectiva(self):
         """Verifica si los datos del coeficiente de area efectiva estan correctos
         """
-        q = self._db( self._db['caefectiva']['id']>0 )
+        q = self._db(
+            (self._db['caefectiva']['especie']==self._db['especie']['id']) &
+            (self._db['especie']['genero']==self._db['genero']['id']) &
+            (self._db['genero']['cby']==self._muid)
+        )
         if q.isempty():
             return False
         else:
-            q = self._db( self._db['rodald']['id']>0 )
+            q = self._db(
+                (self._db['rodald']['plan']==self._db['plan']['id']) &
+                (self._db['plan']['cby']==self._muid)
+            )
             if q.isempty():
                 return False
             else:
-                rows = self._db.executesql("(SELECT DISTINCT rd.especie, sj.departamento FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento) EXCEPT (SELECT DISTINCT especie,departamento FROM caefectiva)")
+                # RFPV - ¿Y si todas las sj hacen que un depto no sea valido?
+                sql1 = "SELECT DISTINCT rd.especie, sj.departamento FROM rodald rd, plan p, seccionjudicial sj " \
+                    "WHERE rd.plan=p.id AND sj.id=p.sjudicial AND p.cby=%i AND sj.cby=%i ORDER BY sj.departamento" % (self._muid,self._muid)
+                sql2 = "SELECT DISTINCT c.especie,c.departamento FROM caefectiva c, especie e, genero g " \
+                    "WHERE c.especie=e.id AND e.genero=g.id AND g.cby=%i AND e.exc='F'" % (self._muid)
+                sql = "(%s) EXCEPT (%s)" % (sql1,sql2)
+                print "MModel.checkCaefectiva.sql: %s" % sql
+                rows = self._db.executesql( sql )
                 if len(rows)==0:
                     return True
                 else:
@@ -131,8 +150,37 @@ class MModel(object):
 
 
     def checkCgsuelo(self):
-        return False
-
+        """Verifica si los datos del coeficiente de suelo estan correctos
+        """
+        # cguselo(sjudiaicl,gruposuelo)
+        q = self._db(
+            (self._db['cgsuelo']['sjudicial']==self._db['seccionjudicial']['id']) &
+            (self._db['seccionjudicial']['cby']==self._muid) &
+            (self._db['seccionjudicial']['exc']==False)
+        )
+        if q.isempty():
+            return False
+        else:
+            q = self._db(
+                (self._db['ubicacionrodald']['rodal']==self._db['rodald']['id']) &
+                (self._db['rodald']['plan']==self._db['plan']['id']) &
+                (self._db['plan']['cby']==self._muid)
+            )
+            if q.isempty():
+                return False
+            else:
+                sql1 = "SELECT DISTINCT urd.sjudicial FROM ubicacionrodald urd, rodald rd, plan p, seccionjudicial sj " \
+                    "WHERE rd.plan=p.id AND urd.rodal=rd.id AND sj.id=urd.sjudicial AND p.cby=%i AND sj.cby=%i AND sj.exc='F' " \
+                    "ORDER BY urd.sjudicial" % (self._muid,self._muid)
+                sql2 = "SELECT DISTINCT c.sjudicial FROM cgsuelo c, seccionjudicial sj " \
+                    "WHERE c.sjudicial=sj.id AND sj.cby=%i AND sj.exc='F'" % (self._muid)
+                sql = "(%s) EXCEPT (%s)" % (sql1,sql2)
+                print "MModel.checkCgsuelo.sql: %s" % sql
+                rows = self._db.executesql( sql )
+                if len(rows)==0:
+                    return True
+                else:
+                    return False
 
     def checkCcosecha(self):
         return False
@@ -157,31 +205,9 @@ class MModel(object):
             return False
 
 
-    def UbicacionRodalD(self):
-        """Fill ubicacionrodald
+    def grupoSueloRodalD(self):
+        """Fill grupo suelo rodald
         """
-        q=self._db( self._db['plan']['id']>0 )
-        if not q.isempty():
-            self._db.commit()
-            try:
-                self._db.executesql("DELETE FROM ubicacionrodald")
-                self._db.executesql("ALTER SEQUENCE ubicacionrodald_id_seq MINVALUE 0")
-                self._db.executesql("SELECT setval('ubicacionrodald_id_seq', 0, true)")
-                # SQL is short and fast
-                sql = "SELECT rd.id, p.sjudicial, p.lon, p.lat FROM rodald rd, plan p " \
-                    "WHERE rd.plan=p.id " \
-                    "ORDER BY rd.id"
-                sqlinsert ="INSERT INTO ubicacionrodald(rodal,sjudicial,lon,lat) (%s)" % sql
-                self._db.executesql(sqlinsert)
-                self._db.commit()
-            except Exception as e:
-                print "Error: %s!" % e
-                self._db.rollback()
-        else:
-            pass
-
-
-    def GrupoSueloRodalD(self):
         q=self._db( self._db['ubicacionrodald']['id']>0 )
         if not q.isempty():
             self._db.commit()
@@ -204,7 +230,7 @@ class MModel(object):
             pass
 
 
-    def IntervRodalD(self):
+    def intervRodalD(self):
         q=self._db( self._db['rodald']['id']>0 )
         if not q.isempty():
             # Temporal table name
@@ -301,8 +327,7 @@ class MModel(object):
 
     def run(self):
         #if checkAll:
-        if self.checkCima() and self.checkCaefectiva() and \
-                self.checkCintervencionr():
+        if self.checkCima() and self.checkCaefectiva() and self.checkCintervencionr():
             self.UbicacionRodalD()
             self.GrupoSueloRodalD()
             self.IntervRodalD()

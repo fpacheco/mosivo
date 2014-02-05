@@ -153,6 +153,8 @@ menuAdmin = [
 
             ( T('Data'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'),
                 [
+                    ( T('Summary'), URL('data','vsummary')==URL(), URL('data','vsummary'), [] ),
+                    LI(_class="divider"),
                     ( T('Plans'), URL('data','vplanes')==URL(), URL('data','vplanes'), [] ),
                     ( T('Declared stands'), URL('data','vrodald')==URL(), URL('data','vrodald'), [] ),
                 ]
@@ -233,6 +235,8 @@ menuUser = [
 
             ( T('Data'), URL('modelconf','memberships')==URL(), URL('modelconf','memberships'),
                 [
+                    ( T('Summary'), URL('data','vsummary')==URL(), URL('data','vsummary'), [] ),
+                    LI(_class="divider"),
                     ( T('Plans'), URL('data','vplanes')==URL(), URL('data','vplanes'), [] ),
                     ( T('Declared stands'), URL('data','vrodald')==URL(), URL('data','vrodald'), [] ),
                 ]

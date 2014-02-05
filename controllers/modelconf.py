@@ -217,7 +217,8 @@ def verifymodel():
     trs= [
         TR(
             TD( T('Verify %s coefficients') % cstr[cont] ),
-            TD( SPAN( B( db( db[ coef[cont] ]['id']>0 ).count() ), T(' records') ) ),
+            # RFPV - Custom count
+            TD( SPAN( B( nRows(coef[cont]) ), T(' records') ) ),
             TD(
                 DIV(
                     SPAN(
@@ -289,7 +290,7 @@ def averifycoefs():
     try:
         tableName=request.post_vars.tableName
         from mmodel.mmodel import MModel
-        model = MModel(mDatabase=db)
+        model = MModel(mDatabase=db,mUid=auth.user_id)
         if tableName=='cima':
             result=model.checkCima()
         elif tableName=='caefectiva':
@@ -895,83 +896,161 @@ def loadDefaults():
             "WHERE rd.plan=p.id AND sj.id=p.sjudicial AND rd.especie=e.id AND e.genero=g.id AND g.cby=%i AND p.cby=%i AND e.exc='F' " \
             "ORDER BY sj.departamento" % (auth.user_id, auth.user_id)
         sql = "%s ( %s )" % (sql1, sql2)
-        print sql
+        print "caefectiva: %s" % sql
         db.executesql( sql )
     # Coeficientes para ima
     if db(
-        db['cima']['id']>0 &
+        (db['cima']['id']>0) &
         (db['cima']['especie']==db['especie']['id']>0) &
         (db['especie']['genero']==db['genero']['id']>0) &
         (db['genero']['cby']==auth.user_id)
     ).isempty():
         sql1= "INSERT INTO cima(especie,departamento,ima) "
-        sql2="(SELECT DISTINCT rd.especie, sj.departamento, 20.0 as ima FROM rodald rd, plan p, seccionjudicial sj, especie e, genero g  " \
+        sql2="SELECT DISTINCT rd.especie, sj.departamento, 20.0 as ima FROM rodald rd, plan p, seccionjudicial sj, especie e, genero g  " \
             "WHERE rd.plan=p.id AND sj.id=p.sjudicial AND rd.especie=e.id AND e.genero=g.id AND g.cby=%i AND p.cby=%i AND e.exc='F' "\
-            "ORDER BY sj.departamento)" % (auth.user_id, auth.user_id)
+            "ORDER BY sj.departamento" % (auth.user_id, auth.user_id)
         sql = "%s ( %s )" % (sql1, sql2)
-        print sql
+        print "cima: %s" % sql
         db.executesql( sql )
     # cgsuelo
-    if db(db['cgsuelo']['id']>0).isempty():
-        db.executesql(
-            "INSERT INTO cgsuelo(sjudicial,gsuelo) " \
-            "(SELECT DISTINCT p.sjudicial, 5 as gsuelo FROM plan p, seccionjudicial sj WHERE sj.id=p.sjudicial ORDER BY p.sjudicial);"
-        )
+    if db(
+        (db['cgsuelo']['id']>0) &
+        (db['cgsuelo']['sjudicial']==db['seccionjudicial']['id']) &
+        (db['seccionjudicial']['cby']==auth.user_id)
+
+    ).isempty():
+        sql1= "INSERT INTO cgsuelo(sjudicial,gsuelo) "
+        sql2="SELECT DISTINCT p.sjudicial, 5 as gsuelo FROM plan p, seccionjudicial sj " \
+            "WHERE sj.id=p.sjudicial AND sj.cby=%i AND p.cby=%i AND sj.exc='F' "\
+            "ORDER BY p.sjudicial" % (auth.user_id, auth.user_id)
+        sql = "%s ( %s )" % (sql1, sql2)
+        print "cgsuelo: %s" % sql
+        db.executesql( sql )
     # Coeficientes para cintervencionr
-    if db(db['cintervencionr']['id']>0).isempty():
-        # 1
-        db.executesql(
-            "INSERT INTO cintervencionr(especie,departamento,stintervencion,aintervencion,fextraccion) " \
-            "(SELECT DISTINCT rd.especie, sj.departamento, 1 as stintervencion, 3 as aintervencion, 0.3 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
-        )
-        db.executesql(
-            "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 2, 1 FROM cintervencionr WHERE stintervencion=1 AND aintervencion=3::numeric(5,3))"
-        )
+    if db(
+        (db['cintervencionr']['especie']==db['especie']['id']) &
+        (db['especie']['genero']==db['genero']['id']) &
+        (db['especie']['exc']==False) &
+        (db['genero']['cby']==auth.user_id)
+    ).isempty():
+        # I1
+        sql1 = "INSERT INTO cintervencionr(especie,departamento,stintervencion,aintervencion,fextraccion)"
+        sql2 = "SELECT DISTINCT rd.especie, sj.departamento, 1 as stintervencion, 3 as aintervencion, 0.3 as fextraccion " \
+            "FROM rodald rd, plan p, seccionjudicial sj, especie e, genero g " \
+            "WHERE rd.plan=p.id AND sj.id=p.sjudicial AND rd.especie=e.id AND e.genero=g.id AND g.cby=%i AND e.exc='F' " \
+            "ORDER BY sj.departamento"  % (auth.user_id)
+        sql = "%s (%s)" % (sql1,sql2)
+        print "I1 - loadDefaults.sql: %s" % sql
+        db.executesql( sql )
 
-        # 2
-        db.executesql(
-            "INSERT INTO cintervencionr(especie,departamento,stintervencion,aintervencion,fextraccion) " \
-            "(SELECT DISTINCT rd.especie, sj.departamento, 2 as stintervencion, 8 as aintervencion, 0.3 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
-        )
-        db.executesql(
-            "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 1, 0.8 FROM cintervencionr WHERE stintervencion=2 AND aintervencion=8::numeric(5,3))"
-        )
-        db.executesql(
-            "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 2, 0.2 FROM cintervencionr WHERE stintervencion=2 AND aintervencion=8::numeric(5,3))"
-        )
+        sql1 = "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino)"
+        sql2 = "SELECT c.id, 2, 1 " \
+            "FROM cintervencionr c, especie e, genero g " \
+            "WHERE c.especie=e.id AND e.genero=g.id AND g.cby=%i AND c.stintervencion=1 AND c.aintervencion=3::numeric(5,3)"  % (auth.user_id)
+        sql = "%s (%s)" % (sql1,sql2)
+        print "I1 - loadDefaults.sql: %s" % sql
+        db.executesql( sql )
+        # EI1
 
-        # 3
-        db.executesql(
-            "INSERT INTO cintervencionr(especie,departamento,stintervencion,aintervencion,fextraccion) " \
-            "(SELECT DISTINCT rd.especie, sj.departamento, 3 as stintervencion, 15 as aintervencion, 0.3 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
-        )
-        db.executesql(
-            "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 1, 0.5 FROM cintervencionr WHERE stintervencion=3 AND aintervencion=15::numeric(5,3))"
-        )
-        db.executesql(
-            "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 2, 0.5 FROM cintervencionr WHERE stintervencion=3 AND aintervencion=15::numeric(5,3))"
-        )
+        # I2
+        sql1 = "INSERT INTO cintervencionr(especie,departamento,stintervencion,aintervencion,fextraccion)"
+        sql2 = "SELECT DISTINCT rd.especie, sj.departamento, 2 as stintervencion, 8 as aintervencion, 0.3 as fextraccion " \
+            "FROM rodald rd, plan p, seccionjudicial sj, especie e, genero g " \
+            "WHERE rd.plan=p.id AND sj.id=p.sjudicial AND rd.especie=e.id AND e.genero=g.id AND g.cby=%i AND e.exc='F' " \
+            "ORDER BY sj.departamento"  % (auth.user_id)
+        sql = "%s (%s)" % (sql1,sql2)
+        print "I2 - loadDefaults.sql: %s" % sql
+        db.executesql( sql )
 
-        # 4
-        db.executesql(
-            "INSERT INTO cintervencionr(especie,departamento,stintervencion,aintervencion,fextraccion) " \
-            "(SELECT DISTINCT rd.especie, sj.departamento, 5 as stintervencion, 20 as aintervencion, 1.00 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
-        )
-        db.executesql(
-            "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 1, 0.8 FROM cintervencionr WHERE stintervencion=5 AND aintervencion=20::numeric(5,3))"
-        )
-        db.executesql(
-            "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 2, 0.2 FROM cintervencionr WHERE stintervencion=5 AND aintervencion=20::numeric(5,3))"
-        )
+        sql1 = "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino)"
+        sql2 = "SELECT c.id, 1, 0.8 " \
+            "FROM cintervencionr c, especie e, genero g " \
+            "WHERE c.especie=e.id AND e.genero=g.id AND g.cby=%i AND c.stintervencion=2 AND c.aintervencion=8::numeric(5,3)"  % (auth.user_id)
+        sql = "%s (%s)" % (sql1,sql2)
+        print "I2 - loadDefaults.sql: %s" % sql
+        db.executesql( sql )
 
-        # 5
-        db.executesql(
-            "INSERT INTO cintervencionr(especie,departamento,stintervencion,aintervencion,fextraccion) " \
-            "(SELECT DISTINCT rd.especie, sj.departamento, 6 as stintervencion, 40 as aintervencion, 0.97 as fextraccion FROM rodald rd, plan p, seccionjudicial sj WHERE rd.plan=p.id AND sj.id=p.sjudicial ORDER BY sj.departamento);"
-        )
-        db.executesql(
-            "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino) (SELECT id, 2, 1 FROM cintervencionr WHERE stintervencion=6 AND aintervencion=40::numeric(5,3))"
-        )
+        sql1 = "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino)"
+        sql2 = "SELECT c.id, 2, 0.2 " \
+            "FROM cintervencionr c, especie e, genero g " \
+            "WHERE c.especie=e.id AND e.genero=g.id AND g.cby=%i AND c.stintervencion=2 AND c.aintervencion=8::numeric(5,3)"  % (auth.user_id)
+        sql = "%s (%s)" % (sql1,sql2)
+        print "I2 - loadDefaults.sql: %s" % sql
+        db.executesql( sql )
+        #EI2
+
+        # I3
+        sql1 = "INSERT INTO cintervencionr(especie,departamento,stintervencion,aintervencion,fextraccion)"
+        sql2 = "SELECT DISTINCT rd.especie, sj.departamento, 3 as stintervencion, 15 as aintervencion, 0.3 as fextraccion " \
+            "FROM rodald rd, plan p, seccionjudicial sj, especie e, genero g " \
+            "WHERE rd.plan=p.id AND sj.id=p.sjudicial AND rd.especie=e.id AND e.genero=g.id AND g.cby=%i AND e.exc='F' " \
+            "ORDER BY sj.departamento"  % (auth.user_id)
+        sql = "%s (%s)" % (sql1,sql2)
+        print "I3 - loadDefaults.sql: %s" % sql
+        db.executesql( sql )
+
+        sql1 = "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino)"
+        sql2 = "SELECT c.id, 1, 0.5 " \
+            "FROM cintervencionr c, especie e, genero g " \
+            "WHERE c.especie=e.id AND e.genero=g.id AND g.cby=%i AND c.stintervencion=3 AND c.aintervencion=15::numeric(5,3)"  % (auth.user_id)
+        sql = "%s (%s)" % (sql1,sql2)
+        print "I3 - loadDefaults.sql: %s" % sql
+        db.executesql( sql )
+
+        sql1 = "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino)"
+        sql2 = "SELECT c.id, 2, 0.5 " \
+            "FROM cintervencionr c, especie e, genero g " \
+            "WHERE c.especie=e.id AND e.genero=g.id AND g.cby=%i AND c.stintervencion=3 AND c.aintervencion=15::numeric(5,3)"  % (auth.user_id)
+        sql = "%s (%s)" % (sql1,sql2)
+        print "I3 - loadDefaults.sql: %s" % sql
+        db.executesql( sql )
+        #EI3
+
+        # I4
+        sql1 = "INSERT INTO cintervencionr(especie,departamento,stintervencion,aintervencion,fextraccion)"
+        sql2 = "SELECT DISTINCT rd.especie, sj.departamento, 5 as stintervencion, 20 as aintervencion, 1.00 as fextraccion " \
+            "FROM rodald rd, plan p, seccionjudicial sj, especie e, genero g " \
+            "WHERE rd.plan=p.id AND sj.id=p.sjudicial AND rd.especie=e.id AND e.genero=g.id AND g.cby=%i AND e.exc='F' " \
+            "ORDER BY sj.departamento"  % (auth.user_id)
+        sql = "%s (%s)" % (sql1,sql2)
+        print "I4 - loadDefaults.sql: %s" % sql
+        db.executesql( sql )
+
+        sql1 = "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino)"
+        sql2 = "SELECT c.id, 1, 0.8 " \
+            "FROM cintervencionr c, especie e, genero g " \
+            "WHERE c.especie=e.id AND e.genero=g.id AND g.cby=%i AND c.stintervencion=5 AND c.aintervencion=20::numeric(5,3)"  % (auth.user_id)
+        sql = "%s (%s)" % (sql1,sql2)
+        print "I4 - loadDefaults.sql: %s" % sql
+        db.executesql( sql )
+
+        sql1 = "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino)"
+        sql2 = "SELECT c.id, 2, 0.2 " \
+            "FROM cintervencionr c, especie e, genero g " \
+            "WHERE c.especie=e.id AND e.genero=g.id AND g.cby=%i AND c.stintervencion=5 AND c.aintervencion=20::numeric(5,3)"  % (auth.user_id)
+        sql = "%s (%s)" % (sql1,sql2)
+        print "I4 - loadDefaults.sql: %s" % sql
+        db.executesql( sql )
+        #EI4
+
+        # I5
+        sql1 = "INSERT INTO cintervencionr(especie,departamento,stintervencion,aintervencion,fextraccion)"
+        sql2 = "SELECT DISTINCT rd.especie, sj.departamento, 6 as stintervencion, 40 as aintervencion, 0.97 as fextraccion " \
+            "FROM rodald rd, plan p, seccionjudicial sj, especie e, genero g " \
+            "WHERE rd.plan=p.id AND sj.id=p.sjudicial AND rd.especie=e.id AND e.genero=g.id AND g.cby=%i AND e.exc='F' " \
+            "ORDER BY sj.departamento"  % (auth.user_id)
+        sql = "%s (%s)" % (sql1,sql2)
+        print "I5 - loadDefaults.sql: %s" % sql
+        db.executesql( sql )
+
+        sql1 = "INSERT INTO cdintervencionr(cintervencionr,destino,fdestino)"
+        sql2 = "SELECT c.id, 2, 1 " \
+            "FROM cintervencionr c, especie e, genero g " \
+            "WHERE c.especie=e.id AND e.genero=g.id AND g.cby=%i AND c.stintervencion=6 AND c.aintervencion=40::numeric(5,3)"  % (auth.user_id)
+        sql = "%s (%s)" % (sql1,sql2)
+        print "I5 - loadDefaults.sql: %s" % sql
+        db.executesql( sql )
+        #EI5
 
 
 ### Model update and run
@@ -1056,7 +1135,7 @@ def modelrun():
     """
     try:
         from mmodel.mmodel import MModel
-        m = MModel(mDatabase=db)
+        m = MModel(mDatabase=db,mUid=auth.user_id)
         result = m.run()
         return dict( result=False )
     except Exception as e:

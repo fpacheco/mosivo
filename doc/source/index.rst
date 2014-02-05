@@ -6,8 +6,8 @@
 .. meta::
     :description: Docuementación de aplicaciones del Inventario Forestal Nacional
     :keywords: InGeSur, Dirección General Forestal, Ministerio de Gaadería
- 
-.. sectionauthor:: Fernando Pacheco <fernando.pacheco@ingesur.com.uy>   
+
+.. sectionauthor:: Fernando Pacheco <fernando.pacheco@ingesur.com.uy>
 
 *********************************************
 Aplicaciones del Inventario Nacional Forestal
@@ -22,9 +22,10 @@ Contents:
 
 .. toctree::
     :maxdepth: 4
-    
+
     intro.rst
     manual.rst
+    tutorial.rst
     report.rst
     code.rst
     faq.rst

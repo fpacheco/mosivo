@@ -144,20 +144,23 @@ class UpdateFromRDB():
     def uRDT2RD(self):
         """Pasa de rodaldtmp a rodald
         """
-        # Delete all data in table rodald for this user
-        self._db.executesql("DELETE FROM rodald WHERE plan IN (SELECT id FROM plan WHERE cby=%i)" % self._muid)
-
-        sql = "INSERT INTO rodald(plan,especie,anioplant,areaafect) "
-        sql += "(SELECT p.id, e.id, rdt.anioplant, rdt.areaafect "
-        sql += "FROM plan p, especie e, genero g, rodaldtmp rdt "
-        sql += "WHERE rdt.ncarpeta=p.ncarpeta AND e.nombre=rdt.nesp AND g.nombre=rdt.ngen AND e.genero=g.id "
-        sql += "AND p.cby=%i AND g.cby=%i AND rdt.cby=%i " % (self._muid, self._muid, self._muid)
-        sql += "ORDER BY rdt.ncarpeta)"
+        self._db.commit()
         try:
+            # Delete all data in table rodald for this user
+            self._db.executesql("DELETE FROM rodald WHERE plan IN (SELECT id FROM plan WHERE cby=%i)" % self._muid)
+            sql = "INSERT INTO rodald(plan,especie,anioplant,areaafect) "
+            sql += "(SELECT p.id, e.id, rdt.anioplant, rdt.areaafect "
+            sql += "FROM plan p, especie e, genero g, rodaldtmp rdt "
+            sql += "WHERE rdt.ncarpeta=p.ncarpeta AND e.nombre=rdt.nesp AND g.nombre=rdt.ngen AND e.genero=g.id "
+            sql += "AND p.cby=%i AND g.cby=%i AND rdt.cby=%i " % (self._muid, self._muid, self._muid)
+            sql += "ORDER BY rdt.ncarpeta)"
             rows = self._db.executesql(sql)
+            self._db.commit()
+            self.__uUbicacionRodalD()
             return True
         except Exception as e:
             print "Error: %s" % e
+            self._db.rollback()
             return False
 
 
@@ -224,7 +227,7 @@ class UpdateFromRDB():
                     id=int( lr['id'] )
                     genero=lr['nombre']
                     sql = 'SELECT CodE, Especie FROM Plantas WHERE Genero LIKE \'' + str(genero) + '%\''
-                    print sql
+                    print "UpdateFromRDB.uEspecie.sql: %s" % sql
                     rows=self.rdb.executesql(sql)
                     try:
                         for r in rows:
@@ -243,6 +246,25 @@ class UpdateFromRDB():
                 print "Error: %s" % e
                 self._db.rollback()
                 return False
+
+    def __uUbicacionRodalD(self):
+        """Fill ubicacionrodald (private function - autoused)
+        """
+        self._db.commit()
+        try:
+            # SQL is short and fast
+            sql1 = "SELECT rd.id, p.sjudicial, p.lon, p.lat FROM rodald rd, plan p " \
+                "WHERE rd.plan=p.id AND p.cby=%i" \
+                "ORDER BY rd.id" % self._muid
+            sql ="INSERT INTO ubicacionrodald(rodal,sjudicial,lon,lat) (%s)" % sql1
+            print "UpdateFromRDB.__uUbicacionRodalD.sql: %s" % sql
+            self._db.executesql(sql)
+            self._db.commit()
+            return True
+        except Exception as e:
+            print "Error: %s!" % e
+            self._db.rollback()
+            return False
 
 
     def uAll(self):

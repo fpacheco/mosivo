@@ -48,23 +48,24 @@ def neddaction():
                         return response.json( {'result': True } )
             elif dataAction=='deleteAll':
                 print "%s: deleteAll" % (tableName)
-                if db( db[tableName]['id']>0 ).isempty():
-                    response.flash = T('No record deleted')
+                if nRows(tableName)==0:
+                    response.flash = T('No records found')
                     if request.ajax:
                         return response.json( {'result': False, 'msg':T('No records found') }  )
+                elif nRows(tableName)==-1:
+                    response.flash = T('No table deleted')
+                    if request.ajax:
+                        return response.json( {'result': False, 'msg':T('No table found') }  )
                 else:
-                    # WARNING: Delete all record in the table!!!
-                    db.commit()
-                    try:
-                        db( db[tableName]['id']>0 ).delete()
-                        # db.executesql("SELECT setval('%s_id_seq', 1, true)" % tableName)
-                        db.executesql("ALTER SEQUENCE %s_id_seq MINVALUE 0;" % tableName)
-                        db.executesql("SELECT setval('%s_id_seq', 0, true);" % tableName)
+                    # WARNING: Delete all record in the table for the current user!!!
+                    if deleteTable(tableName):
                         response.flash = T('Records deleted')
                         if request.ajax:
                             return response.json( {'result': True } )
-                    except:
-                        db.rollback()
+                    else:
+                        response.flash = T('No records deleted')
+                        if request.ajax:
+                            return response.json( {'result': False, 'msg':T('No table found') } )
             else:
                 redirect(URL('default','index'))
 
