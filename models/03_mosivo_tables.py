@@ -521,7 +521,7 @@ db.cbcampo.bcampo.requires=IS_NOT_IN_DB(
 db.cbcampo.especie.widget=cSelEsp.widget
 
 
-# Coeficiente general en la industria
+# Coeficiente general en la industria. Se va a al industria destino = Madera Sólida (id=1)
 db.define_table("cbindustria",
     Field("especie", db.especie, label=T("Especie"),
       required=True, requires=IS_IN_DB(db, 'especie.id', '%(nombre)s'),

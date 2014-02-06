@@ -886,9 +886,8 @@ def mcbindustriatrf():
 def loadDefaults():
     # Coeficients para area efectiva
     if db(
-        (db['caefectiva']['id']>0) &
-        (db['caefectiva']['especie']==db['especie']['id']>0) &
-        (db['especie']['genero']==db['genero']['id']>0) &
+        (db['caefectiva']['especie']==db['especie']['id']) &
+        (db['especie']['genero']==db['genero']['id']) &
         (db['genero']['cby']==auth.user_id)
     ).isempty():
         sql1="INSERT INTO caefectiva(especie,departamento,aefectiva)"
@@ -900,9 +899,8 @@ def loadDefaults():
         db.executesql( sql )
     # Coeficientes para ima
     if db(
-        (db['cima']['id']>0) &
-        (db['cima']['especie']==db['especie']['id']>0) &
-        (db['especie']['genero']==db['genero']['id']>0) &
+        (db['cima']['especie']==db['especie']['id']) &
+        (db['especie']['genero']==db['genero']['id']) &
         (db['genero']['cby']==auth.user_id)
     ).isempty():
         sql1= "INSERT INTO cima(especie,departamento,ima) "
@@ -914,7 +912,6 @@ def loadDefaults():
         db.executesql( sql )
     # cgsuelo
     if db(
-        (db['cgsuelo']['id']>0) &
         (db['cgsuelo']['sjudicial']==db['seccionjudicial']['id']) &
         (db['seccionjudicial']['cby']==auth.user_id)
 

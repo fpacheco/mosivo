@@ -5,21 +5,21 @@ def all():
     from plugin_dm.datamanager import DataManager
     dm=DataManager(database=db)
     query=(
-        (db.destinointervrodald.id > 0) &
         (db.rodald.id==db.intervrodald.rodal) &
         (db.plan.id==db.rodald.plan) &
+        (db.plan.cby==auth.user_id) &
         (db.especie.id==db.rodald.especie) &
-        (db.genero.id==db.especie.genero) &        
+        (db.genero.id==db.especie.genero) &
         (db.seccionjudicial.id==db.plan.sjudicial) &
         (db.departamento.id==db.seccionjudicial.departamento) &
         (db.intervrodald.id==db.destinointervrodald.irodal)  &
-        (db.tipointervencion.id==db.intervrodald.tintervencion)
+        (db.stintervencion.id==db.intervrodald.stintervencion)
     )
 
     dm.gQuery( query )
     dm.actionTableName('destinointervrodald')
     dm.gFieldId('id')
-    dm.gFields( 
+    dm.gFields(
         [
             ('destinointervrodald','id'),
             ('plan','ncarpeta'),
@@ -28,11 +28,11 @@ def all():
             ('plan','sjudicial'),
             ('especie','genero'),
             ('rodald','especie'),
-            ('intervrodald','tintervencion'),
+            ('intervrodald','stintervencion'),
             ('intervrodald','adisp'),
             ('destinointervrodald','destino'),
             ('destinointervrodald','mcmcc'),
-        ] 
+        ]
     )
     dm.gShowId(False)
     dm.showMActions(False)
@@ -42,8 +42,8 @@ def all():
 @auth.requires_membership('users')
 def gbygenero():
     """
-    
-    """    
+
+    """
     #from plugin_dm.datamanager import DataManager
     #dm=DataManager(database=db)
     query=(
@@ -51,7 +51,7 @@ def gbygenero():
         (db.rodald.id==db.intervrodald.rodal) &
         (db.plan.id==db.rodald.plan) &
         (db.especie.id==db.rodald.especie) &
-        (db.genero.id==db.especie.genero) &        
+        (db.genero.id==db.especie.genero) &
         (db.seccionjudicial.id==db.plan.sjudicial) &
         (db.departamento.id==db.seccionjudicial.departamento) &
         (db.intervrodald.id==db.destinointervrodald.irodal)  &
@@ -62,7 +62,7 @@ def gbygenero():
     dm.actionTableName('destinointervrodald')
     dm.groupby='genero'
     dm.gFieldId('id')
-    dm.gFields( 
+    dm.gFields(
         [
             ('destinointervrodald','id'),
             ('plan','ncarpeta'),
@@ -75,10 +75,10 @@ def gbygenero():
             ('intervrodald','adisp'),
             ('destinointervrodald','destino'),
             ('destinointervrodald','mcmcc'),
-        ] 
+        ]
     )
     dm.gShowId(False)
-    dm.showMActions(False)    
+    dm.showMActions(False)
     return dict(toolbar=dm.toolBar(), grid=dm.grid())
     """
     fields=[
@@ -93,26 +93,26 @@ def gbygenero():
             db.intervrodald.adisp,
             db.destinointervrodald.destino,
             db.destinointervrodald.mcmcc,
-        ] 
+        ]
     grid=SQLFORM.grid(
         query=query,
         fields=fields,
         field_id=db.destinointervrodald.id,
-        groupby=db.especie.genero|db.especie.nombre   
+        groupby=db.especie.genero|db.especie.nombre
     )
     return dict(grid=grid)
 
 
-@auth.requires_membership('users')    
+@auth.requires_membership('users')
 def bycriteria():
     # departamentos
-    d = db(db.departamento).select(db.departamento.ALL,orderby=db.departamento.nombre)    
+    d = db(db.departamento).select(db.departamento.ALL,orderby=db.departamento.nombre)
     # generos
     g = db(db.genero).select(db.genero.ALL,orderby=db.genero.nombre)
     # destinos
     dt = db(db.destino).select(db.destino.ALL,orderby=db.destino.nombre)
     # tipos intervencion
-    ti = db(db.tipointervencion).select(db.tipointervencion.ALL,orderby=db.tipointervencion.nombre)    
+    ti = db(db.tipointervencion).select(db.tipointervencion.ALL,orderby=db.tipointervencion.nombre)
     return dict(d=d,g=g,dt=dt,ti=ti)
 
 
@@ -123,9 +123,9 @@ def sjudicial():
         print "dids: %s" % dids
         if len(dids)>0:
             q = reduce(lambda a,b:a|b, [db.departamento.id==d for d in dids])
-            q = q & (db.departamento.id==db.seccionjudicial.departamento)            
+            q = q & (db.departamento.id==db.seccionjudicial.departamento)
             sj = db(
-                q        
+                q
             ).select(
                 db.seccionjudicial.id,
                 db.seccionjudicial.nombre,
