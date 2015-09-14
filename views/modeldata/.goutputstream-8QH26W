@@ -1,0 +1,166 @@
+{{extend 'layout.html'}}
+<h1> {{ = T('Vista de todos los datos modelados por criterio') }}</h1>
+<div class="alert alert-info">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <h4>Información</h4>
+    Estos son los datos modelados.
+</div>
+
+<script>
+var departamentos;
+var sjudiciales;
+var generos;
+var especies;
+var destinos;
+var tintervencion;
+
+function onDepartamentoClick() {
+    //ver cuales departamentos estan seleccionados
+    
+    // actualizar la tabla de secciones judiciales
+}
+
+function getSJudiciales(departamentos) {
+    // ajax a cotrollador que me de genero,id,especie
+
+}
+
+function alternateAll(table) {
+
+}
+
+</script>
+
+<div class="well well-small">
+    <h4>{{ = T('Years')}}</h4>
+    {{ = T('From:') }}
+    {{ = T('To:') }}
+</div>
+<div class="well well-mini">
+    <h4>{{ = T('Departamentos')}}</h4>
+    {{ = T('Operation:') }}
+    <div class="btn-group" data-toggle="buttons-radio">
+        <button type="button" class="btn btn-small">{{ = T('Diferenced') }}</button>
+        <button type="button" class="btn btn-small">{{ = T('Grouped') }}</button>
+    </div>
+    <table id="departamentos" class="table table-striped table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <td>{{=T('Name')}}</td>
+                <td>
+                    <input type="checkbox" name="d_s_all" value="Milk">
+                </td>
+            </tr>
+        </thead>
+        {{for r in d:}}
+            <tr>
+                <td>{{=r.nombre}}</td>
+                <td>
+                    <input type="checkbox" name="departamento_{{=r.id}}" value="Milk">
+                </td>
+            </tr>
+        {{pass}}
+        <tbody>
+        </tbody>    
+    </table>
+</div>
+<div class="well well-small">
+    <h4>{{ = T('Secciones judiciales')}}</h4>
+    {{ = T('Operation:') }}
+    <div class="btn-group" data-toggle="buttons-radio">
+        <button type="button" class="btn btn-small">{{ = T('Diferenced') }}</button>
+        <button type="button" class="btn btn-small">{{ = T('Grouped') }}</button>
+    </div>    
+</div>
+<div class="well well-small">
+    <h4>{{ = T('Generos')}}</h4>
+    {{ = T('Operation:') }}
+    <div class="btn-group" data-toggle="buttons-radio">
+        <button type="button" class="btn btn-small">{{ = T('Diferenced') }}</button>
+        <button type="button" class="btn btn-small">{{ = T('Grouped') }}</button>
+    </div>
+    <table id="generos" class="table table-striped table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <td>{{=T('Name')}}</td>
+                <td>
+                    <input type="checkbox" name="d_s_all" value="Milk">
+                </td>
+            </tr>
+        </thead>
+        {{for r in g:}}
+            <tr>
+                <td>{{=r.nombre}}</td>
+                <td>
+                    <input type="checkbox" name="departamento_{{=r.id}}" value="Milk">
+                </td>
+            </tr>
+        {{pass}}
+        <tbody>
+        </tbody>    
+    </table>    
+</div>
+<div class="well well-small">
+    <h4>{{ = T('Especies')}}</h4>
+    {{ = T('Operation:') }}
+    <div class="btn-group" data-toggle="buttons-radio">
+        <button type="button" class="btn btn-small">{{ = T('Diferenced') }}</button>
+        <button type="button" class="btn btn-small">{{ = T('Grouped') }}</button>
+    </div>
+</div>
+<div class="well well-small">
+    <h4>{{ = T('Destinos')}}</h4>
+    {{ = T('Operation:') }}
+    <div class="btn-group" data-toggle="buttons-radio">
+        <button type="button" class="btn btn-small">{{ = T('Diferenced') }}</button>
+        <button type="button" class="btn btn-small">{{ = T('Grouped') }}</button>
+    </div>
+    <table id="destinos" class="table table-striped table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <td>{{=T('Name')}}</td>
+                <td>
+                    <input type="checkbox" name="d_s_all" value="Milk">
+                </td>
+            </tr>
+        </thead>
+        {{for r in dt:}}
+            <tr>
+                <td>{{=r.nombre}}</td>
+                <td>
+                    <input type="checkbox" name="departamento_{{=r.id}}" value="Milk">
+                </td>
+            </tr>
+        {{pass}}
+        <tbody>
+        </tbody>    
+    </table>    
+</div>
+<div class="well well-small">
+    <h4>{{ = T('Tipos de intevencion')}}</h4>
+    {{ = T('Operation:') }}
+    <div class="btn-group" data-toggle="buttons-radio">
+        <button type="button" class="btn btn-small">{{ = T('Diferenced') }}</button>
+        <button type="button" class="btn btn-small">{{ = T('Grouped') }}</button>
+    </div>
+    <table id="tipointervencion" class="table table-striped table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <td>{{=T('Name')}}</td>
+                <td>
+                    <input type="checkbox" name="d_s_all" value="Milk">
+                </td>
+            </tr>
+        </thead>
+        {{for r in ti:}}
+            <tr>
+                <td>{{=r.nombre}}</td>
+                <td>
+                    <input type="checkbox" name="tipointervencion_{{=r.id}}" value="Milk">
+                </td>
+            </tr>
+        {{pass}}
+        <tbody>
+        </tbody>    
+    </table>    
+</div>
